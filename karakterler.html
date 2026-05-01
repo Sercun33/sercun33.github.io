@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Half-Life Türkiye</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="taraf.css">
+</head>
+<body>
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+    </div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="lmp.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html" class="active">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h1 class="page-title">Karakterler</h1>
+            <p class="page-desc">Half-Life Evrenindeki Karakterler</p>
+
+            <div class="char-grid">
+    <a href="gordonfreeman.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/gordon.jpg" alt="Gordon Freeman"></div>
+        <div class="char-name">Gordon Freeman</div>
+        <div class="char-role">Teorik Fizikçi</div>
+    </a>
+
+   <!-- <a href="alyx.html" class="char-card">
+        <span class="char-id">DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/alyx.jpg" alt="Alyx Vance"></div>
+        <div class="char-name">Alyx Vance</div>
+        <div class="char-role">Direniş Lideri</div>
+    </a>-->
+
+    <a href="gman.html" class="char-card">
+        <span class="char-id">BİLİNMİYOR</span>
+        <div class="char-img-wrap"><img src="img/karakter/gman.jpg" alt="G-Man"></div>
+        <div class="char-name">G-Man</div>
+        <div class="char-role">Olasılıkları Şekillendiren Adam</div>
+    </a>
+
+    <a href="eli.html" class="char-card">
+        <span class="char-id">DİRENİŞ / Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/eli.jpg" alt="Eli Vance"></div>
+        <div class="char-name">Eli Vance</div>
+        <div class="char-role">Bilim İnsanı</div>
+    </a>
+<!--
+    <a href="karakter/azian.html" class="char-card">
+        <span class="char-id">MERHUM</span>
+        <div class="char-img-wrap"><img src="img/karakter/azian.jpg" alt="Azian Vance"></div>
+        <div class="char-name">Azian Vance</div>
+        <div class="char-role">Sivil</div>
+    </a>
+
+    <a href="karakter/kleiner.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/kleiner.jpg" alt="Dr. Kleiner"></div>
+        <div class="char-name">Isaac Kleiner</div>
+        <div class="char-role">Bilim İnsanı</div>
+    </a>
+
+    <a href="karakter/breen.html" class="char-card">
+        <span class="char-id">COMBINE / Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/breen2.jpg" alt="Wallace Breen"></div>
+        <div class="char-name">Wallace Breen</div>
+        <div class="char-role">Combine Dünya Yöneticisi</div>
+    </a>
+
+    <a href="karakter/barney.html" class="char-card">
+        <span class="char-id">Black Mesa / DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/barney.jpg" alt="Barney Calhoun"></div>
+        <div class="char-name">Barney Calhoun</div>
+        <div class="char-role">Güvenlik Görevlisi</div>
+    </a>
+
+    <a href="karakter/gina.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/gina.jpg" alt="Gina Cross"></div>
+        <div class="char-name">Gina Cross</div>
+        <div class="char-role">Araştırma Görevlisi</div>
+    </a>
+
+    <a href="karakter/collete.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/collete.jpg" alt="Collete Green"></div>
+        <div class="char-name">Collete Green</div>
+        <div class="char-role">Araştırma Görevlisi</div>
+    </a>
+
+    <a href="karakter/adrian.html" class="char-card">
+        <span class="char-id">H.E.C.U.</span>
+        <div class="char-img-wrap"><img src="img/karakter/shephard.jpg" alt="Adrian Shephard"></div>
+        <div class="char-name">Adrian Shephard</div>
+        <div class="char-role">H.E.C.U. Mensubu Onbaşı</div>
+    </a>
+
+    <a href="karakter/nihilanth.html" class="char-card">
+        <span class="char-id">XEN</span>
+        <div class="char-img-wrap"><img src="img/karakter/nihilanth.jpg" alt="Nihilanth"></div>
+        <div class="char-name">Nihilanth</div>
+        <div class="char-role">Xen Lideri</div>
+    </a>
+
+    <a href="karakter/russell.html" class="char-card">
+        <span class="char-id">DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/russell.jpg" alt="Russell"></div>
+        <div class="char-name">Russell</div>
+        <div class="char-role">Mühendis</div>
+    </a>
+
+    <a href="karakter/odessa.html" class="char-card">
+        <span class="char-id">DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/odessa.jpg" alt="Odessa Cubbage"></div>
+        <div class="char-name">Odessa Cubbage</div>
+        <div class="char-role">Direniş Üyesi</div>
+    </a>
+
+    <a href="karakter/magnusson.html" class="char-card">
+        <span class="char-id">Black Mesa / DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/magnusson.jpg" alt="Arne Magnusson"></div>
+        <div class="char-name">Arne Magnusson</div>
+        <div class="char-role">Roket Bilimci</div>
+    </a>
+
+    <a href="karakter/grigori.html" class="char-card">
+        <span class="char-id">RAVENHOLM</span>
+        <div class="char-img-wrap"><img src="img/karakter/grigori.jpg" alt="Peder Grigori"></div>
+        <div class="char-name">Peder Grigori</div>
+        <div class="char-role">Rahip</div>
+    </a>
+
+    <a href="karakter/judith.html" class="char-card">
+        <span class="char-id">DİRENİŞ / COMBINE</span>
+        <div class="char-img-wrap"><img src="img/karakter/judith.jpg" alt="Judith Mossman"></div>
+        <div class="char-name">Judith Mossman</div>
+        <div class="char-role">Araştırmacı</div>
+    </a>
+
+    <a href="karakter/keller.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/keller.jpg" alt="Doktor Keller"></div>
+        <div class="char-name">Doktor Keller</div>
+        <div class="char-role">Kıdemli Bilim İnsanı</div>
+    </a>
+
+    <a href="karakter/rosenberg.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/rosenberg.jpg" alt="Doktor Rosenberg"></div>
+        <div class="char-name">Doktor Rosenberg</div>
+        <div class="char-role">Araştırma Görevlisi</div>
+    </a>
+
+    <a href="karakter/otis.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakter/otis.jpg" alt="Otis"></div>
+        <div class="char-name">Otis Laurey</div>
+        <div class="char-role">Güvenlik Görevlisi</div>
+    </a>
+
+    <a href="karakter/dog.html" class="char-card">
+        <span class="char-id">DİRENİŞ</span>
+        <div class="char-img-wrap"><img src="img/karakter/dog.jpg" alt="Dog"></div>
+        <div class="char-name">Dog</div>
+        <div class="char-role">Evcil Robot</div>
+    </a>
+
+    <a href="karakter/jeff.html" class="char-card">
+        <span class="char-id">COMBINE</span>
+        <div class="char-img-wrap"><img src="img/karakter/jeff.jpg" alt="Jeff"></div>
+        <div class="char-name">Jeff</div>
+        <div class="char-role">Mutasyona Uğramış</div>
+    </a>
+
+    <a href="karakter/gus.html" class="char-card">
+        <span class="char-id">Black Mesa</span>
+        <div class="char-img-wrap"><img src="img/karakQter/gus.jpg" alt="Gus"></div>
+        <div class="char-name">Gus</div>
+        <div class="char-role">Personel</div>
+    </a>
+</div>-->
+        </main>
+    </div>
+
+    <script>
+    // Karakter Arşivi Hızlı Yükleme Protokolü
+    window.addEventListener('load', () => {
+        // Sabit bekleme süresi 1 saniyeye indirildi
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            const wrapper = document.getElementById('main-wrapper');
+            
+            if(preloader) {
+                preloader.style.opacity = '0';
+                preloader.style.transition = 'opacity 0.2s ease'; // Kapanış akıcılığı
+                preloader.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    if(wrapper) {
+                        wrapper.style.opacity = '1';
+                        wrapper.style.visibility = 'visible';
+                    }
+                }, 200);
+            }
+        }, 200); // 
+    });
+
+    // Menü Kontrolü (Stabilize edildi)
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    if(menuBtn && navLinks) {
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('open');
+        });
+    }
+</script>
+</body>
+</html>

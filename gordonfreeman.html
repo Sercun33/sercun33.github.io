@@ -1,0 +1,412 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gordon Freeman</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css">
+    <style>
+        /* --- MODERN TABLO (WEAPON CARDS) TASARIMI --- */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .weapon-card:hover {
+            border-color: var(--primary-orange);
+            background: rgba(245, 130, 32, 0.02);
+            transform: translateY(-5px);
+        }
+
+        .weapon-card-header {
+            background: rgba(245, 130, 32, 0.1);
+            padding: 15px 20px;
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-card-header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        .weapon-list {
+            padding: 10px 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .weapon-item {
+            padding: 10px 25px;
+            color: #bbb;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .weapon-item a { color: inherit; text-decoration: none; }
+
+        .weapon-item:last-child { border-bottom: none; }
+
+        .weapon-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            padding-left: 30px;
+        }
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px; border-radius: 15px; transition: 0.3s;
+            cursor: zoom-in; position: relative; overflow: hidden;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); }
+        .archive-doc img { width: 100%; border-radius: 8px; display: block; }
+        .doc-text { font-size: 10px; color: #555; font-weight: 800; text-align: center; margin-top: 8px; display: block; }
+
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+        }
+        #zoomModal img { max-width: 90%; max-height: 90%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 20px; }
+
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="">
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="lmp.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+               <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html" class="active">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="img/gordon.jpg" alt="Gordon Freeman">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">Gordon Freeman</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Teorik Fizikçi</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">ARŞİV KANITLARI</h3>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/fmektup.jpg">
+                        <span class="doc-text">Black Mesa'ya Çağırılışı</span>
+                    </div>
+                    <div style="height: 15px;"></div>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/ayinelemani.jpg">
+                        <span class="doc-text">AYIN ELEMANI ÖDÜLÜ</span>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">HAKKINDA BİLGİLER</h2>
+                    <div class="info-row"><b>Adı:</b> <span>Gordon Freeman</span></div>
+                    <div class="info-row"><b>Eğitim:</b> <span>M.I.T. - Teorik Fizik (Doktora)</span></div>
+                    <div class="info-row"><b>Tanım:</b> <span>Yanlış Yerdeki Doğru Kişi~(G-Man)</span></div>
+                    <div class="info-row"><b>Durumu:</b> <span>G-Man ile anlaşması bozuldu  /  Özgür</span></div>
+                    <div class="info-row"><b>Görünüş:</b> <span>Half-Life (Ana Karakter)<br>Half-Life Opposing Force (Xende görülür)<br>Half-Life Blue Shift (H.E.C.U. Tarafından  Kaçırılırken Barney görür)<br>Half-Life 2 (Ana Karakter)<br>Half-Life 2 Episode 1 (Ana Karakter) <br>Half-Life 2 Episode 2 (Ana Karakter) <br>Half-Life Alyx (Oyun Sonu)</span></div>
+                </div>
+
+                <article class="story-section">
+                    <h2>KİM BU GORDON FREEMAN?</h2>
+                    <p>Gordon Freeman, Half-Life serisinin ana karakteridir. Massachusetts Teknoloji Enstitüsü (M.I.T)'den Mezun olup 1997 Yılında Innsbruck Üniversitesi'nde Ziyaretçi Araştırma Görevlisi olarak çalışırken kendisine Akıl Hocası Isaac Kleiner'ın Çalıştığı Black Mesa Araştırma Tesisinden İş Teklifi gelmesi üzerine Black Mesa'da çalışmaya başlamıştır.</p>
+                    
+                    <h2>Half-Life</h2>
+                    <p>Gordon Freeman 16 Mayıs 200X Sabahı Seviye 3 Yurtlarındaki odasından ayrılarak 08:47'de Sektör C'deki Anormal Materyaller Laboratuvarına gitmek üzere Black Mesa Tren sistemine bindi.<br>
+		  İşe 30 dakika geç kalan Freeman laboratuvara adımını atar atmaz kendisine tehlike giysisini giyip <a href="spektrometre.html" style="color:#ff6600">Antikütle Spektrometresi</a>nin de içinde olduğu deney odasına gitmesi gerektiği söylendi. Freeman Deney Odasına girdi, merdivenleri çalıştırıp rotorları aktive etti daha sonrasında Xen'den getirilen GG-3883 isimli Xenium'u Makineye iterek <a href="spektrometre.html" style="color:#ff6600">Rezonans Çağlayanı</a>na sebep oldu</p>
+		Rezonans Çağlayanından sonra hayatta kalan bir bilim adamı tarafından yardım çağırmak üzere yer yüzüne gönderildi, fakat kendilerini 'kurtarmaya gelen'Tehlikeli Çevre Muharebe Birimi (H.E.C.U)askerlerinin gerçek yüzlerini gördü. Tıpkı bir bilim insanın da dediği gibi
+                    <div style="border-left: 3px solid #ff6600; padding-left: 0.8em; margin: 1.5em 0; max-width: 400px; color: #eee; font-style: italic; font-size: 0.9rem; background: rgba(30, 30, 30, 0.6); border-radius: 5px; padding: 15px;">
+                        "Onların engelleme anlayışı projeyle ilişkili herkesi öldürmektir!"
+                        <div style="text-align: right; color: #ff6600cc; font-weight: 600; font-size: 0.85rem; margin-top: 0.5em; font-style: normal;">- Bir Bilim Adamı</div>
+                    </div>
+
+                    <p>Hükümetin Bu hamlesinden sonra Freeman kendisini bir ateş üçgeninin tam ortasında buldu:<br>
+		Bir tarafta Portal Fırtınaları yüzünden Xen'den gelen Xen canlıları <br>
+		Bir tarafta tesiste saklanmaya çalışan personeller<br>
+		Bir tarafta da ABD Hükümetinin herşeyi örtbas etmek için gönderdiği H.E.C.U Askerleri<br>
+		<br>
+		Tüm bunlarla mücadele ederken Black Mesa'nın hiç bilmediği taraflarını gördü. <a href="lmpy-lambda.html" style="color:#ff6600">Lambda Kompleksteki</a> bilim adamları ona Portalların Dünyadan kapatılamayacağını çünkü diğer tarafta çok güçlü bir canlının onları engellidiğini bu yüzden kendisinin o canlıyı öldürmek için Xen'e gitmesi gerektiğini söylerler.<br>
+		Freeman Lambda Kompleksten açılan bir Portalla Xen'e geçiş yapar
+		Xende bir yolculuk geçirditken sonra Nihilanth adındaki o canlıyla tanışır ve onu öldürür.<br>
+		<br>
+		Freeman bir anda kendisini uzak bir xen adasında bulur ve zaman birden onun için işlevini yitirir. karşısındaysa tüm yolculuğu boyunca kendisini izleyen G-Man vardır.
+		G-Man Freeman'a bir iş teklifinde bulunur kabul etmesi karşılığında kendisini zamandan ve mekandan yoksun bir bekleyişe alacağını söyler. aksi halde kendisini tüm bu mücadelesinden çok daha zor hatta kendi deyimiyle "Kazanılma İhtimali" olmayan bir mücadeleye sokacağını söyler. Freeman mecburiyetten bu teklifi kabul eder ve Freeman'ın hikayesi bu noktada duraksar.</p>
+					
+					<h2>Half-Life 2</h2>
+		<p>Freeman, G-Man tarafından zamanın dışında bir durumda tutulurken. Dünya bu süreçte <a href="combine.html" style="color:#ff6600">Combine</a> adı verilen başka bir evrenden gelen ve son derece gelişmiş bir imparatorluk tarafından işgal edilmiştir. Combine, insanlık direncini kırmış, dünyadaki tüm kaynakları sömürmeye başlamış ve şehirleri baskıcı bir şekilde yeniden organize etmiştir. G-Man, Gordon’ı bu yeni düzene uyandırdığında, o artık sadece bir bilim insanı değil, aynı zamanda Yanlış Yerdeki Doğru Kişi olmuştur...<br>
+			<br>Half-Life 2’nin başında, Gözlerini 17.Şehirde açan Freeman burada eski dostlarıyla – Dr. Isaac Kleiner, Barney Calhoun ve Eli Vance – yeniden bağlantı kurar. Freeman ve Eli Vance'in kızı Alyx'in insanlığın combine'dan gizlice inşa ettiği gizli bir araştırma merkezi olan Black Mesa East</a>'e ışınlanmaları gereklidir. Alyx başarılı bir şekilde ışınlanır ama Freeman Dr. Kleiner'ın headcrab'i Lamar makineye atladığı için ışınlanamaz... O andan itibaren, Freeman istemeden de olsa Combine'a karşı büyüyen direnişin sembolü hâline gelecektir.
+			ve insanlığın direnişinde önemli bir rol oynayacaktır.
+		</p>
+
+                    <div class="tables-wrapper">
+                        <div class="weapon-card">
+                            <div class="weapon-card-header">Kullandığı Silahlar</div>
+                            <ul class="weapon-list">
+                                <li class="weapon-item"><a href="levye.html">Levye</a></li>
+                                <li class="weapon-item"><a href="mp5.html">MP5</a></li>
+                                <li class="weapon-item"><a href="mp7.html">MP7</a></li>
+                                <li class="weapon-item"><a href="elb.html">El Bombası</a></li>
+                                <li class="weapon-item"><a href="rpg.html">RPG</a></li>
+                                <li class="weapon-item"><a href="spas12.html">SPAS-12</a></li>
+                                <li class="weapon-item"><a href="grvgun.html">Gravity Gun</a></li>
+                                <li class="weapon-item"><a href="magnum.html">.357 Magnum</a></li>
+                                <li class="weapon-item"><a href="tau.html">Tau Cannon</a></li>
+                                <li class="weapon-item"><a href="gluon.html">Gluon Silahı</a></li>
+                                <li class="weapon-item"><a href="snark.html">Snark</a></li>
+                                <li class="weapon-item"><a href="glock.html">Glock</a></li>
+                                <li class="weapon-item"><a href="usphl2.html">USP</a></li>
+                                <li class="weapon-item"><a href="crossbow.html">Crossbow</a></li>
+                                <li class="weapon-item"><a href="hvhnd.html">Hivehand</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="weapon-card">
+                            <div class="weapon-card-header">Çıkarılan Silahlar</div>
+                            <ul class="weapon-list">
+                                <li class="weapon-item"><a href="ak47.html">AK-47</a></li>
+                                <li class="weapon-item"><a href="hopwire.html">Hopwire</a></li>
+                                <li class="weapon-item"><a href="tas.html">Taş</a></li>
+                                <li class="weapon-item"><a href="annabelle.html">Annabelle Pompalı Tüfeği</a></li>
+                                <li class="weapon-item"><a href="cmg.html">Combine Koruma Silahı</a></li>
+                                <li class="weapon-item"><a href="immolator.html">Immolator</a></li>
+                                <li class="weapon-item"><a href="jop.html">Elektrikli Jop</a></li>
+                                <li class="weapon-item"><a href="snprf.html">Keskin Nişancı Tüfeği</a></li>
+                                <li class="weapon-item"><a href="tau.html">Tau Cannon</a></li>
+                                <li class="weapon-item"><a href="glock.html">Glock</a></li>
+                                <li class="weapon-item"><a href="dagbaltasi.html">Dağ Baltası</a></li>
+                            </ul>
+                        </div>
+                    </div>
+					
+					<div class="tables-wrapper">
+                        <div class="weapon-card">
+                            <div class="weapon-card-header">Freeman'ın Geliştirilmesi</div>
+                                <p>Half-Life yapım aşamasındayken ana karakterin isminin belirlenme aşamasında Gordon Freeman ismi Ünlü Fizikçi Freeman Dyson'dan ilham alınarak türetilmiştir. Başlanıgçta Freeman için düşünülen model günümüzdekinden çok farklı bir yapıya sahipti. Gordon'ın bu versiyonu gri ve yeşil renklerden oluşan garip bir H.E.V giysisi giymekteydi. bir motorcuyu andırdığı için hayranlar tarafından Ivan The Spacebiker takma adı verildi.</p><br>
+		<div style="display: inline-block; max-width: 200px; margin-right: 20px; align">
+  			<div class="image-box" style="max-width: 200px">
+    			<img id="Ivan" alt="Ivan the spacebiker" style="max-width: 200px" src="img/ivan.jpg"/>
+    				<div class="image-caption">Ivan The Spacebiker</div>
+  			</div>
+		</div>
+
+		<div style="display: inline-block; max-width: 200px; margin-right: 20px">
+  			<div class="image-box" style="max-width: 200px">
+    			<img id="Gordon" alt="Gordon Freeman Güncel" style="max-width: 200px" src="img/gordon2.jpg"/>
+    			<div class="image-caption">Gordon Freeman</div>
+  			</div>
+		</div>
+		
+		<div style="display: inline-block; max-width: 200px;">
+  			<div class="image-box" style="max-width: 200px">
+    			<img id="Gordon2" alt="Gordon Freeman Half-Life 2 20.YIL Update" style="max-width: 200px" src="img/gordon3.png"/>
+    			<div class="image-caption">Half-Life 2 20.YIL</div>
+  			</div>
+		</div>
+		<br>
+		<br>
+		
+		Valve, Half-Life’ın temasının daha ciddi ve bilimsel bir yönde olmasını amaçlıyordu. Ivan’ın çılgın görünümü oyunun temasına fazla uymuyordu. Bu nedenle Ivan’ın yerini, gözlüklü, daha modern ve canlı renkler içeren H.E.V giysili ve keçi sakallı bir teorik fizikçi olan günümüzdeki model aldı. Freeman daha sıradan bir karakter olarak, oyuncunun kendini yerine koyabileceği bir "sessiz kahraman" formuna uyarlandı.
+		<br>
+		<div style="display: inline-block; max-width: 200px; margin-right: 20px; align">
+  			<div class="image-box" style="max-width: 200px">
+    			<img id="Gordonps2" alt="Gordon Freeman Playstation 2 Modeli" style="max-width: 200px" src="img/gordonps2.jpg"/>
+    				<div class="image-caption">PlayStation 2 Modeli</div>
+  			</div>
+		</div>
+
+		<div style="display: inline-block; max-width: 200px; margin-right: 20px">
+  			<div class="image-box" style="max-width: 200px">
+    			<img id="Gordondc" alt="Gordon Freeman Dreamcast Modeli (İptal Edildi)" style="max-width: 200px" src="img/gordondc.jpg"/>
+    			<div class="image-caption">Dreamcast Modeli</div>
+  			</div>
+		</div>
+		<br>
+		
+		<br>
+		Half-Life'ın yayınlanmasından sonra çeşitli platformlara portları da yayınlandı bu platformların çoğunda Gordon Freeman orijinal modelinden farklı bir modele sahipti
+		Playstation 2 Modeli PC'ye göre daha HD tasarlanmıştı ayrıca Dreamcast platformu için port yapılırken yine farklı bir model daha tasarlandı ancak port'un iptali sonrası bu model tarihin tozlu raflarında yerini aldı.
+		<br>
+		<br>
+			<div class="image-box" style="float: left; max-width: 140px; margin: 0 1em 1em 0; text-align: center; background: #111; padding: 6px; border-radius: 5px; max-height: 160px">
+  						<img id="Ivan2" alt="Ivan The Spacebiker Half-Life 25.Yıl Güncellemesi" style="max-width: 140px; max-height: 140px" src="img/ivan3.jpg"/>
+  						
+			</div>
+			<p>
+ 		 		Half-Life'ın 25.Yıl Güncellemesiyle birlikte Valve Ivan takma adlı bu eski modeli oyunun multiplayer modunda oyuncuların oynayabilmesi için oyuna ekledi ayrıca renkleri de değiştirilebilir hale getirildi.
+			</p>
+		<br>
+		<br>
+		<br>
+		<br>
+		<h1>Half-Life 2 BETA</h1>
+		Half-Life 2'nin geliştirilme sürecinde oyunun daha karanlık olması hedeflendiği için bu sefer karanlık bir Freeman tipi seçilmişti<br>
+		<br>
+			<div class="image-box" style="float: left; max-width: 200px; margin: 0 1em 1em 0; text-align: center; background: #111; padding: 6px; border-radius: 5px;">
+  						<img id="Gordon" style="max-width: 100%;" src="img/freemanhl2beta.jpg"/>
+  						<div class="image-caption" style="color: #ccc; font-size: 0.9rem; margin-top: 4px;">Half-Life 2 BETA Freeman</div>
+			</div>
+
+		<p>
+ 		 	Bu görsel, Half-Life 2'nin erken geliştirme aşamasında tasarlanmış olan Freeman modelini göstermektedir.
+ 			 Valve, final sürümüne kadar birçok tasarım değişikliğine gitmiştir. Bu model, 2003’te Axel Gembe tarafından sızdırılan beta sürümde görülmektedir.
+			<br>
+			<br>
+			Resimde Freeman ortadadır, Solda Captain Vance (Günümüzde Eli Vance), Sağda ise Alyx Vance yer almaktadır.
+			Freeman Half-Life 1'deki Formunun aksine daha karanlık bir modele sahiptir. Ama bu Sonradan değiştirilmiştir.
+		</p>
+		<br>
+                            </ul>
+                        </div>
+					
+                </article>
+		<h2 style="color: #fff; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px;">GÖRSEL GALERİ (YAKINDA)</h2>
+<div class="tables-wrapper" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+   <h2>Yakında</h2>
+</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function openZoom(el) {
+            document.getElementById('zoomedImg').src = el.querySelector('img').src;
+            document.getElementById('zoomModal').style.display = 'flex';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+		
+		document.querySelectorAll('.custom-audio-player').forEach(player => {
+    const audio = new Audio(player.dataset.audio);
+    const playBtn = player.querySelector('.play-btn');
+    const progress = player.querySelector('.progress');
+
+    playBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Kartın tıklama olayını engelle
+        if (audio.paused) { 
+            audio.play(); 
+            playBtn.textContent = '⏸️'; 
+        } else { 
+            audio.pause(); 
+            playBtn.textContent = '▶️'; 
+        }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        progress.value = (audio.currentTime / audio.duration) * 100;
+    });
+
+    progress.addEventListener('input', () => {
+        audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+});
+    </script>
+</body>
+</html>

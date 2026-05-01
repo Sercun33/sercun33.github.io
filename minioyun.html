@@ -1,0 +1,447 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HL-DLE</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- ORTAK ÇEKİRDEK VE ARKA PLAN --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.85); z-index: -1;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: #000; z-index: 99999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loader-content { text-align: center; }
+        .loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); margin-bottom: 20px; animation: pulse 2s infinite ease-in-out; }
+        .loader-bar { width: 200px; height: 3px; background: #111; margin: 0 auto; border-radius: 10px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #f58220; animation: load 2s linear forwards; }
+        .loader-text { display: block; margin-top: 15px; font-size: 0.6rem; letter-spacing: 3px; color: #f58220; font-weight: 700; }
+
+        /* --- NAVBAR --- */
+        #main-wrapper { opacity: 0; transition: opacity 1.2s ease; visibility: hidden; flex: 1; display: flex; flex-direction: column; }
+        #main-wrapper.visible { opacity: 1; visibility: visible; }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 8%; background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff;}
+        .logo img { height: 40px; }
+        .orange-text { color: #f58220; }
+
+        .nav-links { display: flex; list-style: none; gap: 30px; transition: 0.5s ease-in-out; }
+        .nav-links a {
+            color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+        .menu-btn { display: none; width: 30px; height: 20px; cursor: pointer; z-index: 2100; position: relative; }
+        .menu-btn__burger, .menu-btn__burger::before, .menu-btn__burger::after {
+            width: 30px; height: 3px; background: #f58220; position: absolute; transition: 0.4s;
+        }
+        .menu-btn__burger::before { content: ''; transform: translateY(-8px); }
+        .menu-btn__burger::after { content: ''; transform: translateY(8px); }
+        .menu-btn.open .menu-btn__burger { background: transparent; transform: translateX(-20px); }
+        .menu-btn.open .menu-btn__burger::before { transform: rotate(45deg) translate(15px, -15px); }
+        .menu-btn.open .menu-btn__burger::after { transform: rotate(-45deg) translate(15px, 15px); }
+
+        @media (max-width: 992px) {
+            .menu-btn { display: block; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+                background: rgba(10, 10, 10, 0.98); flex-direction: column;
+                justify-content: center; align-items: center; z-index: 2050;
+            }
+            .nav-links.open { right: 0; }
+            .nav-links li { margin: 15px 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* --- OYUN ALANI (ORTA KISIM) --- */
+        .game-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 550px;
+            background: rgba(15, 15, 15, 0.7);
+            border: 1px solid rgba(245, 130, 32, 0.3);
+            border-radius: 15px;
+            padding: 35px 30px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .game-container::before {
+            content: "SİSTEM TARAMASI";
+            display: block;
+            background: rgba(245, 130, 32, 0.1);
+            margin: -35px -30px 25px -30px;
+            padding: 10px 25px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #f58220;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            letter-spacing: 2px;
+            text-align: left;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* --- MOD SEÇİM MENÜSÜ --- */
+        #menu-screen { display: block; }
+        
+        .mode-title { font-size: 1.2rem; color: #fff; margin-bottom: 25px; font-weight: 800; letter-spacing: 1px; }
+        
+        .mode-cards { display: flex; flex-direction: column; gap: 15px; }
+
+        .mode-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: #ddd;
+        }
+
+        .mode-card i { font-size: 1.5rem; color: #f58220; }
+        .mode-card:hover { border-color: #f58220; background: rgba(245, 130, 32, 0.1); color: #fff; transform: translateY(-3px); }
+
+        /* --- AKTİF OYUN EKRANI --- */
+        #game-screen { display: none; }
+
+        .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .back-btn { background: transparent; color: #aaa; border: 1px solid #555; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+        .game-stats { font-weight: 800; font-size: 0.9rem; }
+        .stat-label { color: #555; }
+        .stat-value { color: #f58220; margin-left: 5px; font-size: 1.1rem;}
+
+        /* Görsel Modu (Karakter/Silah) - ZOOM SİSTEMİ */
+        .image-portal {
+            width: 200px; height: 200px; margin: 0 auto 30px; border-radius: 50%;
+            border: 3px solid rgba(245, 130, 32, 0.5); overflow: hidden; position: relative;
+            background: #000; box-shadow: 0 0 40px rgba(245, 130, 32, 0.15);
+        }
+        .pixelated-target { 
+            width: 100%; height: 100%; object-fit: cover; 
+            object-position: center; /* Merkeze zoom yapar */
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: rgba(245, 130, 32, 0.8); box-shadow: 0 0 15px #f58220; animation: scan 2.5s infinite linear; }
+
+        /* Replik Modu */
+        .quote-portal {
+            background: rgba(0, 0, 0, 0.6); border-left: 4px solid #f58220;
+            padding: 30px 20px; margin-bottom: 30px; border-radius: 0 10px 10px 0;
+            font-style: italic; font-size: 1.1rem; color: #ddd; position: relative;
+            min-height: 150px; display: flex; align-items: center; justify-content: center;
+        }
+        .quote-portal::before, .quote-portal::after { content: '"'; font-size: 2rem; color: #555; position: absolute; font-style: normal;}
+        .quote-portal::before { top: 10px; left: 10px; }
+        .quote-portal::after { bottom: -10px; right: 15px; }
+
+        .game-hint { font-size: 0.85rem; color: #888; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;}
+        .input-group { display: flex; gap: 10px; }
+        #guessInput { flex: 1; background: rgba(0, 0, 0, 0.6); border: 1px solid #444; padding: 14px 20px; border-radius: 8px; color: #fff; font-family: inherit; font-size: 1rem; outline: none; transition: 0.3s; }
+        #guessInput:focus { border-color: #f58220; }
+        .btn-mini { background: #f58220; color: #000; border: none; padding: 0 25px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
+        .btn-mini:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(245,130,32,0.3); }
+
+        .feedback-msg { margin-top: 20px; font-size: 0.9rem; font-weight: 800; min-height: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .msg-success { color: #00ff00; text-shadow: 0 0 10px rgba(0,255,0,0.4); }
+        .msg-error { color: #ff0000; text-shadow: 0 0 10px rgba(255,0,0,0.4); }
+
+        @media (max-width: 600px) { .input-group { flex-direction: column; } .btn-mini { padding: 15px; } }
+
+        @keyframes load { to { width: 100%; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+            <div class="loader-bar"><div class="progress"></div></div>
+            <span class="loader-text">SİSTEM BAŞLATILIYOR...</span>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <nav class="navbar">
+            <a href="anasayfaa.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html" class="active">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <main class="game-area">
+            <div class="game-container">
+                
+                <!-- 1. ADIM: MOD SEÇİM EKRANI -->
+                <div id="menu-screen">
+                    <div class="mode-title">SORGULAMA TÜRÜNÜ SEÇİN</div>
+                    <div class="mode-cards">
+                        <div class="mode-card" onclick="openGameMode('char')">
+                            <i class="fa-solid fa-user"></i> KARAKTER TAHMİNİ
+                        </div>
+                        <!--<div class="mode-card" onclick="openGameMode('weapon')">
+                            <i class="fa-solid fa-gun"></i> SİLAH TAHMİNİ
+                        </div>
+                        <div class="mode-card" onclick="openGameMode('quote')">
+                            <i class="fa-solid fa-message"></i> REPLİK TAHMİNİ
+                        </div>-->
+                    </div>
+                </div>
+
+                <!-- 2. ADIM: AKTİF OYUN EKRANI -->
+                <div id="game-screen">
+                    <div class="game-header">
+                        <button class="back-btn" onclick="showMenu()">❮ GERİ DÖN</button>
+                        <div class="game-stats"><span class="stat-label">SKOR:</span><span id="gameScore" class="stat-value">0</span></div>
+                    </div>
+
+                    <!-- GÖRSEL OYUN İÇİN -->
+                    <div class="image-portal" id="image-portal">
+                        <img src="" id="targetImg" class="pixelated-target">
+                        <div class="scan-line"></div>
+                    </div>
+
+                    <!-- METİN OYUNU İÇİN -->
+                    <div class="quote-portal" id="quote-portal">
+                        <span id="targetQuote">"Veri Bekleniyor..."</span>
+                    </div>
+
+                    <div class="game-controls">
+                        <p class="game-hint" id="gameHint">KİMLİĞİ BELİRLEYİN</p>
+                        <div class="input-group">
+                            <input type="text" id="guessInput" placeholder="Cevabınızı girin..." autocomplete="off">
+                            <button id="queryBtn" class="btn-mini">SORGULA</button>
+                        </div>
+                        <div id="gameFeedback" class="feedback-msg"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+		
+		// --- PRELOADER & NAVBAR KONTROLÜ ---
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('preloader').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('main-wrapper').classList.add('visible');
+        }, 800);
+    }, 1000);
+});
+
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+menuBtn.addEventListener('click', () => {
+    menuBtn.classList.toggle('open');
+    navLinks.classList.toggle('open');
+});
+
+// --- VERİTABANLARI ---
+const charDB = [
+    { answer: ["Gordon Freeman", "Gordon", "Freeman"], img: "img/karakter/gordon.jpg" },
+    { answer: ["G-Man", "Gman", "G man"], img: "img/karakter/gman.jpg" },
+    { answer: ["Alyx Vance", "Alyx", "Alix"], img: "img/karakter/alyx.jpg" },
+    { answer: ["Barney Calhoun", "Barney"], img: "img/karakter/barney.jpg" },
+    { answer: ["Isaac Kleiner", "Kleiner", "Dr Kleiner"], img: "img/karakter/kleiner.jpg" }
+];
+
+const weaponDB = [
+    { answer: ["Levye", "Crowbar"], img: "img/silah/levye.jpg" },
+    { answer: ["Yerçekimi Silahı", "Yer çekimi silahı", "Gravity Gun"], img: "img/silah/gravitygun.jpg" },
+    { answer: ["Arbalet", "Crossbow", "Yay"], img: "img/silah/crossbow.jpg" },
+    { answer: ["Pompalı", "Shotgun", "Pompalı Tüfek"], img: "img/silah/shotgun.jpg" }
+];
+
+const quoteDB = [
+    { answer: ["G-Man", "Gman"], quote: "Yanlış yerdeki doğru kişi dünyayı tamamen değiştirebilir." },
+    { answer: ["Barney Calhoun", "Barney"], quote: "Biranızı ısmarlayacağım." },
+    { answer: ["Isaac Kleiner", "Kleiner"], quote: "Lamar! Buraya gel!" },
+    { answer: ["Wallace Breen", "Breen", "Dr Breen"], quote: "Size söyleyeyim... Seçim yanılsaması tehlikelidir." }
+];
+
+// --- OYUN MANTIĞI ---
+let currentMode = '';
+let currentDB = [];
+let currentTarget = null;
+let score = 0;
+let currentZoom = 5; 
+let isWaitingNextRound = false; // YENİ: Spam tıklamayı önlemek için kilit
+
+function showMenu() {
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('menu-screen').style.display = 'block';
+}
+
+window.openGameMode = function(mode) {
+    currentMode = mode;
+    document.getElementById('menu-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+    
+    const imgPortal = document.getElementById('image-portal');
+    const quotePortal = document.getElementById('quote-portal');
+    const hint = document.getElementById('gameHint');
+    const input = document.getElementById('guessInput');
+
+    if(mode === 'char') {
+        currentDB = charDB;
+        imgPortal.style.display = 'block';
+        quotePortal.style.display = 'none';
+        hint.innerText = "KİMLİĞİ BELİRLEYİN";
+        input.placeholder = "Karakter adı...";
+    } else if(mode === 'weapon') {
+        currentDB = weaponDB;
+        imgPortal.style.display = 'block';
+        quotePortal.style.display = 'none';
+        hint.innerText = "EKİPMANI BELİRLEYİN";
+        input.placeholder = "Silah adı...";
+    } else if(mode === 'quote') {
+        currentDB = quoteDB;
+        imgPortal.style.display = 'none';
+        quotePortal.style.display = 'flex';
+        hint.innerText = "BU REPLİK KİME AİT?";
+        input.placeholder = "Karakter adı...";
+    }
+    
+    startRound();
+};
+
+function startRound() {
+    isWaitingNextRound = false; // KİLİDİ AÇ
+    currentZoom = 5;
+    currentTarget = currentDB[Math.floor(Math.random() * currentDB.length)];
+    
+    const input = document.getElementById('guessInput');
+    const btn = document.getElementById('queryBtn');
+    
+    input.value = "";
+    input.disabled = false; // Girdiyi tekrar aktif et
+    btn.disabled = false;   // Butonu tekrar aktif et
+    
+    document.getElementById('gameFeedback').innerText = "";
+
+    if(currentMode === 'char' || currentMode === 'weapon') {
+        const img = document.getElementById('targetImg');
+        img.src = currentTarget.img;
+        img.style.transform = `scale(${currentZoom})`; 
+    } else if(currentMode === 'quote') {
+        document.getElementById('targetQuote').innerText = currentTarget.quote;
+    }
+    
+    input.focus();
+}
+
+function processGuess() {
+    // EĞER BEKLEME SÜRESİNDEYSEK (DOĞRU BİLİNMİŞSE) HİÇBİR ŞEY YAPMA!
+    if(isWaitingNextRound) return;
+
+    const input = document.getElementById('guessInput');
+    const btn = document.getElementById('queryBtn');
+    const feedback = document.getElementById('gameFeedback');
+    
+    // Kullanıcı hiçbir şey yazmadan basarsa engelle
+    if(input.value.trim() === "") return;
+
+    const userGuess = input.value.trim().toLowerCase();
+    const isCorrect = currentTarget.answer.some(correctAnswer => userGuess === correctAnswer.toLowerCase());
+    
+    if (isCorrect) {
+        // DOĞRU
+        isWaitingNextRound = true; // SİSTEMİ KİLİTLE
+        input.disabled = true;     // Klavyeden yazmayı engelle
+        btn.disabled = true;       // Tıklamayı engelle
+
+        score += 10;
+        document.getElementById('gameScore').innerText = score;
+        feedback.innerText = "BAŞARILI: " + currentTarget.answer[0].toUpperCase();
+        feedback.className = "feedback-msg msg-success";
+        
+        if(currentMode === 'char' || currentMode === 'weapon') {
+            document.getElementById('targetImg').style.transform = "scale(1)";
+        }
+        setTimeout(startRound, 2500);
+    } else {
+        // YANLIŞ
+        feedback.innerText = "EŞLEŞME BULUNAMADI!";
+        feedback.className = "feedback-msg msg-error";
+        input.style.borderColor = "#ff0000";
+        setTimeout(() => input.style.borderColor = "#444", 500);
+
+        if(currentMode === 'char' || currentMode === 'weapon') {
+            currentZoom = Math.max(1, currentZoom - 1); 
+            document.getElementById('targetImg').style.transform = `scale(${currentZoom})`;
+        }
+    }
+}
+
+document.getElementById('queryBtn').addEventListener('click', processGuess);
+document.getElementById('guessInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') processGuess();
+});
+		
+    </script>
+</body>
+</html>

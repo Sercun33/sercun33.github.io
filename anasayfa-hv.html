@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HL TR WIKI | Tactical Archive</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="yedek.css">
+</head>
+<body class="tactical-vibe">
+
+<div id="loader">
+    <div class="scanner-line"></div>
+    <div class="loader-wrap">
+        <img src="hltrwikiweb.png" alt="HL TR WIKI" class="loading-logo">
+        <div class="scan-status">BIOMETRIC_SCAN: <span class="blink">G. FREEMAN</span></div>
+        <div class="load-bar-wrap">
+            <div class="load-bar-fill"></div>
+        </div>
+        <div class="matrix-text">01010100 11000011 10011100 01010010 01001011 11000100 10110000 01011001 01000101</div>
+    </div>
+</div>
+
+<div id="app">
+    <div class="screen-corners"></div>
+    <div class="side-numbers">01 02 03 04 05 06 07 08 09 10</div>
+
+    <header class="tactical-header">
+        <div class="header-inner">
+            <div class="logo-zone">
+                <img src="hltrwikiweb.png" alt="Logo" class="nav-logo">
+                <div class="system-tag">HALF-LIFE TÜRKİYE</div>
+            </div>
+            
+            <div class="search-module">
+                <div class="input-wrap">
+                    <span class="prefix">ARA></span>
+                    <input type="text" placeholder="VERİ SORGULA...">
+                </div>
+            </div>
+
+            <div class="user-status">
+                <div class="health-pulse"></div>
+                <div class="user-info">
+                    <span class="u-name">GORDON_F</span>
+                    <span class="u-rank">ARAŞTIRMA GÖREVLİSİ</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <aside class="left-panel">
+            <div class="panel-card">
+                <div class="card-h">DİZİN_NAVİGASYON</div>
+                <nav class="v-menu">
+                    <a href="#" class="v-link active"><span class="v-num">01</span> ANA SAYFA</a>
+                    <a href="#" class="v-link"><span class="v-num">02</span> KARAKTER ANALİZİ</a>
+                    <a href="#" class="v-link"><span class="v-num">03</span> SİLAH TEKNOLOJİSİ</a>
+                    <a href="#" class="v-link"><span class="v-num">04</span> XEN EKOLOJİSİ</a>
+                    <a href="#" class="v-link"><span class="v-num">05</span> MOD DÜNYASI</a>
+                </nav>
+            </div>
+
+            <div class="panel-card radar-box">
+                <div class="card-h">AKTİF_TARAMA</div>
+                <div class="radar">
+                    <div class="radar-line"></div>
+                    <div class="dot d1"></div>
+                    <div class="dot d2"></div>
+                </div>
+                <div class="radar-stats">
+                    <span>AKTİF ÜYE SAYISI: 7</span>
+                    <span>TEHDİT: DÜŞÜK</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="center-panel">
+            <div class="main-article-card">
+                <div class="article-glow"></div>
+                <div class="article-header">
+                    <span class="breadcrumb">DOSYA_ARŞİVİ / #1998_INCIDENT</span>
+                    <h2>REZONANS ÇAĞLAYANI: FELAKETİN BAŞLANGICI</h2>
+                </div>
+                <div class="article-body">
+                    <p>Sektör C Test Odası'ndaki anti-kütle spektrometresi üzerinde yapılan deney, bilinen gerçekliğin yırtılmasına neden oldu. Bu rapor, olayın teknik detaylarını ve Türkiye direniş hücrelerinden gelen istihbaratı içermektedir.</p>
+                    <div class="data-grid">
+                        <div class="data-item"><strong>ÖRNEK:</strong> GG-3883</div>
+                        <div class="data-item"><strong>LOKASYON:</strong> BLACK MESA</div>
+                        <div class="data-item"><strong>SONUÇ:</strong> UNFORESEEN CONSEQUENCES</div>
+                    </div>
+                    <button class="tactical-btn">TAM VERİYE ERİŞ <i class="fas fa-caret-right"></i></button>
+                </div>
+            </div>
+
+            <div class="sub-row">
+                <div class="panel-card">
+                    <div class="card-h">SON_GÜNCELLEMELER</div>
+                    <ul class="activity-feed">
+                        <li><span class="time">14:02</span> > Borealis koordinatları eklendi.</li>
+                        <li><span class="time">11:50</span> > Combine Advisor zayıf noktaları güncellendi.</li>
+                        <li><span class="time">08:15</span> > HL: Alyx VR optimizasyon rehberi.</li>
+                    </ul>
+                </div>
+                <div class="panel-card">
+                    <div class="card-h">SİSTEM_LOGLARI</div>
+                    <div class="terminal-mini">
+                        <code>LOADING_DATABASE... OK</code><br>
+                        <code>SYNCING_TURKEY_SERVER... OK</code><br>
+                        <code>WELCOME_USER_FREEMAN</code>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                document.getElementById('app').style.opacity = '1';
+                document.getElementById('app').style.filter = 'blur(0px)';
+            }, 600);
+        }, 3500);
+    });
+</script>
+</body>
+</html>

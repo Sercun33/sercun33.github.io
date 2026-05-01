@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hakkımızda - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="hakkimizda.css">
+</head>
+<body>
+
+    <!-- AÇILIŞ EKRANI -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
+            <div class="loader-bar"><div class="progress"></div></div>
+            <span class="loader-text">ARŞİV BİLGİLERİ ÇEKİLİYOR...</span>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="anasayfaa.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html" class="active">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <!-- BAŞLIK -->
+        <header class="page-header">
+            <h1>SİTE HAKKINDA</h1>
+            <p>Half-Life Türkiye Arşivi'nin kuruluş amacı, vizyonu ve teknik altyapısı.</p>
+        </header>
+
+        <!-- İÇERİK KISMI -->
+        <main class="about-container">
+            
+            <!-- Sol Sütun (Bilgiler) -->
+            <div class="about-content">
+                <div class="info-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-database"></i>
+                        <h2>PROJE AMACI</h2>
+                    </div>
+                    <p>Half-Life Türkiye, bu efsanevi evrenin hikayesini, karakterlerini, silahlarını ve modlarını Türk oyuncu topluluğuna tamamen Türkçe aynı zamanda en doğru, derli toplu ve şık şekilde sunmak amacıyla kurulmuş bağımsız bir sitedir. Valve ile ilişkisi yoktur.</p>
+                </div>
+
+                <div class="info-card highlight-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-code"></i>
+                        <h2>GELİŞTİRİCİ</h2>
+                    </div>
+                    <p>Bu sistemin tasarımı, <strong>Sercan Aksakal</strong> tarafından yapılmıştır. Proje, tamamen topluluğa fayda sağlamak ve Half-Life efsanesini yaşatmak vizyonuyla hayata geçirilmiştir.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <h2>YASAL UYARI</h2>
+                    </div>
+                    <p>Half-Life evreni, karakterleri ve tüm resmi materyalleri Valve Corporation'a aittir. Bu site kâr amacı gütmeyen, hayran yapımı (fan-made) bir ansiklopedi projesidir.</p>
+                </div>
+            </div>
+
+            <!-- Sağ Sütun (Terminal İstatistikleri) -->
+            <aside class="about-sidebar">
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <span>hlturkiye.com</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="stat-row">
+                            <span class="stat-label">SİTE DURUMU:</span>
+                            <span class="stat-value warning">BAKIM</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Sürüm:</span>
+                            <span class="stat-value">0.0.4</span>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.classList.add('visible');
+                    }, 400);
+                }
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

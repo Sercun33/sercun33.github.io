@@ -1,0 +1,131 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=JetBrains+Mono&family=Orbitron:wght@400;700&display=swap');
+
+:root {
+    --primary: #f58220;
+    --primary-dim: rgba(245, 130, 32, 0.2);
+    --bg-black: #050505;
+    --panel-bg: rgba(15, 15, 18, 0.9);
+    --border-color: #2a2a2e;
+    --text-main: #b0b0b5;
+}
+
+body {
+    background: var(--bg-black);
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0; overflow-x: hidden;
+}
+
+/* --- TACTICAL LOADING SCREEN --- */
+#loader {
+    position: fixed; inset: 0; background: #000; z-index: 10000;
+    display: flex; justify-content: center; align-items: center; transition: 0.6s;
+}
+.scanner-line {
+    position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+    background: var(--primary); box-shadow: 0 0 15px var(--primary);
+    animation: scan 2s infinite ease-in-out;
+}
+.loader-wrap { text-align: center; }
+.loading-logo { height: 70px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--primary)); }
+.scan-status { font-family: 'Orbitron'; color: var(--primary); font-size: 0.8rem; letter-spacing: 2px; }
+.blink { animation: blink 0.8s infinite; }
+.load-bar-wrap { width: 300px; height: 2px; background: #222; margin: 20px auto; }
+.load-bar-fill { width: 0%; height: 100%; background: var(--primary); animation: fill 3.2s forwards ease-in-out; }
+
+@keyframes scan { 0%, 100% { top: 0; } 50% { top: 100%; } }
+@keyframes fill { to { width: 100%; } }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* --- APP MAIN --- */
+#app { opacity: 0; filter: blur(10px); transition: 1s ease; }
+
+.tactical-header {
+    background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border-color);
+    padding: 15px 30px; position: sticky; top: 0; z-index: 100;
+}
+.header-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1600px; margin: 0 auto; }
+.nav-logo { height: 45px; }
+.system-tag { font-size: 0.6rem; color: var(--primary); background: var(--primary-dim); padding: 2px 8px; margin-top: 5px; border-radius: 2px; }
+
+.search-module { background: #111; border: 1px solid var(--border-color); padding: 8px 15px; border-radius: 4px; }
+.prefix { color: var(--primary); font-weight: bold; margin-right: 10px; }
+.search-module input { background: none; border: none; color: #fff; width: 300px; outline: none; font-family: 'JetBrains Mono'; }
+
+.user-status { display: flex; align-items: center; gap: 15px; }
+.health-pulse { width: 12px; height: 12px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; animation: blink 1.5s infinite; }
+.u-name { display: block; font-family: 'Orbitron'; font-size: 0.8rem; color: #fff; }
+.u-rank { font-size: 0.6rem; color: #666; }
+
+/* --- LAYOUT --- */
+.main-wrapper { display: grid; grid-template-columns: 320px 1fr; gap: 25px; max-width: 1600px; margin: 30px auto; padding: 0 20px; }
+
+.panel-card {
+    background: var(--panel-bg); border: 1px solid var(--border-color);
+    position: relative; margin-bottom: 25px;
+}
+.card-h { 
+    background: var(--border-color); color: #fff; font-size: 0.65rem; 
+    padding: 5px 12px; font-weight: bold; letter-spacing: 1px;
+}
+
+.v-menu { padding: 15px; }
+.v-link { 
+    display: flex; align-items: center; gap: 15px; color: #777; 
+    text-decoration: none; padding: 12px; border-left: 2px solid transparent; transition: 0.3s;
+}
+.v-link:hover, .v-link.active { background: rgba(255,255,255,0.03); color: var(--primary); border-left-color: var(--primary); }
+.v-num { font-size: 0.7rem; opacity: 0.5; }
+
+/* RADAR */
+.radar-box { padding-bottom: 20px; }
+.radar {
+    width: 150px; height: 150px; border: 1px solid #222; border-radius: 50%;
+    margin: 20px auto; position: relative; overflow: hidden;
+}
+.radar-line {
+    position: absolute; top: 50%; left: 50%; width: 50%; height: 2px;
+    background: linear-gradient(to right, transparent, var(--primary));
+    transform-origin: left; animation: spin 4s linear infinite;
+}
+.dot { position: absolute; width: 4px; height: 4px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
+.d1 { top: 30%; left: 40%; }
+.d2 { top: 70%; left: 60%; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.radar-stats { display: flex; justify-content: space-around; font-size: 0.6rem; color: #555; }
+
+/* MAIN ARTICLE */
+.main-article-card { 
+    background: #111; border: 1px solid var(--border-color); padding: 50px; 
+    position: relative; overflow: hidden; margin-bottom: 30px;
+}
+.article-glow { position: absolute; top: -100px; left: -100px; width: 300px; height: 300px; background: var(--primary); filter: blur(120px); opacity: 0.05; }
+
+.breadcrumb { font-size: 0.7rem; color: var(--primary); }
+h2 { font-family: 'Oswald'; font-size: 3rem; color: #fff; margin: 15px 0; }
+.data-grid { display: flex; gap: 30px; margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px dashed #333; }
+.data-item { font-size: 0.8rem; }
+.data-item strong { color: var(--primary); margin-right: 5px; }
+
+.tactical-btn {
+    background: var(--primary); border: none; padding: 12px 30px; 
+    font-family: 'Orbitron'; font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+.tactical-btn:hover { box-shadow: 0 0 20px var(--primary-dim); transform: scale(1.05); }
+
+.sub-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.activity-feed { list-style: none; padding: 20px; margin: 0; font-size: 0.85rem; }
+.activity-feed li { margin-bottom: 12px; color: #888; border-bottom: 1px solid #222; padding-bottom: 8px; }
+.time { color: var(--primary); margin-right: 10px; }
+
+.terminal-mini { padding: 20px; font-size: 0.75rem; color: #00ff00; line-height: 1.8; }
+
+/* DECORATIVE SQUARES */
+.screen-corners::before, .screen-corners::after {
+    content: ''; position: fixed; width: 40px; height: 40px; border: 2px solid #222; z-index: 50; pointer-events: none;
+}
+.screen-corners::before { top: 100px; left: 20px; border-right: 0; border-bottom: 0; }
+.screen-corners::after { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
+
+.side-numbers { position: fixed; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.6rem; color: #222; writing-mode: vertical-rl; }

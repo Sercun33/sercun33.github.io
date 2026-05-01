@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site Bakımda - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Courier+Prime&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.90); /* Normalden biraz daha karanlık */
+            z-index: -1;
+        }
+
+        .maintenance-container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(15, 15, 15, 0.75);
+            border: 1px solid rgba(245, 130, 32, 0.4);
+            border-radius: 15px;
+            padding: 50px 40px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(245, 130, 32, 0.1);
+            position: relative;
+        }
+
+        /* Üstteki uyarı çizgisi */
+        .maintenance-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 5px;
+            background: repeating-linear-gradient(
+                45deg,
+                #f58220,
+                #f58220 10px,
+                #000 10px,
+                #000 20px
+            );
+            border-radius: 15px 15px 0 0;
+        }
+
+        .warning-icon {
+            font-size: 4rem;
+            color: #f58220;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(245, 130, 32, 0.4));
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        h1 span { color: #f58220; }
+
+        p {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+        }
+
+        /* Terminal Log Ekranı */
+        .terminal-box {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-left: 3px solid #f58220;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+            height: 130px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .terminal-header {
+            font-size: 0.7rem;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 5px;
+        }
+
+        .log-content {
+            font-family: 'Courier Prime', Courier, monospace;
+            font-size: 0.8rem;
+            color: #f58220;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .log-line {
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+
+        .log-line.success { color: #00ff00; }
+        .log-line.error { color: #ff0000; }
+        .log-line.system { color: #888; }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #f58220;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+
+        /* Sosyal Medya veya Geri Dönüş Linkleri */
+        .contact-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contact-links a {
+            color: #777;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .contact-links a:hover { color: #f58220; transform: translateY(-3px); }
+
+        /* Animasyonlar */
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.95); opacity: 0.8; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        @media (max-width: 600px) {
+            .maintenance-container { padding: 40px 25px; }
+            h1 { font-size: 1.5rem; }
+			
+			
+			
+    </style>
+</head>
+<body>
+
+    <div class="maintenance-container">
+        <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+        <h1>SİTE <span>BAKIMDA</span></h1>
+        <p>Half-Life Türkiyenin bu sayfası şu anda planlı bir güncelleme alıyor. Sektör C laboratuvarlarındaki çalışmalar tamamlandığında yayınımız kaldığı yerden devam edecektir.</p><br>
+		 <section class="hero">           
+                <a href="index.html" class="btn">ANASAYFAYA GİTMEK İÇİN TIKLA</a><br>
+            </section>
+		<br><br><br>
+        
+        <div class="terminal-box">
+            <div class="terminal-header">SİSTEM_LOGLARI v2.4</div>
+            <div class="log-content" id="logContent">
+                <!-- JavaScript ile loglar buraya akacak -->
+            </div>
+        </div>
+
+        <div class="contact-links">
+            <a href="#" title="Discord Sunucumuz"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" title="YouTube Kanalımız"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" title="Steam Grubumuz"><i class="fa-brands fa-steam"></i></a>
+        </div>
+		<br>
+		<br>
+		<p>Half-Life Evreni Valve'a aittir bu site topluluk yapımıdır, kar amacı gütmez.</p>
+    </div>
+
+    <script>
+        // Terminal Log Simülasyonu
+        const logs = [
+            { text: "> Ana sunucu bağlantısı kesiliyor...", type: "system" },
+            { text: "> Veritabanı yedeklemesi başlatıldı.", type: "system" },
+            { text: "> Yedekleme %100 tamamlandı.", type: "success" },
+            { text: "> Lambda çekirdeği soğutuluyor...", type: "system" },
+            { text: "> DİKKAT: Anormal rezonans tespit edildi!", type: "error" },
+            { text: "> Önlem protokolleri devrede.", type: "success" },
+            { text: "> G-Man dosyaları şifreleniyor...", type: "system" },
+            { text: "> Yeni arayüz modülleri yükleniyor...", type: "system" },
+            { text: "> Lütfen sistemin yeniden başlatılmasını bekleyin." , type: "system"}
+        ];
+
+        const logContainer = document.getElementById('logContent');
+        let currentLogIndex = 0;
+
+        function addLog() {
+            if (currentLogIndex < logs.length) {
+                // Eski imleci temizle
+                const oldCursor = document.querySelector('.cursor');
+                if (oldCursor) oldCursor.remove();
+
+                const logData = logs[currentLogIndex];
+                const line = document.createElement('div');
+                line.className = `log-line ${logData.type}`;
+                line.innerHTML = `${logData.text} <span class="cursor"></span>`;
+                
+                logContainer.appendChild(line);
+                
+                // Terminalin hep en altta kalmasını sağla
+                logContainer.parentElement.scrollTop = logContainer.parentElement.scrollHeight;
+
+                currentLogIndex++;
+                
+                // Rastgele bir süre sonra (0.5 sn ile 2 sn arası) bir sonraki logu yazdır
+                const nextDelay = Math.random() * 1500 + 500;
+                setTimeout(addLog, nextDelay);
+            } else {
+                // Loglar bitince imleç yanıp sönmeye devam etsin
+                const oldCursor = document.querySelector('.cursor');
+                if (oldCursor) oldCursor.remove();
+                
+                const finalCursor = document.createElement('div');
+                finalCursor.innerHTML = `<span class="cursor"></span>`;
+                logContainer.appendChild(finalCursor);
+            }
+        }
+
+        // Simülasyonu başlat
+        setTimeout(addLog, 1000);
+    </script>
+</body>
+</html>

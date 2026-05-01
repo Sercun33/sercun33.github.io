@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eli Vance</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css">
+    <style>
+        /* --- MODERN TABLO (WEAPON CARDS) TASARIMI --- */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .weapon-card:hover {
+            border-color: var(--primary-orange);
+            background: rgba(245, 130, 32, 0.02);
+            transform: translateY(-5px);
+        }
+
+        .weapon-card-header {
+            background: rgba(245, 130, 32, 0.1);
+            padding: 15px 20px;
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-card-header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        .weapon-list {
+            padding: 10px 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .weapon-item {
+            padding: 10px 25px;
+            color: #bbb;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .weapon-item a { color: inherit; text-decoration: none; }
+
+        .weapon-item:last-child { border-bottom: none; }
+
+        .weapon-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            padding-left: 30px;
+        }
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px; border-radius: 15px; transition: 0.3s;
+            cursor: zoom-in; position: relative; overflow: hidden;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); }
+        .archive-doc img { width: 100%; border-radius: 8px; display: block; }
+        .doc-text { font-size: 10px; color: #555; font-weight: 800; text-align: center; margin-top: 8px; display: block; }
+
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+        }
+        #zoomModal img { max-width: 90%; max-height: 90%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 20px; }
+
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="">
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="lmp.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html" class="active">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="img/eli.jpg" alt="Eli Vance">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">Eli Vance</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Bilim Adamı - Direniş Lideri</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">ARŞİV KANITLARI</h3>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/ekip.jpg">
+                        <span class="doc-text">Black Mesa Bilim Ekibi</span>
+                    </div>
+                    <div style="height: 15px;"></div>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/alyxaile.jpg">
+                        <span class="doc-text">Vance Ailesi</span>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">HAKKINDA BİLGİLER</h2>
+                    <div class="info-row"><b>Adı:</b> <span>Eli Vance</span></div>
+                    <div class="info-row"><b>Tanım:</b> <span>Direniş Lideri</span></div>
+                    <div class="info-row"><b>Görünüş:</b> <span>Half-Life (Doğrudan değil)<br>Half-Life 2 (Yan Karakter)<br>Half-Life 2 Episode 1 (Yan Karakter) <br>Half-Life 2 Episode 2 (Yan Karakter) <br>Half-Life Alyx (Yan Karakter)</span></div>
+					
+					
+					<div class="info-row"><b>Ses Örneği:</b> <span><h2 id="ses"></h2>
+<div class="audio-logs-container">
+    <div class="audio-log-item" data-audio="ses/elihl2.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">2004</span>
+            <span class="log-desc">Half-Life 2</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	
+	<div class="audio-log-item" data-audio="ses/elihlalyx.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">2020</span>
+            <span class="log-desc">Half-Life Alyx</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+		
+</div></span></div>
+					
+					
+                </div>
+
+                <article class="story-section">
+                    <h2>KİM BU ELI VANCE?</h2>
+                    <p align="left"> Half-Life evreninin en önemli ve sevilen karakterlerinden biri olan Dr. Eli Vance, yalnızca bilim insanı kimliğiyle değil, aynı zamanda direnişin karizmatik liderlerinden biri olarak da öne çıkıyor. Alyx Vance'in babası olan Eli, Black Mesa'da çalışan parlak bir fizikçiydi. Işınlanma teknolojileri üzerine yaptığı araştırmalar, Half-Life serisinin olay örgüsünde kilit bir rol oynadı. Black Mesa faciasından sonra hayatta kalan Eli, insanlığın Combine'a karşı verdiği mücadelenin ön saflarında yer aldı. Lambda Direnişi'nin en önemli figürlerinden biri haline gelerek, insanlara umut aşıladı. Engeline rağmen (Black Mesa olayları sırasında bacağını kaybetti) azmi ve zekasıyla direnişe yön verdi.Black Mesa olaylarından sonra ailesinden geriye bir tek sevgili kızı <a href="bakim.html" style="color:#ff6600">Alyx Vance</a> hayatta kaldı, bu kazada pek çok arkadaşını ve aynı zamanda Karısı olan <a href="bakim.html" style="color:#ff6600">Azian Vance</a>'i de kaybetti.</p>
+                    
+					
+					<div class="tables-wrapper">
+                        <div class="weapon-card">
+                            <div class="weapon-card-header">Eli Vance'in Geliştirilmesi</div>
+                                <p align="center">Half-Life 2 yapım aşamasındayken Eli Vance konsepti her zaman vardı ama ilk hali <a href="bakim.html" style="color:#ff6600">Kaptan Vance</a> adında birisi olacaktı. <a href="bakim.html" style="color:#ff6600">Half-Life 2'nin 2003'teki sızıntısı</a>ndan sonra Valve'ın aldığı kararla pek çok karakter üzerinde değişikliğe gidilirken Kaptan Vance bırakıldı ve Eli Vance olarak yeniden planlandı.</p><br>
+                            </ul>
+                        </div>
+					
+                </article>
+		<h2 style="color: #fff; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px;">GÖRSEL GALERİ (YAKINDA)</h2>
+<div class="tables-wrapper" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+   <h2>Yakında</h2>
+</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function openZoom(el) {
+            document.getElementById('zoomedImg').src = el.querySelector('img').src;
+            document.getElementById('zoomModal').style.display = 'flex';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+		
+		
+		
+		
+document.querySelectorAll('.audio-log-item').forEach(item => {
+    const audio = new Audio(item.dataset.audio);
+    const playBtn = item.querySelector('.play-btn');
+    const progress = item.querySelector('.progress');
+
+    playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+            // Diğer çalanları durdurmak istersen buraya durdurma kodu eklenebilir
+            audio.play();
+            item.classList.add('playing');
+            playBtn.textContent = 'Durdur';
+        } else {
+            audio.pause();
+            item.classList.remove('playing');
+            playBtn.textContent = 'Oynat';
+        }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        progress.value = (audio.currentTime / audio.duration) * 100;
+    });
+
+    audio.addEventListener('ended', () => {
+        item.classList.remove('playing');
+        playBtn.textContent = 'Oynat';
+    });
+});
+		
+		
+		
+    </script>
+</body>
+</html>

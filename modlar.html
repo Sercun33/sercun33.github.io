@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topluluk Modları - Half-Life Türkiye</title>
+    
+    <!-- Fontlar ve İkonlar -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- HARİCİ CSS DOSYASI BAĞLANTISI -->
+    <link rel="stylesheet" href="mod.css">
+</head>
+<body>
+
+    <!-- AÇILIŞ EKRANI -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
+            <div class="loader-bar"><div class="progress"></div></div>
+            <span class="loader-text">VERİTABANI SENKRONİZE EDİLİYOR...</span>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="anasayfaa.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+              <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html" class="active">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <!-- BAŞLIK VE ARAMA -->
+        <header class="page-header">
+            <h1>Topluluk Modları</h1>
+            <p>Black Mesa Arşivi'ne dışarıdan yüklenen yetkisiz (?) ama bir o kadar da efsanevi yazılım eklentileri.</p>
+        </header>
+
+        <div class="search-container">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="modSearch" placeholder="Mod ara... (Örn: Entropy, Co-op, Korku)">
+        </div>
+
+        <!-- MOD LİSTESİ -->
+        <main class="mod-grid" id="modGrid">
+            
+            <div class="mod-card">
+                <img src="img/modlar/blackmesa.jpg" class="mod-img" alt="Black Mesa" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/101731652414777596/1202A7DCEECA91630C1CC9527D11FC8382AF4CB5/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Black Mesa</h2>
+                    <span class="mod-author">Geliştirici: Crowbar Collective</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Remake</span>
+                        <span class="mod-tag">Singleplayer</span>
+                    </div>
+                    <p class="mod-desc">Orijinal Half-Life oyununun Source motoru ile tamamen baştan yapılmış, modern grafiklere ve genişletilmiş Xen bölümlerine sahip efsanevi hali.</p>
+                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                </div>
+            </div>
+
+            <div class="mod-card">
+                <img src="img/modlar/entropy.jpg" class="mod-img" alt="Entropy: Zero 2" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/1826900450005706240/E113AFAC2CDE36F6D9CA7871C6BA953492CE0049/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Entropy: Zero 2</h2>
+                    <span class="mod-author">Geliştirici: Breadmen</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Hikaye</span>
+                        <span class="mod-tag">Combine</span>
+                    </div>
+                    <p class="mod-desc">Bad Cop (Kötü Polis) lakaplı elit bir Combine askerinin rolünü üstlenin. Gordon Freeman'a ulaşmak için devasa bir savaşa girin.</p>
+                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                </div>
+            </div>
+
+            <div class="mod-card">
+                <img src="img/modlar/svencoop.jpg" class="mod-img" alt="Sven Co-op" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/487814329971844234/9D2D490E35E1700F8A5D6B6B599BB710D707BE3F/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Sven Co-op</h2>
+                    <span class="mod-author">Geliştirici: Sven Co-op Team</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Co-op</span>
+                        <span class="mod-tag">Multiplayer</span>
+                    </div>
+                    <p class="mod-desc">Half-Life deneyimini arkadaşlarınızla omuz omuza yaşayın! Özel haritalar, yeni düşmanlar ve bitmek bilmeyen hayatta kalma mücadelesi.</p>
+                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                </div>
+            </div>
+
+            <div class="mod-card">
+                <img src="img/modlar/cryoffear.jpg" class="mod-img" alt="Cry of Fear" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Cry of Fear</h2>
+                    <span class="mod-author">Geliştirici: Team Psykskallar</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Korku</span>
+                        <span class="mod-tag">Hayatta Kalma</span>
+                    </div>
+                    <p class="mod-desc">Half-Life 1 motoruyla yapılmış psikolojik bir korku şaheseri. Soğuk İskandinav gecelerinde yalnız başınıza veya co-op olarak hayatta kalın.</p>
+                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                </div>
+            </div>
+
+            <!-- Arama Bulunamadı -->
+            <div class="no-results" id="noResults">
+                <i class="fa-solid fa-triangle-exclamation"></i> SİSTEM UYARISI: Eşleşen mod bulunamadı.
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- PRELOADER (Açılmama Sorunu İçin Güvenlik Eklendi) ---
+        // Resimlerin yüklenmesini beklemeden DOM hazır olunca ekranı açar.
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.classList.add('visible');
+                    }, 500);
+                }
+            }, 800);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+
+        // --- ARAMA FİLTRESİ ---
+        const searchInput = document.getElementById('modSearch');
+        const modCards = document.querySelectorAll('.mod-card');
+        const noResults = document.getElementById('noResults');
+
+        if(searchInput) {
+            searchInput.addEventListener('input', function() {
+                const filter = this.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                modCards.forEach(card => {
+                    const textContent = card.innerText.toLowerCase();
+                    if (textContent.includes(filter)) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

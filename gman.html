@@ -1,0 +1,507 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Man</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css">
+    <style>
+        /* --- MODERN TABLO (WEAPON CARDS) TASARIMI --- */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        :root {
+    /* Renk değişkeninin tanımlı olduğundan emin olmak için ekledim */
+    --primary-orange: #f58220; 
+}
+
+.weapon-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: 0.3s ease;
+    font-family: sans-serif; /* Projenize göre değiştirebilirsiniz */
+}
+
+.weapon-card:hover {
+    border-color: var(--primary-orange);
+    background: rgba(245, 130, 32, 0.02);
+    transform: translateY(-5px);
+}
+
+.weapon-card-header {
+    background: rgba(245, 130, 32, 0.1);
+    padding: 15px 20px;
+    color: var(--primary-orange);
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weapon-card-header::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--primary-orange);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--primary-orange);
+}
+
+.weapon-card-content {
+    padding: 20px;
+}
+
+.description {
+    text-align: center;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Yeni Eklenen Grid (Izgara) Yapısı */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.image-box {
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s ease;
+}
+
+.image-box:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.image-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    display: block;
+}
+
+.image-caption {
+    margin-top: 10px;
+    color: #bbb;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Eğer listede kullanacaksanız eski liste kodlarınız duruyor */
+.weapon-list {
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
+}
+
+.weapon-item {
+    padding: 10px 25px;
+    color: #bbb;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: 0.2s;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weapon-item a { color: inherit; text-decoration: none; }
+.weapon-item:last-child { border-bottom: none; }
+
+.weapon-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    padding-left: 30px;
+}
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px; border-radius: 15px; transition: 0.3s;
+            cursor: zoom-in; position: relative; overflow: hidden;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); }
+        .archive-doc img { width: 100%; border-radius: 8px; display: block; }
+        .doc-text { font-size: 10px; color: #555; font-weight: 800; text-align: center; margin-top: 8px; display: block; }
+
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+        }
+        #zoomModal img { max-width: 90%; max-height: 90%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 20px; }
+
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="">
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="lmp.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html" class="active">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+            <!--    <li><a href="video.html">Videolar</a></li>
+                <li><a href="haberler.php">Haberler</a></li>-->
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="img/gman.jpg" alt="G-MAN">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">G-MAN</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">BOYUTLARARASI UĞURSUZ BÜROKRAT</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">G-MAN</h3>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/gman01.jpg">
+                        <span class="doc-text">G-Man tren sisteminde</span>
+                    </div>
+                    <div style="height: 15px;"></div>
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="img/gman02.jpg">
+                        <span class="doc-text">G-Man H.E.C.U kampında</span>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">HAKKINDA BİLGİLER</h2>
+                    <div class="info-row"><b>Adı:</b> <span>G-MAN</span></div>
+                    <div class="info-row"><b>Tanım:</b> <span>Boyutlararası Uğursuz Bürokrat</span></div>
+                    <div class="info-row"><b>Durumu:</b> <span>Alyx Vance Tarafından Combine'dan kurtarıldı. (Bilinen)</span></div>
+                    <div class="info-row"><b>Eşya:</b> <span>Evrak Çantası</span></div>
+                    <div class="info-row"><b>Seslendiren:</b> <span>Michael Shapiro</span></div>
+                    <div class="info-row"><b>Tasarlayanlar:</b> <span>Ken Birdwell<br>Marc Laidlaw<br>Ted Backman<br> Doug Wood<br></span></div>
+					
+					<div class="info-row"><b>Ses Örneği:</b> <span><h2 id="ses"></h2>
+<div class="audio-logs-container">
+    <div class="audio-log-item" data-audio="ses/gmanhl1.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">1998</span>
+            <span class="log-desc">Half-Life</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	
+	<div class="audio-log-item" data-audio="ses/gmanhlof.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">1999</span>
+            <span class="log-desc">Half-Life Opposing Force</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	
+	<div class="audio-log-item" data-audio="ses/gmanhl2beta.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">2003</span>
+            <span class="log-desc">Half-Life 2 BETA</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	
+
+    <div class="audio-log-item" data-audio="ses/gmanhl2.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">2004</span>
+            <span class="log-desc">Half-Life 2</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	<div class="audio-log-item" data-audio="ses/gmanhlalyx.mp3">
+        <div class="log-status-light"></div>
+        <div class="log-details">
+            <span class="log-id">2020</span>
+            <span class="log-desc">Half-Life Alyx</span>
+        </div>
+        <div class="log-controls">
+            <button class="play-btn">Oynat</button>
+            <div class="waveform-visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <input type="range" class="progress" min="0" value="0">
+        </div>
+    </div>
+	
+	
+</div></span></div>
+					
+					
+					<div class="info-row">
+						
+						</div>
+                    <div class="info-row"><b>Görünüş:</b> <span>Half-Life<br>Half-Life Opposing Force<br>Half-Life Blue Shift<br>Half-Life 2<br>Half-Life 2 Episode 1<br>Half-Life 2 Episode 2<br>Half-Life Alyx (Oyun Sonu)</span></div>
+                </div>
+
+                <article class="story-section">
+                    <h2>KİM BU G-MAN?</h2>
+                    <p>G-MAN,Valve tarafından geliştirilen Half-Life serisinin en ikonik ve gizemli karakterlerinden biridir. Takım elbisesi, elindeki evrak çantası ve donuk yüz ifadesiyle tanınan bu karakter, serinin başından itibaren oyuncuların karşısına çıkmış, ancak kimliği ve amacı hiçbir zaman <b>tam olarak açıklanmamıştır</p> Oyuncular onun hakkında ancak oyunun müsade ettiği kadarıyla gözleme dayalı yorumda bulunabilir. Oyunlardan göründüğü kadarıyla G-Man olaylara doğrudan müdahale etmeden ''İşverenlerinin'' çıkarları doğrultusunda yön verir. Zamanı bükebildiği, mekânlar arasında serbestçe hareket edebildiği görülür. (Ama bunları yapmasına sebep olan motivasyon nedir - iş verenleri kimdir bilinmez)
+                    </p>
+                    <h2>Half-Life</h2>
+                    <p>Rezonans çağlayanına neden olan Xenium'u Doktor Breen'e teslim etmesi dışında oyun boyunca G-Man'in hikayeye doğrudan bir katkısı yoktur ancak G-Man Freeman'ı tüm yolculuğu boyunca gizlice izler ve hikayenin sonunda Freeman'ı Xenden çıkarıp ona iş teklifi yapar. Bu sayede oyunun hikayesel çizgisini komple değiştirir.
+						</p>
+					
+					<h2>Half-Life 2</h2>
+		<p><a href="lmpk-gf.html" style="color:#ff6600">Gordon Freeman</a>'ı bekleyişten çıkarırken söylediği repliklerden biri:
+		   <div style="border-left: 3px solid #ff6600; padding-left: 0.8em; margin: 1.5em 0; max-width: 400px; color: #eee; font-style: italic; font-size: 0.9rem; background: rgba(30, 30, 30, 0.6); border-radius: 5px; padding: 15px;">
+                        "Kalkın ve harekete geçin Bay Freeman!"
+                        <div style="text-align: right; color: #ff6600cc; font-weight: 600; font-size: 0.85rem; margin-top: 0.5em; font-style: normal;">G-MAN</div>
+                    </div>
+
+		</p>
+
+                    <div class="tables-wrapper">
+                        <div class="weapon-card">
+                            <div class="weapon-card-header">Kullandıkları</div>
+                            <ul class="weapon-list">
+                                <li class="weapon-item"><a href="#">Evrak Çantası</a></li>
+                        </div>
+                    </div>
+					
+					<div class="tables-wrapper">
+                        <div class="weapon-card">
+    <div class="weapon-card-header">GMAN'in Geliştirilmesi</div>
+    
+    <div class="weapon-card-content">
+        <p class="description">
+            Half-Life yapım aşamasındayken GMAN karakterinin kaderi net olarak belirli değildi. Kim olduğu yıllar içinde şekillendirildi. 3D modelinin ise en baştan itibaren çok değiştiği söylenemez.
+        </p>
+
+        <div class="image-gallery">
+            <div class="image-box">
+                <img id="gman-concept" alt="gmanalfa" src="img/gmanc.jpg"/>
+                <div class="image-caption">Konsept</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-3d" alt="Gmanhl1hd" src="img/gmanilk.jpg"/>
+                <div class="image-caption">3D Model</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-hl1" alt="Gmanhl1" src="img/gmanhl1.jpg"/>
+                <div class="image-caption">Half-Life</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-opfor" alt="gmanof" src="img/gmanhlofhd.jpg"/>
+                <div class="image-caption">Half-Life OF</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-dreamcast" alt="Gmanhldc" src="img/gmanhldc.jpg"/>
+                <div class="image-caption">Half-Life Dreamcast</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-hl1-hd" alt="Gmanhl1hd" src="img/gmanhl1hd.jpg"/>
+                <div class="image-caption">Half-Life HD</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-ps2" alt="gmanps2" src="img/gmanhl1ps2.jpg"/>
+                <div class="image-caption">PS2</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-hl2" alt="Gmanhl2" src="img/gmanhl2.jpg"/>
+                <div class="image-caption">Half-Life 2</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-hl2-beta" alt="Gmanhl2beta" src="img/gmanhl2s.jpg"/>
+                <div class="image-caption">Half-Life 2 (Kravat)</div>
+            </div>
+
+            <div class="image-box">
+                <img id="gman-alyx" alt="Gmanhlalyx" src="img/gmanhla.jpg"/>
+                <div class="image-caption">Half-Life Alyx</div>
+            </div>
+        </div>
+    </div>
+</div>	
+							
+                            </ul>
+                        </div>
+					
+                </article>
+		<h2 style="color: #fff; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px;">GÖRSEL GALERİ (YAKINDA)</h2>
+<div class="tables-wrapper" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+   <h2>Yakında</h2>
+</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function openZoom(el) {
+            document.getElementById('zoomedImg').src = el.querySelector('img').src;
+            document.getElementById('zoomModal').style.display = 'flex';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+		
+		
+		
+		
+document.querySelectorAll('.audio-log-item').forEach(item => {
+    const audio = new Audio(item.dataset.audio);
+    const playBtn = item.querySelector('.play-btn');
+    const progress = item.querySelector('.progress');
+
+    playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+            // Diğer çalanları durdurmak istersen buraya durdurma kodu eklenebilir
+            audio.play();
+            item.classList.add('playing');
+            playBtn.textContent = 'Durdur';
+        } else {
+            audio.pause();
+            item.classList.remove('playing');
+            playBtn.textContent = 'Oynat';
+        }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        progress.value = (audio.currentTime / audio.duration) * 100;
+    });
+
+    audio.addEventListener('ended', () => {
+        item.classList.remove('playing');
+        playBtn.textContent = 'Oynat';
+    });
+});
+		
+		
+		
+    </script>
+</body>
+</html>

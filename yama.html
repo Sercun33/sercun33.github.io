@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yama Arşivi | Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+       
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.85); z-index: -1;
+        }
+
+        /* PRELOADER VE WRAPPER AYARLARI (GÖRÜNMEME SORUNUNU ÇÖZEN KISIM) */
+        #preloader {
+            position: fixed; inset: 0; background: #000; z-index: 99999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        #main-wrapper { opacity: 0; transition: opacity 1.2s ease; visibility: hidden; }
+        #main-wrapper.visible { opacity: 1; visibility: visible; }
+
+        .loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); animation: pulse 2s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 8%; background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff; }
+        .logo img { height: 40px; }
+        .orange-text { color: #f58220; }
+        .nav-links { display: flex; list-style: none; gap: 30px; }
+        .nav-links a { color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+        /* YAMA ARŞİVİ TASARIMI */
+        .archive-container { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+        .archive-title { text-align: center; margin-bottom: 40px; }
+        .archive-title h1 { font-size: 2.5rem; color: #f58220; text-transform: uppercase; margin-bottom: 5px; }
+
+        .patch-entry { position: relative; margin-bottom: 30px; }
+        .patch-entry:not(:last-child)::after {
+            content: ""; position: absolute; bottom: -35px; left: 50%;
+            width: 2px; height: 40px; background: linear-gradient(to bottom, #f58220, transparent);
+        }
+
+        .patch-notes {
+            background: rgba(15, 15, 15, 0.7);
+            border: 1px solid rgba(245, 130, 32, 0.3);
+            border-radius: 15px; padding: 25px; text-align: left;
+            backdrop-filter: blur(10px); position: relative;
+        }
+
+        .patch-notes::before {
+            content: "YAMA NOTLARI"; display: block;
+            background: rgba(245, 130, 32, 0.1); margin: -25px -25px 20px -25px;
+            padding: 8px 20px; font-size: 0.65rem; font-weight: 800;
+            color: #f58220; border-bottom: 1px solid rgba(245, 130, 32, 0.2); letter-spacing: 2px;
+        }
+
+        .patch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .patch-version { background: #f58220; color: #000; padding: 3px 12px; border-radius: 4px; font-weight: 800; font-size: 0.75rem; }
+        .patch-date { color: #555; font-size: 0.75rem; font-weight: 700; }
+        .patch-list { list-style: none; }
+        .patch-list li { font-size: 0.85rem; color: #bbb; margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .patch-list li::before { content: ">"; position: absolute; left: 0; color: #f58220; font-weight: 800; }
+
+        @media (max-width: 600px) { .patch-header { flex-direction: column; align-items: flex-start; gap: 10px; } }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+    </div>
+
+    <div id="main-wrapper">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Anasayfa</a></li>
+            </ul>
+        </nav>
+
+        <div class="archive-container">
+            <header class="archive-title">
+                <h1>Yama Arşivi</h1>
+                <p style="color: #444; font-weight: 800; font-size: 0.7rem; letter-spacing: 2px;">HALF-LIFE TÜRKİYE YAMA GEÇMİŞİ</p>
+            </header>
+
+            <div class="patch-entry">
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.4</span>
+                        <span class="patch-date">1 MAYIS 2026</span>
+                    </div>
+                    <ul class="patch-list">
+						<li>Mini Oyun baştan tasarlandı.</li>
+						<li>Hakkımızda Sayfası yapıldı.</li>
+						<li>Bakım bildirimi sayfası yapıldı.</li>
+                    </ul>
+                </div>
+				
+				<br>
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.3</span>
+                        <span class="patch-date">29 NİSAN 2026</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>GMAN'in Tanıtım sayfası eklendi</li>
+                        <li>Karakterler sayfası düzenlendi</li>
+                        <li>Menülerdeki Hizalanma Sorunları giderildi.</li>
+                        <li>Ses Örneklerindeki çalışmama hatası giderildi.</li>
+                    </ul>
+                </div>
+				<br>
+				
+                <div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.2</span>
+                        <span class="patch-date">29 MART 2026</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Freeman'ın Tanıtım Sayfası eklendi</li>
+                        <li>Düşmanlar Sayfası düzenlendi</li>
+                        <li>Menülerdeki Hizalanma Sorunları giderildi.</li>
+                        <li>Mobil Menüsü tasarlandı.</li>
+                        <li>Anasayfa'da bulunan yuvarlak kutucuklardaki resim görünmeme hatası düzeltildi.</li>
+                        <li></li>
+                    </ul>
+                </div>
+				<br>
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.1</span>
+                        <span class="patch-date">28 MART 2026</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Eski Tasarım tamamen kaldırıldı ve yeni tasarıma geçildi.</li>
+                        <li>Yama Arşivi modülü sisteme entegre edildi.</li>
+                        <li>Sistem kararlılığı için Preloader protokolü eklendi.</li>
+                        <li>Tüm CSS çakışmaları giderildi.</li>
+                    </ul>
+                </div>
+				
+				<br>
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.8</span>
+                        <span class="patch-date">9 Ağustos 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Karakter Sayfalarını incelerken solda görünen 'Hızlı Geçiş' menüsü eklendi</li>
+                        <li>Yeni karakter sayfaları eklendi: Barney Calhoun, Adrian Shephard, Arne Magnusson</li>
+                    </ul>
+                </div>
+				
+				<br>
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.7</span>
+                        <span class="patch-date">8 Ağustos 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Karakter Sayfaları Düzenlendi : Isaac Kleiner, Eli Vance, Gordon Freeman</li>
+                        <li>Lambda Kompleks için Bilgi Sayfası Eklendi</li>
+                    </ul>
+                </div>
+				
+				<br>
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.4</span>
+                        <span class="patch-date">6 Ağustos 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Yeni karakter sayfaları eklendi : Isaac Kleiner</li>
+                        <li>Tasarım hataları düzeltildi</li>
+                        <li>Yeni silah sayfaları eklendi : Levye</li>
+                    </ul>
+                </div>
+				
+				<br>
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.3.2</span>
+                        <span class="patch-date">4 AĞUSTOS 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Yeni karakter sayfaları eklendi : Eli Vance</li>
+                    </ul>
+                </div>
+				
+				<br>
+				
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.3.1</span>
+                        <span class="patch-date">30 TEMMUZ 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Combine Bilgi Sayfası Eklendi</li>
+                    </ul>
+                </div>
+				
+				
+				<br>
+				
+				
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.3</span>
+                        <span class="patch-date">29 TEMMUZ 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Site Arka Planındaki Black Mesa Research Facility ibaresi Türkçeleştirildi</li>
+                    </ul>
+                </div>
+				
+				
+			<br>
+				
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.2</span>
+                        <span class="patch-date">29 TEMMUZ 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Menü elden geçirildi : Half-Life Türkiye Bilgi Sayfası ve Karakterler kısımları eklendi</li>
+                        <li>Sayfalardaki resimlere basılı tutunca büyütme özelliği eklendi</li>
+                        <li>Spektrometre sayfası eklendi</li>
+                        <li>Gordon Freeman Karakter Sayfasına ''Freeman'ın Geliştirilmesi'' bölümü eklendi</li>
+                    </ul>
+                </div>
+				
+				
+				<br>
+				
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.1</span>
+                        <span class="patch-date">28 TEMMUZ 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Menü Mobil Cihazlara uyumlu hale getirildi.</li>
+                        <li>Gordon Freeman sayfası elden geçirildi, Alyx Vance ve G-Man Sayfaları Eklendi.</li>
+                    </ul>
+                </div>
+				
+				
+				<br>
+				
+				
+				<div class="patch-notes">
+                    <div class="patch-header">
+                        <span class="patch-version">V0.0.0</span>
+                        <span class="patch-date">26 TEMMUZ 2025</span>
+                    </div>
+                    <ul class="patch-list">
+                        <li>Site Yapılmaya Başlandı.</li>
+                        <li>Gordon Freeman Sayfası eklendi</li>
+                        <li>Menü Turuncu Yapıldı.</li>
+                    </ul>
+                </div>
+            </div>
+
+            </div>
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde görünmezlikten çıkma protokolü
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            const wrapper = document.getElementById('main-wrapper');
+            
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    wrapper.classList.add('visible');
+                }, 500);
+            }, 400); // 
+        });
+    </script>
+</body>
+</html>
