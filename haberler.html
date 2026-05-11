@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/tr/favicon.png">
+    <title>Haberler - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="taraf.css">
+
+    <style>
+        /* KAYDIRMA ÇUBUĞU */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; }
+
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        /* --- HABER KARTLARI --- */
+        .main-article { display: flex; flex-direction: column; gap: 40px; }
+        
+        .news-ribbon {
+            background: rgba(15, 15, 15, 0.95);
+            border-top: 4px solid #f58220;
+            padding: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+            animation: newsFadeIn 0.6s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .news-thumb-wrapper { width: 100%; max-height: 400px; overflow: hidden; border-bottom: 1px solid #333; background: #000; }
+        .news-thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; opacity: 0.8; }
+        .news-ribbon:hover .news-thumb { transform: scale(1.05); opacity: 1; }
+
+        .news-body { padding: 30px; }
+
+        .news-title {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        .news-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .meta-item {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .date-meta { color: #f58220; }
+        .author-meta { color: #4db8ff; } /* Mavi tonuyla yazar ayrıştırıldı */
+
+        /* Quill İçerik Uyumu */
+        .news-content {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .news-content img { max-width: 100%; height: auto !important; border-radius: 10px; margin: 20px 0; border: 1px solid #333; }
+        .news-content p { margin-bottom: 15px; }
+        .news-content a { color: #f58220; text-decoration: none; }
+        .news-content a:hover { text-decoration: underline; }
+        .news-content h1, .news-content h2, .news-content h3 { color: #fff; margin-top: 25px; margin-bottom: 15px; }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        .profile-container {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid #f58220;
+        }
+
+        @keyframes newsFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .news-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haberler.html" class="active">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="img/tr/hltrwikiweb.png" style="width: 80px; margin-bottom: 15px;">
+                    <div style="font-size: 1.3rem; font-weight: 800; margin-top: 10px;">HABER MERKEZİ</div>
+                    <div style="color: #f58220; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Ağ Durumu: Aktif</div>
+                </div>
+            </aside>
+
+            <section class="main-article" id="news-feed">
+                <div class="loading-status" style="text-align: center; color: #f58220; padding: 50px; font-weight: 800;">VERİ AKIŞI BEKLENİYOR...</div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSFWOKj20USZpyfb3CobaFyhsIAr_Cb2A",
+            authDomain: "hltr-haberler.firebaseapp.com",
+            projectId: "hltr-haberler",
+            storageBucket: "hltr-haberler.firebasestorage.app",
+            messagingSenderId: "458236342220",
+            appId: "1:458236342220:web:ebb9a32534cd1ce304f769"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function haberleriGetir() {
+            const feed = document.getElementById('news-feed');
+            try {
+                const q = query(collection(db, "haberler"), orderBy("tarih", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                feed.innerHTML = "";
+
+                if (querySnapshot.empty) {
+                    feed.innerHTML = '<div style="text-align:center; color:#555; padding:40px;">Şu an için ağda kayıtlı bir haber bulunmamaktadır.</div>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const veri = doc.data();
+                    
+                    let tarihMetni = "Bilinmeyen Tarih";
+                    if(veri.tarih) {
+                        const dateObj = veri.tarih.toDate();
+                        tarihMetni = dateObj.toLocaleDateString('tr-TR');
+                    }
+
+                    // Paneldeki "Yazar İsmi" kutusundan gelen veri, yoksa varsayılan
+                    const yazarGoster = veri.yazar ? veri.yazar.toUpperCase() : "ANONİM OPERATÖR";
+
+                    const haberHtml = `
+                        <article class="news-ribbon">
+                            <div class="news-thumb-wrapper">
+                                <img src="${veri.kapak}" class="news-thumb" alt="Haber Görseli">
+                            </div>
+                            <div class="news-body">
+                                <h2 class="news-title">${veri.baslik}</h2>
+                                <div class="news-meta">
+                                    <span class="meta-item date-meta"><i class="fa-regular fa-calendar"></i> ${tarihMetni}</span>
+                                    <span class="meta-item author-meta"><i class="fa-solid fa-signature"></i> EDİTÖR: ${yazarGoster}</span>
+                                </div>
+                                <div class="news-content">${veri.icerik}</div>
+                            </div>
+                        </article>
+                    `;
+                    feed.insertAdjacentHTML('beforeend', haberHtml);
+                });
+
+            } catch (error) {
+                console.error("Hata:", error);
+                feed.innerHTML = '<div style="text-align:center; color:#ff3333; padding:50px;">SİSTEM HATASI: Veritabanı bağlantısı koptu.</div>';
+            }
+        }
+
+        haberleriGetir();
+    </script>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
