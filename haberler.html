@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/tr/favicon.png">
+    <title>Haberler - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="taraf.css">
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- WIKI TASARIM DÜZENİ --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #f58220;
+        }
+        
+        /* --- HABER KARTLARI (RIBBON) --- */
+        .main-article { display: flex; flex-direction: column; gap: 30px; }
+        
+        .news-ribbon {
+            background: rgba(20, 20, 20, 0.8);
+            border-left: 5px solid #f58220;
+            padding: 25px;
+            border-radius: 0 20px 20px 0;
+            transition: 0.3s;
+            animation: newsFadeIn 0.6s ease-in-out;
+        }
+        .news-ribbon:hover {
+            transform: translateX(8px);
+            background: rgba(30, 30, 30, 0.9);
+            border-left-width: 8px;
+        }
+
+        .news-title {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .news-date {
+            color: #f58220;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+        .news-content {
+            color: #bbb;
+            line-height: 1.8;
+            white-space: pre-wrap; /* Satır boşluklarını korur */
+            font-size: 0.95rem;
+        }
+
+        /* --- DURUM MESAJLARI --- */
+        .loading-status {
+            text-align: center;
+            padding: 50px;
+            color: #f58220;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .empty-status {
+            text-align: center;
+            color: #555;
+            padding: 40px;
+            border: 1px dashed rgba(255,255,255,0.05);
+            border-radius: 15px;
+        }
+
+        @keyframes newsFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haberler.html" class="active">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="img/tr/hltrwikiweb.png" alt="HLTR Haber" style="width: 80px; margin-bottom: 15px;">
+                    <div class="char-name" style="font-size: 1.3rem; font-weight: 800; margin-top: 10px;">HABER MERKEZİ</div>
+                    <div class="char-role" style="color: #f58220; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Ağ Durumu: Aktif</div>
+                </div>
+            </aside>
+
+            <section class="main-article" id="news-feed">
+                <div class="loading-status">VERİ AKIŞI BEKLENİYOR...</div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // Sizin anahtarlarınız
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSFWOKj20USZpyfb3CobaFyhsIAr_Cb2A",
+            authDomain: "hltr-haberler.firebaseapp.com",
+            projectId: "hltr-haberler",
+            storageBucket: "hltr-haberler.firebasestorage.app",
+            messagingSenderId: "458236342220",
+            appId: "1:458236342220:web:ebb9a32534cd1ce304f769"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function haberleriGetir() {
+            const feed = document.getElementById('news-feed');
+            try {
+                // Haberleri tarihe göre yeniden eskiye (desc) sıralıyoruz
+                const q = query(collection(db, "haberler"), orderBy("tarih", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                feed.innerHTML = ""; // Yükleniyor yazısını temizle
+
+                if (querySnapshot.empty) {
+                    feed.innerHTML = '<div class="empty-status">Şu an için ağda kayıtlı bir haber bulunmamaktadır.</div>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const veri = doc.data();
+                    
+                    // Tarih verisini okunabilir hale getiriyoruz
+                    let tarihMetni = "Bilinmeyen Tarih";
+                    if(veri.tarih) {
+                        const dateObj = veri.tarih.toDate();
+                        tarihMetni = dateObj.toLocaleDateString('tr-TR') + " | " + dateObj.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+                    }
+
+                    // Haber Şeridi (Ribbon) Oluşturma
+                    const haberHtml = `
+                        <div class="news-ribbon">
+                            <h2 class="news-title">${veri.baslik}</h2>
+                            <span class="news-date"><i class="fa-regular fa-clock"></i> ${tarihMetni}</span>
+                            <div class="news-content">${veri.icerik}</div>
+                        </div>
+                    `;
+                    feed.insertAdjacentHTML('beforeend', haberHtml);
+                });
+
+            } catch (error) {
+                console.error("Bağlantı hatası:", error);
+                feed.innerHTML = '<div class="empty-status" style="color:#ff3333;">SİSTEM HATASI: Veritabanına ulaşılamadı.</div>';
+            }
+        }
+
+        haberleriGetir();
+    </script>
+
+    <script>
+        // --- PRELOADER & GİRİŞ ANİMASYONU ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        // --- MOBİL MENÜ İŞLEVİ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
