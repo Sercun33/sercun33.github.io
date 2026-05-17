@@ -6,7 +6,17 @@
     <title>Eli Vance</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
     <link rel="stylesheet" href="taraf.css">
+	<link rel="icon" type="image/png" href="img/tr/favicon.ico">
     <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU (SCROLLBAR)
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
         /* --- MODERN TABLO (WEAPON CARDS) TASARIMI --- */
         .tables-wrapper {
             display: grid;
@@ -146,7 +156,7 @@
 
     <div id="main-wrapper" style="opacity: 0; transition: 1s;">
         <nav class="navbar">
-            <a href="lmp.html" class="logo">
+            <a href="index.html" class="logo">
                 <img src="img/tr/hltrwikiweb.png" alt="Logo">
                 <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
             </a>
@@ -156,23 +166,24 @@
             </div>
 
             <ul class="nav-links" id="navLinks">
-                <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
-            <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Anasayfa</a></li>
                 <li><a href="karakterler.html" class="active">Karakterler</a></li>
                 <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
-            <!--    <li><a href="video.html">Videolar</a></li>
-                <li><a href="haberler.php">Haberler</a></li>-->
-                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
                 <li><a href="minioyun.html">Mini Oyun</a></li>
-            </ul>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
             </ul>
         </nav>
 
         <main class="wiki-wrapper">
             <aside class="sidebar-assets">
                 <div class="profile-container">
-                    <img src="img/eli.jpg" alt="Eli Vance">
+                    <img src="karakter/eli.jpg" alt="Eli Vance">
                     <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">Eli Vance</div>
                     <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Bilim Adamı - Direniş Lideri</div>
                 </div>
@@ -197,9 +208,9 @@
                     <div class="info-row"><b>Adı:</b> <span>Eli Vance</span></div>
                     <div class="info-row"><b>Tanım:</b> <span>Direniş Lideri</span></div>
                     <div class="info-row"><b>Görünüş:</b> <span>Half-Life (Doğrudan değil)<br>Half-Life 2 (Yan Karakter)<br>Half-Life 2 Episode 1 (Yan Karakter) <br>Half-Life 2 Episode 2 (Yan Karakter) <br>Half-Life Alyx (Yan Karakter)</span></div>
-					
-					
-					<div class="info-row"><b>Ses Örneği:</b> <span><h2 id="ses"></h2>
+                    
+                    
+                    <div class="info-row"><b>Ses Örneği:</b> <span><h2 id="ses"></h2>
 <div class="audio-logs-container">
     <div class="audio-log-item" data-audio="ses/elihl2.mp3">
         <div class="log-status-light"></div>
@@ -215,9 +226,9 @@
             <input type="range" class="progress" min="0" value="0">
         </div>
     </div>
-	
-	
-	<div class="audio-log-item" data-audio="ses/elihlalyx.mp3">
+    
+    
+    <div class="audio-log-item" data-audio="ses/elihlalyx.mp3">
         <div class="log-status-light"></div>
         <div class="log-details">
             <span class="log-id">2020</span>
@@ -231,26 +242,24 @@
             <input type="range" class="progress" min="0" value="0">
         </div>
     </div>
-		
+        
 </div></span></div>
-					
-					
+                    
+                    
                 </div>
 
                 <article class="story-section">
                     <h2>KİM BU ELI VANCE?</h2>
-                    <p align="left"> Half-Life evreninin en önemli ve sevilen karakterlerinden biri olan Dr. Eli Vance, yalnızca bilim insanı kimliğiyle değil, aynı zamanda direnişin karizmatik liderlerinden biri olarak da öne çıkıyor. Alyx Vance'in babası olan Eli, Black Mesa'da çalışan parlak bir fizikçiydi. Işınlanma teknolojileri üzerine yaptığı araştırmalar, Half-Life serisinin olay örgüsünde kilit bir rol oynadı. Black Mesa faciasından sonra hayatta kalan Eli, insanlığın Combine'a karşı verdiği mücadelenin ön saflarında yer aldı. Lambda Direnişi'nin en önemli figürlerinden biri haline gelerek, insanlara umut aşıladı. Engeline rağmen (Black Mesa olayları sırasında bacağını kaybetti) azmi ve zekasıyla direnişe yön verdi.Black Mesa olaylarından sonra ailesinden geriye bir tek sevgili kızı <a href="bakim.html" style="color:#ff6600">Alyx Vance</a> hayatta kaldı, bu kazada pek çok arkadaşını ve aynı zamanda Karısı olan <a href="bakim.html" style="color:#ff6600">Azian Vance</a>'i de kaybetti.</p>
+                    <p align="left"> Half-Life evreninin en önemli ve sevilen karakterlerinden biri olan Dr. Eli Vance, yalnızca bilim insanı kimliğiyle değil, aynı zamanda direnişin karizmatik liderlerinden biri olarak da öne çıkıyor. Alyx Vance'in babası olan Eli, Black Mesa'da çalışan parlak bir fizikçiydi. Işınlanma teknolojileri üzerine yaptığı araştırmalar, Half-Life serisinin olay örgüsünde kilit bir rol oynadı. Black Mesa faciasından sonra hayatta kalan Eli, insanlığın Combine'a karşı verdiği mücadelenin ön saflarında yer aldı. Lambda Direnişi'nin en önemli figürlerinden biri haline gelerek, insanlara umut aşıladı. Engeline rağmen (Black Mesa olayları sırasında bacağını kaybetti) azmi ve zekasıyla direnişe yön verdi.Black Mesa olaylarından sonra ailesinden geriye bir tek sevgili kızı <a href="alyx.html" style="color:#ff6600">Alyx Vance</a> hayatta kaldı, bu kazada pek çok arkadaşını ve aynı zamanda Karısı olan <a href="bakim.html" style="color:#ff6600">Azian Vance</a>'i de kaybetti.</p>
                     
-					
-					<div class="tables-wrapper">
+                    <div class="tables-wrapper">
                         <div class="weapon-card">
                             <div class="weapon-card-header">Eli Vance'in Geliştirilmesi</div>
                                 <p align="center">Half-Life 2 yapım aşamasındayken Eli Vance konsepti her zaman vardı ama ilk hali <a href="bakim.html" style="color:#ff6600">Kaptan Vance</a> adında birisi olacaktı. <a href="bakim.html" style="color:#ff6600">Half-Life 2'nin 2003'teki sızıntısı</a>ndan sonra Valve'ın aldığı kararla pek çok karakter üzerinde değişikliğe gidilirken Kaptan Vance bırakıldı ve Eli Vance olarak yeniden planlandı.</p><br>
-                            </ul>
                         </div>
-					
+                    </div>
                 </article>
-		<h2 style="color: #fff; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px;">GÖRSEL GALERİ (YAKINDA)</h2>
+        <h2 style="color: #fff; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px;">GÖRSEL GALERİ (YAKINDA)</h2>
 <div class="tables-wrapper" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
    <h2>Yakında</h2>
 </div>
@@ -271,6 +280,7 @@
             }, 300);
         });
 
+        // Menü Kontrolü Orijinal Hali
         const menuBtn = document.getElementById('menuBtn');
         const navLinks = document.getElementById('navLinks');
         if(menuBtn && navLinks) {
@@ -279,40 +289,33 @@
                 navLinks.classList.toggle('open');
             });
         }
-		
-		
-		
-		
-document.querySelectorAll('.audio-log-item').forEach(item => {
-    const audio = new Audio(item.dataset.audio);
-    const playBtn = item.querySelector('.play-btn');
-    const progress = item.querySelector('.progress');
 
-    playBtn.addEventListener('click', () => {
-        if (audio.paused) {
-            // Diğer çalanları durdurmak istersen buraya durdurma kodu eklenebilir
-            audio.play();
-            item.classList.add('playing');
-            playBtn.textContent = 'Durdur';
-        } else {
-            audio.pause();
-            item.classList.remove('playing');
-            playBtn.textContent = 'Oynat';
-        }
-    });
+        document.querySelectorAll('.audio-log-item').forEach(item => {
+            const audio = new Audio(item.dataset.audio);
+            const playBtn = item.querySelector('.play-btn');
+            const progress = item.querySelector('.progress');
 
-    audio.addEventListener('timeupdate', () => {
-        progress.value = (audio.currentTime / audio.duration) * 100;
-    });
+            playBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    item.classList.add('playing');
+                    playBtn.textContent = 'Durdur';
+                } else {
+                    audio.pause();
+                    item.classList.remove('playing');
+                    playBtn.textContent = 'Oynat';
+                }
+            });
 
-    audio.addEventListener('ended', () => {
-        item.classList.remove('playing');
-        playBtn.textContent = 'Oynat';
-    });
-});
-		
-		
-		
+            audio.addEventListener('timeupdate', () => {
+                progress.value = (audio.currentTime / audio.duration) * 100;
+            });
+
+            audio.addEventListener('ended', () => {
+                item.classList.remove('playing');
+                playBtn.textContent = 'Oynat';
+            });
+        });
     </script>
 </body>
 </html>

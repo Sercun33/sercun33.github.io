@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lambda Kompleksi</title>
+    
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css">
+    
+    <style>
+        /* ==========================================================================
+           PROFESYONEL TERMİNAL DÜZENİ (TARAMA EFEKTLERİ KALDIRILDI)
+           ========================================================================== */
+        
+        /* Renk Değişkenleri */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --text-color: #bbb;
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; }
+
+        /* Temizlenmiş Resim Konteyneri */
+        .img-shield {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 130, 32, 0.1); /* Çerçeve hafifletildi */
+            cursor: zoom-in;
+            background: transparent; /* Siyah arka plan kaldırıldı */
+        }
+
+        /* ::after (Sabit CRT Çizgileri) ve .scan-bar (Hareketli Çizgi) KALDIRILDI */
+
+        .img-shield img {
+            width: 100%; display: block;
+            transition: 0.5s ease;
+            /* filter (sepia vb.) KALDIRILDI - Resim orijinal renginde */
+        }
+
+        .img-shield:hover img {
+            transform: scale(1.05); /* Sadece hafif büyüme efekti kaldı */
+        }
+
+        /* --- WIKI DÜZENİ --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px; border-radius: 15px; margin-bottom: 15px;
+            position: relative;
+        }
+
+        .doc-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;
+            border: 1px solid var(--primary-orange); padding: 3px 8px; background: rgba(0,0,0,0.8); z-index: 4;
+            pointer-events: none;
+        }
+
+        /* HİKAYE KESİTLERİ (RESİMLİ) */
+        .story-item {
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .story-item.has-image { grid-template-columns: 220px 1fr; align-items: start; }
+        }
+
+        .info-ribbon { background: var(--card-bg); border-left: 5px solid var(--primary-orange); padding: 25px; border-radius: 0 20px 20px 0; margin-bottom: 30px; }
+        .info-row { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; }
+        .info-row b { color: var(--primary-orange); width: 140px; font-size: 0.75rem; text-transform: uppercase; flex-shrink: 0; }
+
+        .playing .bar { animation: soundWave 0.5s infinite ease-in-out; }
+        @keyframes soundWave { 0%, 100% { height: 5px; } 50% { height: 18px; } }
+
+        #zoomModal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; cursor: zoom-out; flex-direction: column;}
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;}
+
+        @media (max-width: 992px) { .wiki-wrapper { grid-template-columns: 1fr; } .sidebar-assets { order: 2; } .main-article { order: 1; } }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" style="max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px;" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haber.html">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html" class="active">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <div class="img-shield" onclick="openZoom(this)">
+                        <img src="mekan/lmk.jpg" alt="Lambda Kompleksi Ana Giriş (Black Mesa)">
+                    </div>
+                    <div style="font-size: 1.5rem; font-weight: 800; margin-top: 15px;">LAMBDA KOMPLEKSİ</div>
+                    <div style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Sektör F</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); text-align: center; letter-spacing: 2px; margin-bottom: 15px;">FOTOĞRAFLAR</h3>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <div class="doc-label">REAKTÖR (BETA SÜRÜM)</div>
+                            <img src="mekan/lmkrbeta.jpg" alt="Reaktör'ün İçinden bir görüntü (Half-Life BETA)">
+                        </div>
+                    </div>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <div class="doc-label">SOĞUTMA</div>
+                            <img src="img/lmksk.jpg" alt="Ana Reaktör Soğutma Sistemi (HL1)">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; color: #fff; margin-bottom: 20px; letter-spacing: 1px;">LAMBDA KOMPLEKS</h2>
+                    <div class="info-row"><b>Sektör Adı:</b> <span>Sektör F | Lambda Kompleksi</span></div>
+                    <div class="info-row"><b>Durum:</b> <span>Yıkıldı (Black Mesa Olayı)</span></div>
+                    <div class="info-row"><b>İlk Görünüş:</b> <span>Half-Life</span></div>
+                    <div class="info-row"><b>Son Görünüş:</b> <span>Half-Life: Opposing Force</span></div>
+                </div>
+
+                <div class="story-section" style="color: var(--text-color); line-height: 1.8; margin-top: 30px;">
+                    
+                    <div class="story-item has-image">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="mekan/lmkrp.jpg" alt="Lambda Reaktörünün Bütün halde Render'ı">
+                        </div>
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">GENEL BAKIŞ</h2>
+                            <p>Lambda Kompleks Black Mesa'da bulunan diğer sektörler gibi tesisin ana bölümlerinden birisidir. İçerisinde Reaktörler, Soğutma Sistemleri, ve Mühimmat Depoları, Teleportasyon Sistemleri barındırır.
+			Ayrıca Dünya'dan Xen'e portallar açabilen çok güçlü bir makineyi de bünyesinde bulundurur.</p>
+                            <p>Rezonans Çağlayanından sonra Lambda Kompleks'e girişlerin neredeyse hepsi kapatılmış geriye 2 giriş kalmıştır.
+			3 Numaralı Atık İşleme Alanı ve Sektör E Malzeme taşıma sisteminin B bölümü haricindeki tüm girişler kontrollü bir şekilde kapatılmıştır.</p>
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">ANA REAKTÖR</h2>
+                            <p>Ana Lambda Reaktörü, portal açan devasa makineye güç vermek için özel olarak tasarlanmıştır. Sistem <b>4 çekirdekten</b> oluşur (Çekirdek A-B-C-D).</p>
+                            <p>Oluşan muazzam ısıyı dengelemek ve çekirdekleri soğutmak için tesiste <b>2 adet pompalama istasyonu</b> (Pompa 1-2) ve <b>3 devasa tank sistemi</b> (Tank 1-2-AUX) kesintisiz olarak kullanılır.</p>
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">LAMBDA COMPLEX HARİTA KODLARI</h2>
+                            <p>Lambda Kompleks, motor içerisinde pek çok harita koduyla oyunda mevcuttur:</p>
+                            <ul style="list-style-type: square; margin-left: 20px; color: #eee; margin-top: 10px;">
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Half-Life:</strong> c3a1, c3a1a, c3a1b, c3a2e, c3a2, c3a2a, c3a2b, c3a2c, c3a2d, c3a2f</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Half-Life Uplink:</strong> hldemo1, hldemo2, hldemo3</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Half-Life Opposing Force:</strong> of2a6, of3a1</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- RESİM BÜYÜTME (ZOOM MODAL) ---
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            
+            const imgEl = el.querySelector('img');
+            
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            caption.textContent = imgEl.alt; // Resmin alt metnini başlık olarak gösterir
+            
+            modal.style.display = 'flex';
+        }
+
+        // --- PRELOADER ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+﻿/* ==========================================================================
+   HALF-LIFE TÜRKİYE - ÇEKİRDEK TASARIM DOSYASI (CORE.CSS)
+   ========================================================================== */
+
+/* --- ORTAK SIFIRLAMA --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* --- ÖZEL SCROLLBAR --- */
+html { scrollbar-width: thin; scrollbar-color: #f58220 #0a0a0a; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+/* --- HEV HUD NİŞANGAH (CROSSHAIR) VE ARKA PLAN --- */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #050505 url('../img/black-mesa-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    cursor: url('../img/crosshair.png') 16 16, auto;
+}
+
+a, button, .menu-btn, .close-btn, .filter-btn, .weapon-slot, .enemy-card, .info-card { 
+    cursor: url('../img/crosshair.png') 16 16, pointer !important; 
+}
+
+body::before { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
+
+/* --- PRELOADER (YÜKLEME EKRANI) --- */
+#preloader { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+.loader-content { text-align: center; }
+.loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); margin-bottom: 20px; animation: pulse 2s infinite ease-in-out; }
+.loader-bar { width: 200px; height: 3px; background: #111; margin: 0 auto; border-radius: 10px; overflow: hidden; }
+.progress { width: 0%; height: 100%; background: #f58220; animation: load 2s linear forwards; }
+.loader-text { display: block; margin-top: 15px; font-size: 0.6rem; letter-spacing: 3px; color: #f58220; font-weight: 700; }
+
+/* --- NAVBAR (MENÜ) --- */
+#main-wrapper { opacity: 0; transition: opacity 0.8s ease; visibility: hidden; flex: 1; display: flex; flex-direction: column; }
+#main-wrapper.visible { opacity: 1; visibility: visible; }
+
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 8%; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid rgba(245, 130, 32, 0.2); }
+.logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff;}
+.logo img { height: 40px; }
+.orange-text { color: #f58220; }
+
+.nav-links { display: flex; list-style: none; gap: 25px; transition: 0.5s ease-in-out; }
+.nav-links a { color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+/* --- MOBİL MENÜ TETİKLEYİCİ --- */
+.menu-btn { display: none; width: 30px; height: 20px; cursor: pointer; z-index: 2100; position: relative; }
+.menu-btn__burger, .menu-btn__burger::before, .menu-btn__burger::after { width: 30px; height: 3px; background: #f58220; position: absolute; transition: 0.4s; }
+.menu-btn__burger::before { content: ''; transform: translateY(-8px); }
+.menu-btn__burger::after { content: ''; transform: translateY(8px); }
+.menu-btn.open .menu-btn__burger { background: transparent; transform: translateX(-20px); }
+.menu-btn.open .menu-btn__burger::before { transform: rotate(45deg) translate(15px, -15px); }
+.menu-btn.open .menu-btn__burger::after { transform: rotate(-45deg) translate(15px, 15px); }
+
+@media (max-width: 992px) {
+    .menu-btn { display: block; }
+    .nav-links { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: rgba(10, 10, 10, 0.98); flex-direction: column; justify-content: center; align-items: center; z-index: 2050; }
+    .nav-links.open { right: 0; }
+    .nav-links li { margin: 15px 0; }
+    .nav-links a { font-size: 1.2rem; }
+}
+
+/* --- ORTAK ANİMASYONLAR --- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes load { to { width: 100%; } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }

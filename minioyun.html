@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HL-DLE</title>
+    <title>HL-DLE Arşiv Sorgusu</title>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
     <style>
         /* --- ORTAK ÇEKİRDEK VE ARKA PLAN --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -122,9 +122,7 @@
 
         /* --- MOD SEÇİM MENÜSÜ --- */
         #menu-screen { display: block; }
-        
         .mode-title { font-size: 1.2rem; color: #fff; margin-bottom: 25px; font-weight: 800; letter-spacing: 1px; }
-        
         .mode-cards { display: flex; flex-direction: column; gap: 15px; }
 
         .mode-card {
@@ -149,7 +147,6 @@
 
         /* --- AKTİF OYUN EKRANI --- */
         #game-screen { display: none; }
-
         .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .back-btn { background: transparent; color: #aaa; border: 1px solid #555; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .back-btn:hover { color: #fff; border-color: #fff; }
@@ -157,7 +154,7 @@
         .stat-label { color: #555; }
         .stat-value { color: #f58220; margin-left: 5px; font-size: 1.1rem;}
 
-        /* Görsel Modu (Karakter/Silah) - ZOOM SİSTEMİ */
+        /* Görsel Modu - ZOOM SİSTEMİ */
         .image-portal {
             width: 200px; height: 200px; margin: 0 auto 30px; border-radius: 50%;
             border: 3px solid rgba(245, 130, 32, 0.5); overflow: hidden; position: relative;
@@ -165,7 +162,7 @@
         }
         .pixelated-target { 
             width: 100%; height: 100%; object-fit: cover; 
-            object-position: center; /* Merkeze zoom yapar */
+            object-position: center; 
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: rgba(245, 130, 32, 0.8); box-shadow: 0 0 15px #f58220; animation: scan 2.5s infinite linear; }
@@ -202,30 +199,29 @@
 <body>
 
     <div id="preloader">
-        <div class="loader-content">
-            <img src="img/tr/hltrwikiweb.png" class="loader-logo">
-            <div class="loader-bar"><div class="progress"></div></div>
-            <span class="loader-text">SİSTEM BAŞLATILIYOR...</span>
-        </div>
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
     </div>
+
 
     <div id="main-wrapper">
         <nav class="navbar">
-            <a href="anasayfaa.html" class="logo">
+            <a href="index.html" class="logo">
                 <img src="img/tr/hltrwikiweb.png" alt="Logo">
                 <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
             </a>
             <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
             <ul class="nav-links" id="navLinks">
-                <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Anasayfa</a></li>
                 <li><a href="karakterler.html">Karakterler</a></li>
                 <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
-            <!--    <li><a href="video.html">Videolar</a></li>
-                <li><a href="haberler.php">Haberler</a></li>-->
-                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
                 <li><a href="minioyun.html" class="active">Mini Oyun</a></li>
-            </ul>
+  <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
             </ul>
         </nav>
 
@@ -239,12 +235,16 @@
                         <div class="mode-card" onclick="openGameMode('char')">
                             <i class="fa-solid fa-user"></i> KARAKTER TAHMİNİ
                         </div>
-                        <!--<div class="mode-card" onclick="openGameMode('weapon')">
+                     <!--   <div class="mode-card" onclick="openGameMode('weapon')">
                             <i class="fa-solid fa-gun"></i> SİLAH TAHMİNİ
+                        </div>
+                        <!-- Harita Tahmini -->
+                        <div class="mode-card" onclick="openGameMode('map')">
+                            <i class="fa-solid fa-map-location-dot"></i> HARİTA TAHMİNİ
                         </div>
                         <div class="mode-card" onclick="openGameMode('quote')">
                             <i class="fa-solid fa-message"></i> REPLİK TAHMİNİ
-                        </div>-->
+                        </div>
                     </div>
                 </div>
 
@@ -281,16 +281,15 @@
     </div>
 
     <script>
-		
-		// --- PRELOADER & NAVBAR KONTROLÜ ---
+// --- PRELOADER & NAVBAR KONTROLÜ ---
 window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('preloader').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('preloader').style.display = 'none';
             document.getElementById('main-wrapper').classList.add('visible');
-        }, 800);
-    }, 1000);
+        }, 200);
+    }, 200);
 });
 
 const menuBtn = document.getElementById('menuBtn');
@@ -302,25 +301,103 @@ menuBtn.addEventListener('click', () => {
 
 // --- VERİTABANLARI ---
 const charDB = [
-    { answer: ["Gordon Freeman", "Gordon", "Freeman"], img: "img/karakter/gordon.jpg" },
-    { answer: ["G-Man", "Gman", "G man"], img: "img/karakter/gman.jpg" },
-    { answer: ["Alyx Vance", "Alyx", "Alix"], img: "img/karakter/alyx.jpg" },
-    { answer: ["Barney Calhoun", "Barney"], img: "img/karakter/barney.jpg" },
-    { answer: ["Isaac Kleiner", "Kleiner", "Dr Kleiner"], img: "img/karakter/kleiner.jpg" }
+    { answer: ["Gordon Freeman", "Gordon", "Freeman"], img: "karakter/gordon.jpg" },
+    { answer: ["Gordon Freeman", "Gordon", "Freeman"], img: "karakter/gordonps2.jpg" },
+    { answer: ["Gordon Freeman", "Gordon", "Freeman"], img: "karakter/gordondc.jpg" },
+    { answer: ["Collete", "collete green", "colete"], img: "karakter/collete.jpg" },
+    { answer: ["G-Man", "Gman", "G man"], img: "karakter/gman.jpg" },
+    { answer: ["G-Man", "Gman", "G man"], img: "karakter/gman01.jpg" },
+    { answer: ["Alyx Vance", "Alyx", "Alix"], img: "karakter/alyx.jpg" },
+    { answer: ["Ivan", "ivan"], img: "karakter/ivan.jpg" },
+    { answer: ["Barney Calhoun", "Barney"], img: "karakter/barney.jpg" },
+    { answer: ["Grigori", "Peder Grigori"], img: "karakter/grigori.jpg" },
+    { answer: ["Gus"], img: "img/karakter/gus.jpg" },
+    { answer: ["Jeff"], img: "img/karakter/jeff.jpg" },
+    { answer: ["Odessa", "odesa", "odessa cubbage"], img: "karakter/odessa.jpg" },
+    { answer: ["Keller", "Dr Keller", "Dr. Keller"], img: "karakter/keller.jpg" },
+    { answer: ["Russell", "russel"], img: "karakter/russell.jpg" },
+    { answer: ["Shephard", "Adrian Shephard", "Adrian"], img: "karakter/shephard.jpg" },
+    { answer: ["Otis"], img: "img/karakter/otis.jpg" },
+    { answer: ["Judith", "Judith Mossman", "Mossman"], img: "karakter/judith.jpg" },
+    { answer: ["Isaac Kleiner", "Kleiner", "Dr Kleiner"], img: "karakter/kleiner.jpg" }
 ];
 
 const weaponDB = [
-    { answer: ["Levye", "Crowbar"], img: "img/silah/levye.jpg" },
-    { answer: ["Yerçekimi Silahı", "Yer çekimi silahı", "Gravity Gun"], img: "img/silah/gravitygun.jpg" },
-    { answer: ["Arbalet", "Crossbow", "Yay"], img: "img/silah/crossbow.jpg" },
-    { answer: ["Pompalı", "Shotgun", "Pompalı Tüfek"], img: "img/silah/shotgun.jpg" }
+    { answer: ["Levye", "Crowbar"], img: "silah/levye.jpg" },
+    { answer: ["Yerçekimi Silahı", "Yer çekimi silahı", "Gravity Gun"], img: "silah/gravitygun.jpg" },
+    { answer: ["Arbalet", "Crossbow", "Yay"], img: "silah/crossbow.jpg" },
+    { answer: ["Pompalı", "Shotgun", "Pompalı Tüfek"], img: "silah/shotgun.jpg" }
+];
+
+const mapDB = [
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross1.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross2.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross3.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross4.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross5.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross6.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross7.png" },
+    { answer: ["Crossfire", "Cross fire"], img: "harita/cross8.png" },
+    { answer: ["Bounce"], img: "harita/bounce1.png" },
+    { answer: ["Bounce"], img: "harita/bounce2.png" },
+    { answer: ["Bounce"], img: "harita/bounce3.png" },
+    { answer: ["Bounce"], img: "harita/bounce4.png" },
+    { answer: ["Bounce"], img: "harita/bounce5.png" },
+    { answer: ["Stalkyard"], img: "harita/st1.png" },
+    { answer: ["Stalkyard"], img: "harita/st2.png" },
+    { answer: ["Stalkyard"], img: "harita/st3.png" },
+    { answer: ["Stalkyard"], img: "harita/st4.png" },
+    { answer: ["Stalkyard"], img: "harita/st5.png" },
+    { answer: ["Stalkyard"], img: "harita/st6.png" },
+    { answer: ["Stalkyard"], img: "harita/st7.png" },
+    { answer: ["Stalkyard"], img: "harita/st8.png" },
+    { answer: ["Gasworks"], img: "harita/gasw1.png" },
+    { answer: ["Gasworks"], img: "harita/gasw2.png" },
+    { answer: ["Gasworks"], img: "harita/gasw3.png" },
+    { answer: ["Gasworks"], img: "harita/gasw4.png" },
+    { answer: ["Gasworks"], img: "harita/gasw5.png" },
+    { answer: ["Gasworks"], img: "harita/gasw6.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot1.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot2.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot3.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot4.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot5.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot6.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot7.png" },
+    { answer: ["Boot Camp", "Bootcamp"], img: "harita/boot8.png" },
+    { answer: ["Datacore", "Data core"], img: "harita/dc1.png" }
 ];
 
 const quoteDB = [
     { answer: ["G-Man", "Gman"], quote: "Yanlış yerdeki doğru kişi dünyayı tamamen değiştirebilir." },
-    { answer: ["Barney Calhoun", "Barney"], quote: "Biranızı ısmarlayacağım." },
+    { answer: ["G-Man", "Gman"], quote: "Öngörülemeyen sonuçlara karşı hazırlıklı olun." },
+    { answer: ["G-Man", "Gman"], quote: "Kalkın ve harekete geçin Bay Freeman." },
+    { answer: ["G-Man", "Gman"], quote: "Korkarım ki durumu yanlış anladınız Bayan Vance" },
+    { answer: ["G-Man", "Gman"], quote: "Onların insanlıkla alakalı tek tecrübesi çelik bir koridordan üzerlerine doğru gelen bir levyeydi." },
+    { answer: ["G-Man", "Gman"], quote: "Bir zamanlar Bayan Vance'i umursamıyorlardı bile." },
+    { answer: ["Barney Calhoun", "Barney"], quote: "Sana Borçlu olduğum şu bira meselesine gelince..." },
+    { answer: ["Barney Calhoun", "Barney"], quote: "Hey, korkuttuğum için kusura bakma. Kameralar için bir şov yapmak zorunda kaldım." },
+    { answer: ["Barney Calhoun", "Barney"], quote: "O pencereden atlamak için birkaç eşya yığ ve meydanda olana kadar devam et." },
+    { answer: ["Barney Calhoun", "Barney"], quote: "Aferin Gordon, O şalteri açman... M.I.T. eğitiminin gerçekten işe yaradığını görebiliyorum." },
     { answer: ["Isaac Kleiner", "Kleiner"], quote: "Lamar! Buraya gel!" },
-    { answer: ["Wallace Breen", "Breen", "Dr Breen"], quote: "Size söyleyeyim... Seçim yanılsaması tehlikelidir." }
+    { answer: ["Grigori", "Peder Grigori","Father Grigori"], quote: "Kurtarılacak bir hayat daha mı? Gözümü üzerinde tutacağım. Bundan fazlasını söz veremem." },
+    { answer: ["Grigori", "Peder Grigori","Father Grigori"], quote: "Sanırım Ravenholm'da kalmak istemiyorsun, bu yüzden seni madenlere götüreceğim." },
+    { answer: ["Magnuson", "Magnusson","Arne Magnusson"], quote: "Ah, bir de Freeman! Bunu başarırsan, Black Mesa'daki o fiyasko için seni affedebilirim. Neden bahsettiğimi biliyorsun –  mikrodalgadaki güveç ile ilgili." },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Doktor Freeman olduğunuzu sanıyorum!" },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Ne Kedisi?" },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Orası Ravenholm'a giden eski geçit. Artık oraya gitmiyoruz." },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Combinelar yavaş uyanabilir, ama bir kez uyandıklarında yollarına çıkmak istemezsiniz." },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Dog, Gordon'u Ravenholm tüneline götür." },
+    { answer: ["Alyx", "Alyx Vance"], quote: "Onu Black Mesa'dan hatırlıyor musun? Eski Yöneticiniz..." },
+    { answer: ["Russel", "Russell"], quote: "Evet, öyle. Hangi minibüste kim olduğunu bilmenin hiçbir yolu yoktu. Yani... Evet. Sonuç olarak, SENİ kurtardım." },
+    { answer: ["Russel", "Russell"], quote: "Eldivenler, Alyx. Biliyorsun, yerçekimi eldivenleri. Oradan birkaç set geçtim" },
+    { answer: ["Russel", "Russell"], quote: "Black Mesa İş bulmanın zor olduğu bir yer.  Mülakata katıldım. Bir yıl sonra tekrar deneyin dediler. Sonrasında ne olduğunu anlatmama gerek yok. Benim için gerçekten büyük bir şanstı. Çok fazla hayatta kalan yok. Dürüst olmak gerekirse, sen ve babanın oradan çıkmış olması bir mucize." },
+    { answer: ["Eli", "Eli Vance"], quote: "Gordon Freeman! Bir bakayım sana, dostum! Aman Tanrım, sen hiç değişmemişsin! Bunu nasıl yapıyorsun?" },
+    { answer: ["Eli", "Eli Vance"], quote: "Sen kendi oğlum olsan daha gururlu olamazdım." },
+    { answer: ["Eli", "Eli Vance"], quote: "Gordon, yaşıyorsun! O tehlikeli kıyafet için Tanrı'ya şükür. Tüm telefonlarımız kapalı. mümkün olan en kısa sürede yüzeye çıkman ve birine burada mahsur kaldığımızı bildirmen gerek." },
+    { answer: ["Keller", "Doktor Keller", "Richard Keller", "Dr Richard Keller"], quote: "Doktor Freeman işe geç kaldı, yine... Doğrusunu söylemek gerekirse Kleiner'ın o çocukta ne bulduğunu anlamıyorum." },
+    { answer: ["Wallace Breen", "Breen", "Dr Breen", "Doktor Breen", "Dr. Breen", "Dr. Wallace Breen"], quote: "Doğamıza ve Kaderimize sadık kalabilmek için daha büyük şeyleri hedeflemeliyiz." },
+    { answer: ["Wallace Breen", "Breen", "Dr Breen", "Doktor Breen", "Dr. Breen", "Dr. Wallace Breen"], quote: "Size söyleyeyim... Seçim yanılsaması tehlikelidir." }
 ];
 
 // --- OYUN MANTIĞI ---
@@ -328,8 +405,8 @@ let currentMode = '';
 let currentDB = [];
 let currentTarget = null;
 let score = 0;
-let currentZoom = 5; 
-let isWaitingNextRound = false; // YENİ: Spam tıklamayı önlemek için kilit
+let currentZoom = 4; 
+let isWaitingNextRound = false; 
 
 function showMenu() {
     document.getElementById('game-screen').style.display = 'none';
@@ -358,6 +435,12 @@ window.openGameMode = function(mode) {
         quotePortal.style.display = 'none';
         hint.innerText = "EKİPMANI BELİRLEYİN";
         input.placeholder = "Silah adı...";
+    } else if(mode === 'map') {
+        currentDB = mapDB;
+        imgPortal.style.display = 'block';
+        quotePortal.style.display = 'none';
+        hint.innerText = "BÖLGEYİ BELİRLEYİN";
+        input.placeholder = "Harita adı... (Örn: Crossfire)";
     } else if(mode === 'quote') {
         currentDB = quoteDB;
         imgPortal.style.display = 'none';
@@ -370,23 +453,46 @@ window.openGameMode = function(mode) {
 };
 
 function startRound() {
-    isWaitingNextRound = false; // KİLİDİ AÇ
-    currentZoom = 5;
+    isWaitingNextRound = false; 
+    
+    // --- HARİTA VE DİĞER MODLAR İÇİN ÖZEL ZOOM AYARI ---
+    if (currentMode === 'map') {
+        // Haritalar geniş olduğu için 2x ile 3x arası hafif bir zoom
+        currentZoom = Math.floor(Math.random() * 2) + 2; 
+    } else {
+        // Karakter ve Silahlar için eski zorlukta 4x ile 6x arası zoom
+        currentZoom = Math.floor(Math.random() * 2) + 2;
+    }
+    
     currentTarget = currentDB[Math.floor(Math.random() * currentDB.length)];
     
     const input = document.getElementById('guessInput');
     const btn = document.getElementById('queryBtn');
     
     input.value = "";
-    input.disabled = false; // Girdiyi tekrar aktif et
-    btn.disabled = false;   // Butonu tekrar aktif et
+    input.disabled = false; 
+    btn.disabled = false;   
     
     document.getElementById('gameFeedback').innerText = "";
 
-    if(currentMode === 'char' || currentMode === 'weapon') {
+    if(currentMode === 'char' || currentMode === 'weapon' || currentMode === 'map') {
         const img = document.getElementById('targetImg');
+        
+        // 2. RASTGELE ODAK NOKTASI (Resmin %0 ile %100 arası x,y koordinatları)
+        const randomX = Math.floor(Math.random() * 101);
+        const randomY = Math.floor(Math.random() * 101);
+        
+        img.style.transition = "none"; 
         img.src = currentTarget.img;
+        
+        // Odak noktasını rastgele konuma ayarla ve zoomla
+        img.style.transformOrigin = `${randomX}% ${randomY}%`;
         img.style.transform = `scale(${currentZoom})`; 
+        
+        setTimeout(() => {
+            img.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+        }, 50);
+
     } else if(currentMode === 'quote') {
         document.getElementById('targetQuote').innerText = currentTarget.quote;
     }
@@ -395,42 +501,42 @@ function startRound() {
 }
 
 function processGuess() {
-    // EĞER BEKLEME SÜRESİNDEYSEK (DOĞRU BİLİNMİŞSE) HİÇBİR ŞEY YAPMA!
     if(isWaitingNextRound) return;
 
     const input = document.getElementById('guessInput');
     const btn = document.getElementById('queryBtn');
     const feedback = document.getElementById('gameFeedback');
     
-    // Kullanıcı hiçbir şey yazmadan basarsa engelle
     if(input.value.trim() === "") return;
 
     const userGuess = input.value.trim().toLowerCase();
     const isCorrect = currentTarget.answer.some(correctAnswer => userGuess === correctAnswer.toLowerCase());
     
     if (isCorrect) {
-        // DOĞRU
-        isWaitingNextRound = true; // SİSTEMİ KİLİTLE
-        input.disabled = true;     // Klavyeden yazmayı engelle
-        btn.disabled = true;       // Tıklamayı engelle
+        isWaitingNextRound = true; 
+        input.disabled = true;     
+        btn.disabled = true;       
 
         score += 10;
         document.getElementById('gameScore').innerText = score;
         feedback.innerText = "BAŞARILI: " + currentTarget.answer[0].toUpperCase();
         feedback.className = "feedback-msg msg-success";
         
-        if(currentMode === 'char' || currentMode === 'weapon') {
-            document.getElementById('targetImg').style.transform = "scale(1)";
+        if(currentMode === 'char' || currentMode === 'weapon' || currentMode === 'map') {
+            const img = document.getElementById('targetImg');
+            // Doğru bilindiğinde resmin düzgün görünmesi için odağı merkeze al ve zoomu sıfırla
+            img.style.transformOrigin = "center center";
+            img.style.transform = "scale(1)";
         }
-        setTimeout(startRound, 2500);
+        setTimeout(startRound, 1500);
     } else {
-        // YANLIŞ
         feedback.innerText = "EŞLEŞME BULUNAMADI!";
         feedback.className = "feedback-msg msg-error";
         input.style.borderColor = "#ff0000";
         setTimeout(() => input.style.borderColor = "#444", 500);
 
-        if(currentMode === 'char' || currentMode === 'weapon') {
+        if(currentMode === 'char' || currentMode === 'weapon' || currentMode === 'map') {
+            // Yanlış bilindiğinde aynı rastgele noktadan geriye doğru uzaklaşır
             currentZoom = Math.max(1, currentZoom - 1); 
             document.getElementById('targetImg').style.transform = `scale(${currentZoom})`;
         }
@@ -441,7 +547,6 @@ document.getElementById('queryBtn').addEventListener('click', processGuess);
 document.getElementById('guessInput').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') processGuess();
 });
-		
     </script>
 </body>
 </html>

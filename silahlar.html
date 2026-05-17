@@ -1,0 +1,505 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silahlar</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Courier+Prime&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <style>
+        /* --- ORTAK ÇEKİRDEK VE ARKA PLAN --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ÖZEL SCROLLBAR --- */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #0a0a0a; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- HEV HUD NİŞANGAH (CROSSHAIR) --- */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            cursor: url('img/crosshair.png') 16 16, auto;
+        }
+
+        a, button, .weapon-slot, .menu-btn, .close-btn, .filter-btn { cursor: url('img/crosshair.png') 16 16, pointer !important; }
+
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
+
+        /* --- PRELOADER --- */
+        #preloader { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-content { text-align: center; }
+        .loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); margin-bottom: 20px; animation: pulse 2s infinite ease-in-out; }
+        .loader-bar { width: 200px; height: 3px; background: #111; margin: 0 auto; border-radius: 10px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #f58220; animation: load 2s linear forwards; }
+        .loader-text { display: block; margin-top: 15px; font-size: 0.6rem; letter-spacing: 3px; color: #f58220; font-weight: 700; }
+
+        /* --- NAVBAR --- */
+        #main-wrapper { opacity: 0; transition: opacity 0.8s ease; visibility: hidden; flex: 1; display: flex; flex-direction: column; }
+        #main-wrapper.visible { opacity: 1; visibility: visible; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 8%; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid rgba(245, 130, 32, 0.2); }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff;}
+        .logo img { height: 40px; }
+        .orange-text { color: #f58220; }
+
+        .nav-links { display: flex; list-style: none; gap: 25px; transition: 0.5s ease-in-out; }
+        .nav-links a { color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+        .menu-btn { display: none; width: 30px; height: 20px; cursor: pointer; z-index: 2100; position: relative; }
+        .menu-btn__burger, .menu-btn__burger::before, .menu-btn__burger::after { width: 30px; height: 3px; background: #f58220; position: absolute; transition: 0.4s; }
+        .menu-btn__burger::before { content: ''; transform: translateY(-8px); }
+        .menu-btn__burger::after { content: ''; transform: translateY(8px); }
+        .menu-btn.open .menu-btn__burger { background: transparent; transform: translateX(-20px); }
+        .menu-btn.open .menu-btn__burger::before { transform: rotate(45deg) translate(15px, -15px); }
+        .menu-btn.open .menu-btn__burger::after { transform: rotate(-45deg) translate(15px, 15px); }
+
+        @media (max-width: 992px) {
+            .menu-btn { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: rgba(10, 10, 10, 0.98); flex-direction: column; justify-content: center; align-items: center; z-index: 2050; }
+            .nav-links.open { right: 0; }
+            .nav-links li { margin: 15px 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* --- SAYFA BAŞLIĞI VE FİLTRELER --- */
+        .page-header { text-align: center; padding: 40px 20px 10px; }
+        .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); color: #f58220; text-transform: uppercase; letter-spacing: 2px; }
+        .page-header p { color: #888; margin-top: 10px; font-weight: 700; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin: 20px auto 30px; padding: 0 20px; }
+        .filter-btn { background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(245, 130, 32, 0.3); color: #ccc; padding: 10px 25px; border-radius: 30px; font-family: inherit; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; transition: 0.3s; text-transform: uppercase; }
+        .filter-btn:hover { border-color: #f58220; color: #fff; }
+        .filter-btn.active { background: #f58220; color: #000; border-color: #f58220; box-shadow: 0 0 15px rgba(245, 130, 32, 0.4); }
+
+        /* --- SİLAH KUTULARI (GRID) --- */
+        .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 90%; max-width: 1200px; margin: 0 auto 60px; }
+        .weapon-slot { background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s ease; backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); animation: fadeIn 0.4s ease forwards; }
+        .weapon-slot:hover { border-color: #f58220; transform: translateY(-5px); background: rgba(245, 130, 32, 0.05); box-shadow: 0 15px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(245, 130, 32, 0.1); }
+        .weapon-slot i { font-size: 1.8rem; color: #555; margin-bottom: 12px; transition: 0.3s; }
+        .weapon-slot:hover i { color: #f58220; }
+        .weapon-slot h3 { font-size: 0.9rem; color: #ccc; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* --- SİLAH DETAY PENCERESİ (MODAL) --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s ease; padding: 20px; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: rgba(15, 15, 15, 0.95); border: 1px solid #f58220; border-radius: 15px; width: 100%; max-width: 700px; padding: 40px; position: relative; transform: scale(0.8) translateY(20px); transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(245, 130, 32, 0.15); text-align: left; max-height: 90vh; overflow-y: auto; }
+        
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: #f58220; border-radius: 3px; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+
+        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 1.8rem; color: #777; transition: 0.3s; z-index: 10; }
+        .close-btn:hover { color: #f58220; transform: rotate(90deg); }
+
+        .modal-header-area { text-align: center; }
+        .modal-badge { display: inline-block; background: rgba(245, 130, 32, 0.1); color: #f58220; border: 1px solid #f58220; padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 15px; }
+        .modal-title { font-size: 2rem; color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+
+        .modal-img-container { width: 100%; height: 200px; background: radial-gradient(circle, rgba(245,130,32,0.1) 0%, transparent 70%); display: flex; justify-content: center; align-items: center; margin-bottom: 25px; border-radius: 10px; border: 1px solid rgba(245,130,32,0.2); }
+        .modal-img-container img { max-width: 90%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6)); }
+
+        .modal-desc { color: #bbb; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; text-align: justify; }
+        
+        /* Modal İçi Liste Tasarımı (Kullanan karakterler vs. için) */
+        .modal-desc ul { margin-left: 20px; margin-top: 10px; color: #ddd; }
+        .modal-desc li { margin-bottom: 6px; }
+
+		
+		/* 3D MODEL ALANI */
+        .model-viewer-container {
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 130, 32, 0.3);
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            outline: none;
+            --poster-color: transparent;
+        }
+		
+		
+        /* TAKTİKSEL TABLO TASARIMI */
+        .stats-table { width: 100%; border-collapse: collapse; font-family: 'Courier Prime', monospace; font-size: 0.85rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(245, 130, 32, 0.3); border-radius: 8px; overflow: hidden; }
+        .stats-table th, .stats-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; line-height: 1.5; }
+        .stats-table th { color: #f58220; font-weight: 800; background: rgba(245, 130, 32, 0.1); text-transform: uppercase; width: 35%; letter-spacing: 1px; }
+        .stats-table td { color: #ddd; font-weight: 700; }
+        .stats-table tr:last-child th, .stats-table tr:last-child td { border-bottom: none; }
+		
+		
+		
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes load { to { width: 100%; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+    </div>
+
+
+    <div id="main-wrapper">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html" class="active">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <header class="page-header">
+            <h1>SİLAH ENVANTERİ</h1>
+            <p>Half-Life Evrenindeki Çeşitli Silahlar Hakkında Bilgiler (Yapılıyor).</p>
+        </header>
+
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">TÜMÜ</button>
+            <button class="filter-btn" data-filter="melee">Yakın Dövüş</button>
+            <button class="filter-btn" data-filter="firearm">Ateşli Silahlar</button>
+            <button class="filter-btn" data-filter="explosive">Patlayıcılar</button>
+            <button class="filter-btn" data-filter="energy">Enerji / Özel</button>
+        </div>
+
+        <main class="weapon-grid" id="weaponGrid"></main>
+    </div>
+
+    <div class="modal-overlay" id="weaponModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <div class="modal-header-area">
+                <span class="modal-badge">TEÇHİZAT DOSYASI</span>
+                <h2 class="modal-title" id="modalTitle">Silah Adı</h2>
+            </div>
+            
+            <div class="modal-img-container">
+                <img id="modalImg" src="" alt="Silah Görseli">
+            </div>
+            
+            <p class="modal-desc" id="modalDesc">Silah açıklaması yükleniyor...</p>
+            <div id="modalTableArea"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.classList.add('visible');
+                    }, 200);
+                }
+            }, 200);
+            renderWeapons('all'); 
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+
+        // ========================================================================
+        // SİLAH VERİTABANI (TERS TIRNAK İLE ÇOK SATIRLI YAPI)
+        // NOT: `` işaretleri arasında istediğin gibi Enter'a basıp alt satıra geçebilir,
+        // <br> ile boşluk bırakabilir, <b> ile kalın yazabilirsin!
+        // ========================================================================
+        
+        const weaponList = [
+            { 
+                filterTag: "melee", 
+                name: "Levye", 
+                class: "Yakın Dövüş", 
+                speed: "Hızlı", 
+                ammo: "Sonsuz (Yok)",
+				
+                
+                // Çoklu satır ve HTML destekli yeni hasar alanı
+                damage: `
+                    <b>Half-Life 1:</b> 5 HP<br>
+                    <b>Half-Life 2:</b> 10 HP<br>
+                    <b>Half-Life 2 Deathmatch:</b> 25 HP<br>
+                    <b>Half-Life Source:</b> 10 HP<br>
+                `,
+                
+                // Çoklu satır ve HTML destekli yeni açıklama alanı
+                desc: `
+                    Gordon Freeman'ın ikonik yakın dövüş silahı. Kapıları kırmak, kutuları parçalamak ve merminiz bittiğinde düşmanları savuşturmak için vazgeçilmezdir.
+                    <br><br>
+                    <b>Kullanan Karakterler:</b>
+                    <ul>
+                        <li>Gordon Freeman</li>
+                        <li>Barney Calhoun (Blue Shift)</li>
+                        <li>Direnişçiler (HL2)</li>
+                    </ul>
+                `
+            },
+            
+         /*   { 
+               filterTag: "firearm", 
+                name: "MP5", 
+                class: "Ateşli Silah (HMT)", 
+                speed: "Çok Yüksek (800 mermi/dk)", 
+                ammo: `
+                    <b>Birincil:</b> 50 Mermi / Şarjör<br>
+                    <b>İkincil:</b> 1 Bomba (M203)
+                `,
+                damage: `
+                    <b>Mermi Hasarı:</b> 5 HP (HL1)<br>
+                    <b>Bomba Hasarı:</b> 100 HP
+                `,
+                desc: `
+                    Black Mesa Güvenlik Güçleri ve HECU askerlerinin standart silahı. İkincil atışında yüksek alan hasarı veren taktiksel bir bomba atar barındırır.
+                    <br><br>
+                    <b>Görüldüğü Oyunlar:</b>
+                    <ul>
+                        <li>Half-Life 1</li>
+                        <li>Opposing Force</li>
+                        <li>Blue Shift</li>
+                    </ul>
+                `
+            },
+
+            { 
+                filterTag: "firearm", 
+                name: "Arbalet", 
+                class: "Keskin Nişancı / Özel", 
+                speed: "Çok Yavaş (Tek Atım)", 
+                ammo: "5 Ok / Şarjör",
+                damage: `
+                    <b>Kafadan Vuruş:</b> Tek Atışta Ölüm<br>
+                    <b>Gövde Vuruşu:</b> 50 HP (HL1)<br>
+                    <b>Gövde Vuruşu:</b> 100 HP (HL2)
+                `,
+                desc: `
+                    Su altında da ateşlenebilen, son derece ölümcül bir keskin nişancı silahı. Uzak mesafedeki hedefleri sessizce indirmek için tasarlanmıştır. HL2 versiyonu kızdırılmış demir çubuk fırlatır.
+                    <br><br>
+                    <b>Kullanan Karakterler:</b>
+                    <ul>
+                        <li>Gordon Freeman</li>
+                    </ul>
+                `
+            },
+
+            
+            { filterTag: "firearm", name: "MP7", class: "Ateşli Silah (HMT)", damage: `Düşük (8 HP / Mermi)`, speed: `Ekstrem Hızlı`, ammo: `45 Mermi / Şarjör`, 
+              desc: `Şehir 17 Direniş üyelerinin ve Combine sivil korumalarının sıkça kullandığı, seri atışlı ve bomba atar eklentili modern hafif makineli tüfek.` },
+            
+            { filterTag: "explosive", name: "El Bombası", class: "Patlayıcı", damage: `Alan Hasarı (100+ HP)`, speed: `Fırlatma (Gecikmeli)`, ammo: `Maksimum 5-10 Adet`, 
+              desc: `Standart parça tesirli MK2 veya Combine üretimi patlayıcı. Dar alanları temizlemek ve siper arkasındaki düşmanları avlamak için mükemmeldir.` },
+            
+            { filterTag: "explosive", name: "RPG", class: "Ağır Patlayıcı", damage: `Devasa (Araç Yokedici)`, speed: `Yavaş (Lazer Güdümlü)`, ammo: `1 Roket / Tüp`, 
+              desc: `Lazer güdümlü roketatar. Zırhlı araçları, helikopterleri, Gunship'leri ve Strider'ları yokedebilen devasa tahrip gücüne sahip ağır silah.` },
+            
+            { filterTag: "firearm", name: "SPAS-12", class: "Av Tüfeği", damage: `Çok Yüksek (Yakından)`, speed: `Yavaş`, ammo: `8 Fişek / Şarjör`, 
+              desc: `Askeri standart pompalı tüfek. İkincil atışında çift namlu ateşleyerek yakın mesafedeki her şeyi, zombileri bile saniyeler içinde paramparça eder.` },
+            
+            { filterTag: "energy", name: "Yerçekimi Silahı", class: "Enerji Manipülatörü", damage: `Fırlatılan Nesneye Bağlı`, speed: `Orta`, ammo: `Sonsuz Enerji`, 
+              desc: `Sıfır Noktası Enerji Alanı Manipülatörü. Ağır nesneleri kaldırıp kendinize çekmenizi ve ölümcül bir hızla düşmanlara fırlatmanızı sağlar.` },
+            
+            { filterTag: "firearm", name: ".357 Magnum", class: "Ateşli Silah (Tabanca)", damage: `Çok Yüksek (40-50 HP)`, speed: `Yavaş`, ammo: `6 Mermi / Silindir`, 
+              desc: `Ağır zırhlı hedeflere karşı mükemmel durdurucu güce sahip, yüksek kalibreli altıpatlar. İsabetli atışlarda ölümcüldür.` },
+            
+            { filterTag: "energy", name: "Tau Cannon", class: "Deneysel Enerji", damage: `Yüksek (Şarja Bağlı)`, speed: `Seri veya Şarjlı Atış`, ammo: `Uranyum Pili (100 Birim)`, 
+              desc: `Deneysel enerji silahı (Gauss Gun). Duvarların arkasından sekebilen ve şarj edildiğinde yıkıcı bir hasar veren uranyum ışınları atar.` },
+            
+            { filterTag: "energy", name: "Gluon Silahı", class: "Deneysel Kuantum", damage: `Aşırı Yüksek`, speed: `Sürekli Işın`, ammo: `Uranyum Pili`, 
+              desc: `Kuantum Yokedici (Egon). Hedefin moleküler yapısını tamamen bozarak onu saniyeler içinde buharlaştıran sürekli bir enerji huzmesi ateşler.` },
+            
+            { filterTag: "energy", name: "Snark", class: "Organik Patlayıcı", damage: `Düşük Sürekli + Patlama`, speed: `Takip (Kendi İlerler)`, ammo: `Maksimum 15 Snark`, 
+              desc: `Xen boyutundan gelen agresif, böcek benzeri organik yaratıklar. Fırlatıldığında hedefleri takip edip ısırarak patlarlar.` },
+            
+            { filterTag: "firearm", name: "Glock", class: "Ateşli Silah (Tabanca)", damage: `Düşük (8 HP / Mermi)`, speed: `Orta / İkincilde Hızlı`, ammo: `17 Mermi / Şarjör`, 
+              desc: `Black Mesa güvenlik görevlilerinin taşıdığı 9mm standart tabanca. Güvenilirdir ve su altında ateş edebilme gibi taktiksel bir avantaja sahiptir.` },
+            
+            { filterTag: "firearm", name: "USP", class: "Ateşli Silah (Tabanca)", damage: `Düşük (8-10 HP)`, speed: `Kullanıcıya Bağlı Hızlı`, ammo: `18 Mermi / Şarjör`, 
+              desc: `Combine Sivil Koruma (Metro Cop) birimlerinin kullandığı 9mm yarı otomatik standart hizmet tabancası. Hızlı atış kapasitesine sahiptir.` },
+            
+            { filterTag: "firearm", name: "Crossbow", class: "Keskin Nişancı", damage: `Ölümcül (100 HP)`, speed: `Çok Yavaş`, ammo: `1 Ok / Yay`, 
+              desc: `Direniş yapımı, dürbünlü keskin nişancı silahı. Düşmanları kızdırılmış demir çubuklarla duvarlara çivileyecek kadar güçlü ve sessizdir.` },
+            
+            { filterTag: "energy", name: "Hivehand", class: "Organik", damage: `Düşük (Sürekli Hasar)`, speed: `Orta / Takip Eden Atış`, ammo: `Sonsuz (Yenilenir)`, 
+              desc: `Alien Grunt'ların organik silahı. Sınırsız mühimmata sahip, hedefini köşe bucak takip eden akıllı ve agresif böcekler (hornet) fırlatır.` },
+            
+            { filterTag: "firearm", name: "AK-47", class: "Ateşli Silah (Taarruz)", damage: `Orta / Yüksek`, speed: `Otomatik (Seri)`, ammo: `30 Mermi / Şarjör`, 
+              desc: `Yüksek durdurucu güce sahip, son derece güvenilir taarruz tüfeği. Direnişin zorlu şartlarında en çok tercih edilen silahlarından biridir.` },
+            
+            { filterTag: "explosive", name: "Hopwire", class: "Deneysel Patlayıcı", damage: `Alan Hasarı (Yüksek)`, speed: `Fırlatma`, ammo: `Taşınabilir`, 
+              desc: `Alyx Vance tarafından geliştirilen deneysel patlayıcı cihaz. Fırlatıldığında havaya sıçrar ve etrafa ölümcül lazer ağları veya şarapnel saçar.` },
+            
+            { filterTag: "melee", name: "Taş", class: "Çevresel Obje", damage: `Çok Düşük`, speed: `Manuel Fırlatma`, ammo: `Sınırsız (Yerden Bulunur)`, 
+              desc: `Direnişçilerin en ilkel silahı. Merminiz bittiğinde sivil koruma dronlarını şaşırtmak veya dikkat dağıtmak için fırlatılabilir.` },
+            
+            { filterTag: "firearm", name: "Annabelle Pompalı Tüfeği", class: "Ateşli Silah / Av Tüfeği", damage: `Yüksek (40 HP)`, speed: `Yavaş`, ammo: `2 Mermi (İç Şarjör)`, 
+              desc: `Peder Grigori'ye ait modifiye edilmiş özel av tüfeği. Pompalı mermisi yerine .357 magnum fişekleri ateşleyen son derece isabetli bir silahtır.` },
+            
+            { filterTag: "energy", name: "Combine Koruma Silahı", class: "Combine Enerji Silahı", damage: `Orta`, speed: `Sürekli Akım`, ammo: `Combine Bataryası`, 
+              desc: `Combine güçlerinin kullandığı gelişmiş enerji tabanlı silah sistemi. Sivil bastırma operasyonlarında sıklıkla karşımıza çıkar.` },
+            
+            { filterTag: "energy", name: "Immolator", class: "Ateş/Asit Püskürtücü", damage: `Sürekli Yakıcı Hasar`, speed: `Sürekli`, ammo: `Gaz Tankı`, 
+              desc: `Cremator'ların kullandığı asit/ateş püskürtücü. Cesetleri ve biyo-tehlikeleri saniyeler içinde kül etmek için kullanılır.` },
+            
+            { filterTag: "melee", name: "Elektrikli Jop", class: "Yakın Dövüş", damage: `Şok / Orta Hasar`, speed: `Hızlı`, ammo: `Batarya (Yenilenir)`, 
+              desc: `Combine Sivil Koruma birimlerinin standart yakın dövüş silahı. Yüksek voltajlı şok vererek isyancıları itaate zorlar.` },
+            
+            { filterTag: "melee", name: "Dağcı Baltası", class: "Yakın Dövüş", damage: `Orta`, speed: `Hızlı`, ammo: `Sonsuz (Yok)`, 
+              desc: `Buzlu arazilerde tırmanmayı veya cephanesizlik durumunda yakın dövüşte hedefleri parçalamayı sağlayan sivri araç.` },
+            
+            { filterTag: "firearm", name: "Alyx'in Silahı", class: "Özel Silah (Tabanca)", damage: `Orta`, speed: `Otomatik / Yüksek`, ammo: `Özel Şarjör`, 
+              desc: `Alyx Vance'in modifiye ettiği, seri ateş edebilen, katlanabilir yapıda ve sadece kendisinin kullanabildiği biyo-şifreli özel tabancası.` },
+            
+            { filterTag: "melee", name: "İngiliz Anahtarı", class: "Yakın Dövüş", damage: `Yüksek`, speed: `Yavaş`, ammo: `Sonsuz (Yok)`, 
+              desc: `Black Mesa mühendislerinin kullandığı, ağır ve savurması yavaş olsa da vurduğunda headcrab'leri tek seferde ezen güçlü bir yakın dövüş aleti.` },
+            
+            { filterTag: "melee", name: "Komando Bıçağı", class: "Yakın Dövüş", damage: `Orta`, speed: `Çok Hızlı`, ammo: `Sonsuz (Yok)`, 
+              desc: `HECU Komandosu Adrian Shephard'ın standart muharebe bıçağı. Sessiz suikastlar ve hızlı saldırılar için mükemmeldir.` },
+            
+            { filterTag: "explosive", name: "Lazer Mayını", class: "Tuzak", damage: `Ölümcül Patlama`, speed: `Tetiklendiğinde`, ammo: `Manuel Kurulum`, 
+              desc: `Duvarlara yerleştirilen ve kırmızı lazer ağı kesildiği anda hedefi havaya uçuran yüksek tahrip güçlü tuzaklayıcı patlayıcı.` },
+            
+            { filterTag: "explosive", name: "Çanta Bomba", class: "Uzaktan Patlayıcı", damage: `Devasa Patlama`, speed: `Tetikli`, ammo: `Maksimum 5 Adet`, 
+              desc: `Uzaktan kumandalı (Satchel Charge), yüksek patlayıcılı çanta. Düşman devriyelerine taktiksel ve ölümcül tuzaklar kurmak için idealdir.` },
+            
+            { filterTag: "firearm", name: "Keskin Nişancı Tüfeği", class: "Ateşli Silah (Sniper)", damage: `Ölümcül`, speed: `Çok Yavaş`, ammo: `Tek Atım`, 
+              desc: `Black Mesa suikastçılarının veya Overwatch Sniper birimlerinin kullandığı, uzak mesafeden tek atan teleskopik dürbünlü ağır tüfek.` },
+            
+            { filterTag: "firearm", name: "Desert Eagle", class: "Ateşli Silah (Tabanca)", damage: `Yüksek`, speed: `Orta`, ammo: `7 Mermi / Şarjör`, 
+              desc: `Siyah operasyonlar (Black Ops) birimlerinin kullandığı, entegre lazer hedefleyicili ve olağanüstü hasara sahip el topu.` },
+            
+            { filterTag: "energy", name: "Spore Fırlatıcı", class: "Organik", damage: `Zehir Hasarı (Yüksek)`, speed: `Yavaş`, ammo: `Organik Sporlar`, 
+              desc: `Opposing Force görevlerinde ele geçirilen organik silah. Duvarlardan seken, son derece zehirli ve şoklayıcı spor mermileri fırlatır.` },
+            
+            { filterTag: "energy", name: "Displacer Topu", class: "Işınlanma Silahı", damage: `Anında Yokedici`, speed: `Şarj Süresi Var`, ammo: `Uranyum Pili`, 
+              desc: `Black Mesa ışınlanma teknolojisinden üretilen deneysel silah. Devasa enerji alanları yaratır ve ikincil atışında kullanıcıyı Xen'e ışınlar.` },
+            
+            { filterTag: "firearm", name: "M249", class: "Ağır Makineli", damage: `Orta`, speed: `Çok Seri`, ammo: `50 Mermi / Kutu`, 
+              desc: `HECU askerlerinin ağır manga destek silahı. Sürdürülebilir atış hızıyla kalabalık uzaylı gruplarını biçmek için birebirdir.` },
+            
+            { filterTag: "energy", name: "Shockroach Silahı", class: "Organik Şok", damage: `Orta / Yüksek`, speed: `Otomatik Seri`, ammo: `Sonsuz (Kendi Yenilenir)`, 
+              desc: `Shock Trooper'lardan düşen organik elektrik silahı. Kendi kendini şarj eden yapısı sayesinde sonsuz elektrik şoku ateşler.` }*/
+        ];
+
+        // --- MODAL (POPUP) ELEMENTLERİ ---
+        const modal = document.getElementById('weaponModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImg = document.getElementById('modalImg');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalTableArea = document.getElementById('modalTableArea');
+        const closeModal = document.getElementById('closeModal');
+
+        closeModal.addEventListener('click', () => { modal.classList.remove('active'); });
+        window.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        // --- SİLAHLARI ÇİZİM VE FİLTRELEME FONKSİYONU ---
+        function renderWeapons(filterType) {
+            const grid = document.getElementById('weaponGrid');
+            grid.innerHTML = ""; 
+            
+            weaponList.forEach(weapon => {
+                if (filterType === 'all' || weapon.filterTag === filterType) {
+                    
+                    let cleanImgName = weapon.name.toLowerCase().replace(/ /g, '').replace(/ı/g, 'i').replace(/ç/g, 'c').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/[\.,\']/g, '');
+                    
+                    const slot = document.createElement('div');
+                    slot.className = 'weapon-slot';
+                    
+                    slot.innerHTML = `
+                        <i class="fa-solid fa-crosshairs"></i>
+                        <h3>${weapon.name}</h3>
+                    `;
+
+                    slot.addEventListener('click', () => {
+                        modalTitle.innerText = weapon.name;
+                        
+                        modalImg.src = `silahlar/${cleanImgName}.jpg`;
+                        modalImg.onerror = function() {
+                            this.src = 'https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'; 
+                        };
+                        
+                        modalDesc.innerHTML = `${weapon.desc}`;
+                        
+                        modalTableArea.innerHTML = `
+                            <table class="stats-table">
+                                <tbody>
+                                    <tr>
+                                        <th>Silah Sınıfı</th>
+                                        <td>${weapon.class}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Hasar Seviyesi</th>
+                                        <td>${weapon.damage}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Saldırı Hızı</th>
+                                        <td>${weapon.speed}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Kapasite</th>
+                                        <td>${weapon.ammo}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+                        
+                        modal.classList.add('active');
+                    });
+
+                    grid.appendChild(slot);
+                }
+            });
+        }
+
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filterValue = btn.getAttribute('data-filter');
+                renderWeapons(filterValue);
+            });
+        });
+
+    </script>
+</body>
+</html>

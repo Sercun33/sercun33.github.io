@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mekanlar</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css">
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Yükleniyor...">
+    </div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+               <li><a href="minioyun.html">Mini Oyun</a></li>
+ <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html" class="active">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h1 class="page-title">Mekan Analizi</h1>
+            <p class="page-desc">Half-Life Evrenindeki Kritik Tesisler ve Bölgeler</p>
+
+         <!--   <div class="char-grid">
+                <a href="blackmesa.html" class="char-card">
+                    <span class="char-id">ÇOK GİZLİ</span>
+                    <div class="char-img-wrap"><img src="mekan/blackmesa.jpg" alt="Black Mesa" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Black Mesa Tesisi</div>
+                    <div class="char-role">Ana Araştırma Kompleksi</div>
+                </a>
+
+                <a href="xen.html" class="char-card">
+                    <span class="char-id">SINIR DÜNYA</span>
+                    <div class="char-img-wrap"><img src="mekan/xen.jpg" alt="Xen Gezegeni" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Xen</div>
+                    <div class="char-role">Boyut Ötesi Uzaylı Gezegeni</div>
+                </a>
+
+-->
+
+           <!--     <a href="sektorc.html" class="char-card">
+                    <span class="char-id">BİLİMSEL</span>
+                    <div class="char-img-wrap"><img src="mekan/sektorc.jpg" alt="Sektör C" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Sektör C</div>
+                    <div class="char-role">Test Laboratuvarları</div>
+                </a>
+-->
+                <a href="lambdakompleks.html" class="char-card">
+                    <span class="char-id">BİLİM</span>
+                    <div class="char-img-wrap"><img src="mekan/lmk.jpg" alt="Lambda Kompleksi" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Lambda Kompleksi</div>
+                    <div class="char-role">Teleportasyon Merkezi</div>
+                </a>
+                
+       <!--          <a href="bmeast.html" class="char-card">
+                    <span class="char-id">DİRENİŞ</span>
+                    <div class="char-img-wrap"><img src="mekan/bmeast.png" alt="Black Mesa Doğu" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Black Mesa East</div>
+                    <div class="char-role">Gizli Direniş Üssü</div>
+                </a>
+-->
+                <a href="citadel.html" class="char-card">
+                    <span class="char-id">Combine</span>
+                    <div class="char-img-wrap"><img src="mekan/citadel.png" alt="Citadel" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Citadel</div>
+                    <div class="char-role">Combine Ana Karargahı</div>
+                </a>
+			<br>
+			<h1>Devamı Yakında Gelecek!</h1>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    // Ön Yükleme (Preloader) Kontrolü
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            const wrapper = document.getElementById('main-wrapper');
+            
+            if(preloader) {
+                preloader.style.opacity = '0';
+                preloader.style.transition = 'opacity 0.2s ease';
+                preloader.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    if(wrapper) {
+                        wrapper.style.opacity = '1';
+                        wrapper.style.visibility = 'visible';
+                    }
+                }, 200);
+            }
+        }, 200); 
+    });
+
+    // Mobil Menü Kontrolü
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    if(menuBtn && navLinks) {
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('open');
+        });
+    }
+    </script>
+</body>
+</html>

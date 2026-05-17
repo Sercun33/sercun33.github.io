@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combine Birlikleri - Half-Life Türkiye</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css">
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU (SCROLLBAR)
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* Char Card İçin Ekstra Renkler (Beta ve Alyx için) */
+        .char-id.alyx { background: #00bcd4; color: #000; }
+        .char-id.beta { background: #8b0000; color: #fff; }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+    </div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html" class="active">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haber.html">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h1 class="page-title">Combine Birlikleri</h1>
+            <p class="page-desc">Combine İmparatorluğuna Ait Askeri ve Sentez Kuvvetler</p>
+
+            <div class="char-grid">
+                
+                <a href="combine-cp.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/sivilkoruma.jpg" alt="Sivil Koruma Ekipleri" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Sivil Koruma</div>
+                    <div class="char-role">Polis Gücü</div>
+                </a>
+
+                <a href="combine-overwatch.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/overwatchaskeri.jpg" alt="Overwatch Askerleri" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Overwatch Askeri</div>
+                    <div class="char-role">Piyade</div>
+                </a>
+
+                <a href="combine-elite.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/overwatchelite.jpg" alt="Combine Elite" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Elite</div>
+                    <div class="char-role">Seçkin Birim</div>
+                </a>
+
+                <a href="combine-stalker.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinestalker.jpg" alt="Combine Stalker" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Stalker</div>
+                    <div class="char-role">Köle / İşçi</div>
+                </a>
+
+                <a href="combine-strider.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinestrider.jpg" alt="Combine Strider" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Strider</div>
+                    <div class="char-role">Ağır Sentez</div>
+                </a>
+
+                <a href="combine-hunter.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinehunter.jpg" alt="Combine Hunter" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Hunter</div>
+                    <div class="char-role">Çevik Sentez</div>
+                </a>
+
+                <a href="combine-gunship.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinegunship.jpg" alt="Combine Gunship (Sarı)" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Gunship (Sarı)</div>
+                    <div class="char-role">Hava Sentezi</div>
+                </a>
+
+                <a href="combine-gunship2.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinegunship2.jpg" alt="Combine Gunship (Mavi)" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Gunship (Mavi)</div>
+                    <div class="char-role">Hava Sentezi</div>
+                </a>
+                
+                <a href="combine-dropship.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinedropship.jpg" alt="Combine Dropship" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Dropship</div>
+                    <div class="char-role">Taşıyıcı Sentez</div>
+                </a>
+
+                <a href="combine-scanner.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinesehirtarayici.jpg" alt="Combine Scanner (Şehir)" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">City Scanner</div>
+                    <div class="char-role">Tarayıcı Drone</div>
+                </a>
+
+                <a href="combine-manhack.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinemanhack.jpg" alt="Combine Manhack" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Manhack</div>
+                    <div class="char-role">Drone</div>
+                </a>
+
+                <a href="combine-advisor.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combineadvisor.jpg" alt="Combine Advisor" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Advisor</div>
+                    <div class="char-role">Yönetici Irk</div>
+                </a>
+
+                <a href="combine-hunterch.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinehunterchopper.jpg" alt="Combine Chopper" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Hunter Chopper</div>
+                    <div class="char-role">Hava Aracı</div>
+                </a>
+
+                <a href="combine-sentry.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinesentrygun.jpg" alt="Combine Sentry" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Sentry Gun</div>
+                    <div class="char-role">Savunma</div>
+                </a>
+
+                <a href="combine-sniper.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinesniper.jpg" alt="Combine Sniper" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Sniper</div>
+                    <div class="char-role">Nişancı</div>
+                </a>
+
+                <a href="combine-rollermine.html" class="char-card">
+                    <span class="char-id">HL2</span>
+                    <div class="char-img-wrap"><img src="combine/combinerollermine.jpg" alt="Combine Rollermine" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Rollermine</div>
+                    <div class="char-role">Mayın / Drone</div>
+                </a>
+
+                <a href="combine-grunt.html" class="char-card">
+                    <span class="char-id alyx">ALYX</span>
+                    <div class="char-img-wrap"><img src="combine/combinegrunt.jpg" alt="Combine Grunt" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Grunt</div>
+                    <div class="char-role">Piyade Er</div>
+                </a>
+
+                <a href="combine-ordinal.html" class="char-card">
+                    <span class="char-id alyx">ALYX</span>
+                    <div class="char-img-wrap"><img src="combine/combineordinal.jpg" alt="Combine Ordinal" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Ordinal</div>
+                    <div class="char-role">Komutan</div>
+                </a>
+                
+                <a href="combine-suppressor.html" class="char-card">
+                    <span class="char-id alyx">ALYX</span>
+                    <div class="char-img-wrap"><img src="combine/combinesuppressor.jpg" alt="Combine Suppressor" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Suppressor</div>
+                    <div class="char-role">Ağır Silah Uzmanı</div>
+                </a>
+
+                <a href="combine-cremator.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinecremator.jpg" alt="Combine Cremator" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Cremator</div>
+                    <div class="char-role">Temizlikçi Birimi</div>
+                </a>
+            
+                <a href="combine-assasin.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combineassasin.jpg" alt="Combine Assasin" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Assassin</div>
+                    <div class="char-role">Suikastçi</div>
+                </a>
+                
+                <a href="combine-scanner2.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinecoraktarayici.jpg" alt="Arazi Scanner" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Arazi Scanner</div>
+                    <div class="char-role">Gözcü Drone</div>
+                </a>
+
+                <a href="combine-scanner3.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinecombot.jpg" alt="Combot Scanner" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combot Scanner</div>
+                    <div class="char-role">Gözcü Drone</div>
+                </a>
+                
+                <a href="combine-guard.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combineguard.jpg" alt="Combine Guard" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Combine Guard</div>
+                    <div class="char-role">Ağır Piyade</div>
+                </a>
+                
+                <a href="combine-assaultsynth.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combineassaultsynth.jpg" alt="Assault Synth" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Assault Synth</div>
+                    <div class="char-role">Sentez Askeri</div>
+                </a>
+
+                <a href="combine-crabsynth.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinecrabsynth.jpg" alt="Combine Crabsynth" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Crab Synth</div>
+                    <div class="char-role">Sentez</div>
+                </a>
+
+                <a href="combine-mortarsynth.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinemortarsynth.jpg" alt="Combine Mortarsynth" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Mortar Synth</div>
+                    <div class="char-role">Sentez</div>
+                </a>
+                
+                <a href="combine-elitesynth.html" class="char-card">
+                    <span class="char-id beta">BETA</span>
+                    <div class="char-img-wrap"><img src="combine/combinesynthelite.jpg" alt="Combine Synth Elite" onerror="this.src='img/tr/hltrwikiweb.png';"></div>
+                    <div class="char-name">Synth Elite Soldier</div>
+                    <div class="char-role">Sentez Piyade</div>
+                </a>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            const wrapper = document.getElementById('main-wrapper');
+            
+            if(preloader) {
+                preloader.style.opacity = '0';
+                preloader.style.transition = 'opacity 0.2s ease';
+                preloader.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    if(wrapper) {
+                        wrapper.style.opacity = '1';
+                        wrapper.style.visibility = 'visible';
+                    }
+                }, 200);
+            }
+        }, 200); 
+    });
+
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    if(menuBtn && navLinks) {
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('open');
+        });
+    }
+    </script>
+</body>
+</html>

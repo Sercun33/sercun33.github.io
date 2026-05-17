@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Black Mesa Araştırma Tesisi</title>
+    
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css" />
+
+    <style>
+        /* ==========================================================================
+           PROFESYONEL TERMİNAL DÜZENİ
+           ========================================================================== */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --text-color: #bbb;
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; }
+
+        /* Temizlenmiş Resim Konteyneri */
+        .img-shield {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 130, 32, 0.1);
+            cursor: zoom-in;
+        }
+
+        .img-shield img {
+            width: 100%; display: block;
+            transition: 0.5s ease;
+        }
+
+        .img-shield:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- WIKI DÜZENİ --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px; border-radius: 15px; margin-bottom: 15px;
+            position: relative;
+        }
+
+        .doc-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;
+            border: 1px solid var(--primary-orange); padding: 3px 8px; background: rgba(0,0,0,0.8); z-index: 4;
+            pointer-events: none;
+        }
+
+        /* HİKAYE KESİTLERİ */
+        .story-item {
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .story-item.has-image { grid-template-columns: 220px 1fr; align-items: start; }
+        }
+
+        .info-ribbon { background: var(--card-bg); border-left: 5px solid var(--primary-orange); padding: 25px; border-radius: 0 20px 20px 0; margin-bottom: 30px; }
+        .info-row { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; }
+        .info-row b { color: var(--primary-orange); width: 140px; font-size: 0.75rem; text-transform: uppercase; flex-shrink: 0; }
+
+        /* G-MAN ALINTI KUTUSU */
+        .quote-box {
+            border-left: 3px solid var(--primary-orange);
+            padding: 20px;
+            margin: 25px 0;
+            background: rgba(245, 130, 32, 0.05);
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            position: relative;
+        }
+        .quote-box::before {
+            content: "\f10d";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 10px; right: 20px;
+            opacity: 0.1;
+            font-size: 3rem;
+        }
+
+        #zoomModal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; cursor: zoom-out; flex-direction: column;}
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;}
+
+        @media (max-width: 992px) { .wiki-wrapper { grid-template-columns: 1fr; } .sidebar-assets { order: 2; } .main-article { order: 1; } }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" style="max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px;" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haber.html">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html" class="active">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <div class="img-shield" onclick="openZoom(this)">
+                        <img src="img/bm/bm.png" alt="Black Mesa Araştırma Tesisi Girişi">
+                    </div>
+                    <div style="font-size: 1.5rem; font-weight: 800; margin-top: 15px;">BLACK MESA</div>
+                    <div style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Araştırma Tesisi</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); text-align: center; letter-spacing: 2px; margin-bottom: 15px;">ARŞİV KANITLARI</h3>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <div class="doc-label">REAKTÖR</div>
+                            <img src="img/lmkrp.jpg" alt="Lambda Reaktörü Render">
+                        </div>
+                    </div>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <div class="doc-label">BETA</div>
+                            <img src="img/lmkrbeta.jpg" alt="Reaktör İçi (BETA)">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; color: #fff; margin-bottom: 20px; letter-spacing: 1px;">TESİS VERİ KARTI</h2>
+                    <div class="info-row"><b>Adı:</b> <span>Black Mesa Araştırma Tesisi</span></div>
+                    <div class="info-row"><b>Durum:</b> <span>Yok Edildi (Termonükleer Cihazla)</span></div>
+                    <div class="info-row"><b>İlk Görünüş:</b> <span>Half-Life</span></div>
+                    <div class="info-row"><b>Son Görünüş:</b> <span>Half-Life: Opposing Force</span></div>
+                </div>
+
+                <div class="story-section" style="color: var(--text-color); line-height: 1.8; margin-top: 30px;">
+                    
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">GENEL BAKIŞ</h2>
+                            <p>Black Mesa, soğuk savaş döneminde Amerikan hükümeti tarafından New Mexico çölüne inşa edilen ve yine Amerika tarafından fonlanan devasa bir araştırma tesisidir.</p>
+                            <p>Doktor Wallace Breen tarafından yönetilen tesis; roketçilikten teorik fiziğe, biyoteknolojiden silah teknolojisine kadar çok geniş alanlarda araştırmalar yürütmekteydi. Güvenlik ve gizlilik nedeniyle tesisin büyük çoğunluğu yer altına inşa edilmiştir.</p>
+                        </div>
+                    </div>
+
+                    <div class="quote-box">
+                        “En büyük utanç kaynağı Black Mesa tesisiydi, ama sanırım bu sorun nihayet çözüldü... tamamen.”
+                        <div style="text-align: right; color: var(--primary-orange); font-weight: 700; font-size: 0.8rem; margin-top: 10px; font-style: normal;">
+                            — G-MAN (Half-Life: Opposing Force)
+                        </div>
+                    </div>
+
+                    <div class="story-item has-image">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="img/lmksk.jpg" alt="Ana Reaktör Soğutma Sistemi">
+                        </div>
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">YAŞAM VE ALTYAPI</h2>
+                            <p>Personelin dışarıyla teması yasak olduğu için tesis; ulaşım sistemleri, yatakhaneler, yemekhaneler ve gündelik yaşamı kolaylaştıracak her türlü imkanı bünyesinde barındıran devasa bir yer altı şehri gibidir.</p>
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">HARİTA KAYITLARI</h2>
+                            <ul style="list-style-type: square; margin-left: 20px; color: #eee; margin-top: 10px;">
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Half-Life:</strong> c3a1, c3a1a, c3a1b, c3a2e, c3a2...</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Half-Life Uplink:</strong> hldemo1, hldemo2, hldemo3</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Opposing Force:</strong> of2a6, of3a1</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            const imgEl = el.querySelector('img');
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            caption.textContent = imgEl.alt;
+            modal.style.display = 'flex';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

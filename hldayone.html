@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Half-Life Day One</title>
+    
+    <!-- FAVICON VE STİL BAĞLANTILARI -->
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css" />
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU VE RENK DEĞİŞKENLERİ
+           ========================================================================== */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px; border-radius: 15px; transition: 0.3s;
+            position: relative; overflow: hidden; display: block; text-decoration: none;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); background: rgba(245, 130, 32, 0.05); }
+        .doc-text { font-size: 0.9rem; color: #eee; font-weight: 800; text-align: center; display: block; letter-spacing: 1px; }
+        .doc-text.highlight { color: var(--primary-orange); }
+
+        /* MODAL (RESİM BÜYÜTME) */
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+            flex-direction: column;
+        }
+        #zoomModal img { max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;}
+
+        /* ANA İÇERİK */
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 15px; }
+        
+        .story-section ul { margin-left: 20px; margin-bottom: 20px; color: #eee; list-style-type: square; }
+        .story-section ul li { margin-bottom: 8px; }
+        .story-section ul li::marker { color: var(--primary-orange); }
+
+        /* GALERİ VE KART TASARIMI */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .weapon-card-header {
+            background: rgba(245, 130, 32, 0.1);
+            padding: 15px 20px;
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-card-header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        .weapon-card-content { padding: 20px; }
+
+        /* VİDEO KONTEYNERİ */
+        .video-container { margin-bottom: 30px; }
+        .video-container h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; text-align: center; font-weight: bold; letter-spacing: 1px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* RESİM GALERİSİ */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .image-box {
+            text-align: center;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .image-box:hover {
+            border-color: var(--primary-orange);
+            background: rgba(245, 130, 32, 0.06);
+            transform: translateY(-5px);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- BÜYÜTME MODALI -->
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <!-- PRELOADER -->
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="haber.html">Haberler</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <!-- SOL PANEL: KÜNYE VE LİNKLER -->
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="evrak/hldayone.png" alt="Half-Life Day One CD Kapak" onerror="this.src='https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/70/header.jpg';">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">HALF-LIFE DAY ONE</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">HALF-LIFE DONANIM SÜRÜMÜ</div>
+                </div>
+            </aside>
+
+            <!-- SAĞ PANEL: ANA MAKALELER, VİDEOLAR VE GALERİ -->
+            <section class="main-article">
+                <!-- BİLGİ ŞERİDİ -->
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">OYUN BİLGİLERİ</h2>
+                    <div class="info-row"><b>Geliştirici:</b> <span>Valve Corporation</span></div>
+                    <div class="info-row"><b>Çıkış Tarihi:</b> <span>1 Kasım 1998</span></div>
+                    <div class="info-row"><b>Tür:</b> <span>Birinci Şahıs Nişancı (FPS)</span></div>
+                    <div class="info-row"><b>Ana Karakter:</b> <span>Dr. Gordon Freeman</span></div>
+                </div>
+
+                <article class="story-section">
+                    <h2 style="margin-top: 0;">Oyun Hakkında</h2>
+                    <p>Half-Life yayınlanmadan önce Valve, Donanım Üreticileriyle bir işbirliği yaparak ekran kartı kutularında bu kısaltılmış Half-Life sürümünü bedavadan göndermiştir. Amaçları hem oyunun bir kısmını (We'Ve got hostiles'a kadar olan kısmı yani olayın yaşandığı ilk günü (day one))'ı) oynattırmaktı.</p>
+<br><br>
+					
+					<h2 style="margin-top: 0;">HALF-LIFE'tan farkları?</h2>
+                   <ul>
+					<li>Konsol ve hileler doğrudan etkinleştirilemez.</li>
+					<li>Direct3D desteklemez.</li>
+					<li>Glock daha yüksek çözünürlüklü bir modele sahiptir.</li>
+					<li>Glock'un şarjör değiştirme sesi yoktur.</li>
+					<li>Hiçbir silah şarjördeki mermi bittiğinde otomatik yenilemez oyuncu r tuşuna basmak zorundadır.</li>
+					<li>El Bombası taşıma limti 25'tir.</li>
+					<li>Vortigaunt başka bir vortigaunt cesedi görünce kaçar.</li>
+					<li>Bilim insanlarının canı daha azdır.</li>
+					<li>Pompalının toplam mermi sayısı 4 mermi azdır.</li>
+					<li>G-Man Oyuncu ateş ederse korkup kaçar.</li>
+					<li>H.E.V Giysisi Pillerinin görünümü farklıdır.</li>
+					<li>Uzun Atmala Modülünün görünümü farklıdır.</li>
+					<li>Silah dokularında bazen belli bir hatadan dolayı beyazlaşma görülür.</li>
+					   
+
+					</ul>
+
+                </article>
+
+                <!-- GÖRSELLER -->
+                <div class="tables-wrapper">
+                    <div class="weapon-card">
+                        <div class="weapon-card-header">Oyun İçi Görseller</div>
+                        <div class="weapon-card-content">
+                            <div class="image-gallery">
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="silahlar/hevarmorpili.png" alt="Half-Life Day One Zırh Pili Modeli">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="silahlar/hldayonelongjump.png" alt="Half-Life Day One Uzun Atlama Modülü Modeli">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="silahlar/mp5bug.png" alt="Half-Life Day One Beyazlaşmış MP5 Modeli">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="karakter/gmankacista.png" alt="Half-Life Day One GMan oyuncu ateşinden korkup kaçıyor.">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- RESİM BÜYÜTME (ZOOM MODAL) ---
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            
+            const imgEl = el.querySelector('img');
+            
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            caption.textContent = imgEl.alt;
+            
+            modal.style.display = 'flex';
+        }
+
+        // --- PRELOADER (Sayfa Yüklenince Açılır) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 200);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

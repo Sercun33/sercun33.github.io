@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oyunlar - Half-Life Türkiye</title>
+    
+    <!-- FAVICON VE ANA STİL DOSYASI -->
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="taraf.css">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Courier+Prime&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* ==========================================================================
+           SAYFA ARKA PLANI VE BAŞLIK
+           ========================================================================== */
+        body {
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: -1; }
+
+        .hero { text-align: center; padding: 50px 20px 10px; }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); color: var(--primary-orange, #f58220); text-transform: uppercase; letter-spacing: 2px; }
+        .hero p { color: #888; font-weight: 700; margin-top: 10px; font-family: 'Courier Prime', monospace; font-size: 1.1rem; }
+
+        /* ==========================================================================
+           BAĞIMSIZ KART TASARIMI VE KLONLAMA ANİMASYONU
+           ========================================================================== */
+        .cards-section {
+            padding: 3rem 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #cards {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+
+        .card {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: scale 100ms;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card .card-front-image {
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        }
+
+        .card .card-image {
+            width: clamp(250px, 20vw, 350px);
+            aspect-ratio: 2 / 3;
+            border-radius: clamp(0.5rem, 0.75vw, 1rem);
+            object-fit: cover;
+        }
+
+        .card-faders {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1500ms;
+            pointer-events: none;
+        }
+
+        .card:hover .card-faders {
+            opacity: 1;
+        }
+
+        .card:active {
+            scale: 0.98;
+        }
+
+        .card-fader {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .card-fader:nth-child(odd) {
+            animation: fade-left 3s linear infinite;
+        }
+
+        .card-fader:nth-child(even) {
+            animation: fade-right 3s linear infinite;
+        }
+
+        .card-fader:is(:nth-child(3), :nth-child(4)) { animation-delay: 750ms; }
+        .card-fader:is(:nth-child(5), :nth-child(6)) { animation-delay: 1500ms; }
+        .card-fader:is(:nth-child(7), :nth-child(8)) { animation-delay: 2250ms; }
+
+        @keyframes fade-left {
+            from { scale: 1; translate: 0%; opacity: 1; }
+            to   { scale: 0.8; translate: -30%; opacity: 0; }
+        }
+
+        @keyframes fade-right {
+            from { scale: 1; translate: 0%; opacity: 1; }
+            to   { scale: 0.8; translate: 30%; opacity: 0; }
+        }
+
+        @media(max-width: 1200px) {
+            #cards {
+                flex-direction: column; 
+                align-items: center;
+                gap: 4rem;
+                padding: 2rem;
+            }
+            .card .card-image { width: 350px; }
+        }
+
+        @media(max-width: 600px) {
+            #cards { gap: 2rem; padding: 1rem; }
+            .card { width: 80%; }
+            .card .card-image { width: 100%; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- AÇILIŞ EKRANI -->
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
+    </div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        
+        <!-- MENÜ (TARAF.CSS UYUMLU) -->
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Half-Life Türkiye Logosu" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section class="hero">
+                <h1>Half-Life Oyunları</h1>
+                <p>Half-Life evrenine açılan oyunları aşağıda bulabilirsiniz<br>
+                Gearbox yapımları ve iptal olmuş olanlar da dahil</p>
+            </section>
+
+            <!-- KART BÖLÜMÜ 1 -->
+            <section class="cards-section">
+                <div id="cards">
+                    <a href="hl.html" target="_blank" class="card" data-color="blue">
+                        <img class="card-front-image card-image" src="oyun/hl1.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl1.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+
+                    <a href="hl2.html" target="_blank" class="card" data-color="green">
+                        <img class="card-front-image card-image" src="oyun/hl2.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl2.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+
+                    <a href="hlalyx.html" target="_blank" class="card" data-color="brown">
+                        <img class="card-front-image card-image" src="oyun/hlalyx.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'"/>
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlalyx.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- KART BÖLÜMÜ 2 -->
+            <section class="cards-section">
+                <div id="cards">
+                    <a href="hlbs.html" target="_blank" class="card" data-color="blue">
+                        <img class="card-front-image card-image" src="oyun/hlbs.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlbs.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+
+                    <a href="hldecay.html" target="_blank" class="card" data-color="green">
+                        <img class="card-front-image card-image" src="oyun/hldecay.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hldecay.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+
+                    <a href="hlof.html" target="_blank" class="card" data-color="brown">
+                        <img class="card-front-image card-image" src="oyun/hlop.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hlop.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- KART BÖLÜMÜ 3 -->
+            <section class="cards-section">
+                <div id="cards">
+                    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="card" data-color="blue">
+                        <img class="card-front-image card-image" src="oyun/hl3.jpg" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                            <img class="card-fader card-image" src="oyun/hl3.jpg" onerror="this.style.display='none'" />
+                        </div>
+                    </a>
+
+                    <a href="hl2ep1.html" target="_blank" class="card" data-color="green">
+                        <img class="card-front-image card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                        <div class="card-faders">
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                            <img class="card-fader card-image" src="https://m.media-amazon.com/images/M/MV5BYTVkMWQyMjctYzAwOS00YWY2LWExNDMtMWVhNWJlOTFjYzI0XkEyXkFqcGc@._V1_.jpg" />
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- PRELOADER ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.style.opacity = '1';
+                    }, 300);
+                }
+            }, 300);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

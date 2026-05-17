@@ -7,7 +7,18 @@
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="stylesheet" href="anasayfa.css">
+    <link rel="stylesheet" href="anasayfa.css">
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU (SCROLLBAR)
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+    </style>
 </head>
 <body>
 
@@ -15,7 +26,7 @@
         <div class="loader-content">
             <img src="img/tr/hltrwikiweb.png" class="loader-logo">
             <div class="loader-bar"><div class="progress"></div></div>
-            <span class="loader-text">SİSTEM BAŞLATILIYOR...</span>
+            <span class="loader-text">Half-Life Türkiyeye hoşgeldiniz</span>
         </div>
     </div>
 
@@ -34,10 +45,14 @@
                 <li><a href="index.html" class="active">Anasayfa</a></li>
                 <li><a href="karakterler.html">Karakterler</a></li>
                 <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
-            <!--    <li><a href="video.html">Videolar</a></li>
-                <li><a href="haberler.php">Haberler</a></li>-->
-                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
                 <li><a href="minioyun.html">Mini Oyun</a></li>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
             </ul>
         </nav>
 
@@ -49,19 +64,19 @@
             </section>
 
          <section class="circle-buttons">
-             <!--      <a href="lmpo.html" class="circle-btn">
-                    <div class="img-wrap"><img src="img/oyun/hl1ico.png"></div>
+                 <a href="oyun.html" class="circle-btn">
+                    <div class="img-wrap"><img src="oyun/hl1ico.png"></div>
                     <span>Oyunlar</span>
-                </a>-->
+                </a>
                 <a href="karakterler.html" class="circle-btn">
-                    <div class="img-wrap"><img src="img/karakter/shephard.jpg"></div>
+                    <div class="img-wrap"><img src="karakter/shephard.jpg"></div>
                     <span>Karakterler</span>
                 </a>
                 <a href="dusmanlar.html" class="circle-btn">
-                    <div class="img-wrap"><img src="img/karakter/combineisgal.jpg"></div>
+                    <div class="img-wrap"><img src="combine/combineisgal.jpg"></div>
                     <span>Düşmanlar</span>
                 </a>
-             <!--     <a href="lmps.html" class="circle-btn">
+               <a href="silahlar.html" class="circle-btn">
                     <div class="img-wrap"><img src="https://www.writeups.org/wp-content/uploads/Half-Life-Video-Game-Weapons-Equipment-d.jpg"></div>
                     <span>Silahlar</span>
                 </a>
@@ -72,25 +87,41 @@
                 <a href="video.html" class="circle-btn">
                     <div class="img-wrap"><img src="https://i.ytimg.com/vi/5Wavn29LMrs/hq720.jpg"></div>
                     <span>Videolar</span>
-                </a>-->
+                </a>
             </section>
-			<section class="patch-notes">
+            <section class="patch-notes">
     <div class="patch-header">
         <div class="patch-meta">
-            <span class="patch-version">V0.0.4</span>
-            <div class="status-wrapper status-maintenance">
+            <span class="patch-version">V0.1</span>
+            <div class="status-wrapper status-stable">
                 <div class="status-dot"></div>
-                <span class="status-text">Sistem: Bakımda</span>
+                <span class="status-text">Sistem: Stabil</span>
             </div>
         </div>
-        <span class="patch-date">1 MAYIS 2026</span>
+        <span class="patch-date">Son Kontrol : 17 MAYIS 2026</span>
     </div>
     
     <ul class="patch-list">
-        <li>Mini Oyun baştan tasarlandı</li>
-		<li>Hakkımızda Sayfası yapıldı.</li>
-		<li>Bakım bildirimi sayfası yapıldı.</li>
-        <li>Tüm Yama Notları Sayfasına gitmek için -> <a href="yama.html"> BURAYA TIKLAYIN</a></li>
+						<li>Videolar Sayfası eklendi.</li>
+						<li>Mekanlar Sayfası eklendi.</li>
+						<li>Modlar Sayfası eklendi.</li>
+						<li>Gina Karakter Sayfası eklendi.</li>
+						<li>Tarihçe(Timeline) Sayfası eklendi. (Fikir için Kora'ya teşekkürler)</li>
+						<li>Mobil Menüde oluşan hatalar giderildi.</li>
+						<li>Half-Life Alfa Geliştirilme Sayfası eklendi.</li>
+						<li>Oyunlar Sayfası Eklendi.</li>
+						<li>Sayfalardaki ScrollBarlar Turuncu renk yapıldı.</li>
+						<li>Half-Life Day One Sayfası eklendi.</li>
+						<li>Half-Life Uplink Sayfası eklendi.</li>
+						<li>Black Mesa Sayfası eklendi</li>
+						<li>Lambda Kompleks Sayfası eklendi</li>
+						<li>G-Man sayfasındaki link hatası düzeltildi.</li>
+						<li>Bazı sayfalarda Half-Life Türkiye Logosuna tıklayınca alınan 404 hatası düzeltildi.</li>
+						<li>Citadel Bilgi Sayfasına 3D Model eklendi.</li>
+						<li>Half-Life 2 Oyun Sayfası eklendi.</li>
+						<li>Lambda Complex Mekan Sayfası eklendi.</li>
+						<li>Black Mesa East Mekan Sayfası eklendi.</li>
+        				<li>Tüm Yama Notları Sayfasına gitmek için -> <a href="yama.html"> BURAYA TIKLAYIN</a></li>
     </ul>
 </section>
         </main>
@@ -106,8 +137,8 @@
                 setTimeout(() => {
                     preloader.style.display = 'none';
                     wrapper.classList.add('visible');
-                }, 700);
-            }, 500);
+                }, 300);
+            }, 300);
         });
 
         // Menü Kontrolü

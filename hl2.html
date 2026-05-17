@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Half-Life 2</title>
+    
+    <!-- FAVICON VE STİL BAĞLANTILARI -->
+    <link rel="icon" type="image/png" href="img/tr/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css" />
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU VE RENK DEĞİŞKENLERİ
+           ========================================================================== */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px; border-radius: 15px; transition: 0.3s;
+            position: relative; overflow: hidden; display: block; text-decoration: none;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); background: rgba(245, 130, 32, 0.05); }
+        .doc-text { font-size: 0.9rem; color: #eee; font-weight: 800; text-align: center; display: block; letter-spacing: 1px; }
+        .doc-text.highlight { color: var(--primary-orange); }
+
+        /* MODAL (RESİM BÜYÜTME) */
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+            flex-direction: column;
+        }
+        #zoomModal img { max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;}
+
+        /* ANA İÇERİK */
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 15px; }
+        
+        .story-section ul { margin-left: 20px; margin-bottom: 20px; color: #eee; list-style-type: square; }
+        .story-section ul li { margin-bottom: 8px; }
+        .story-section ul li::marker { color: var(--primary-orange); }
+
+        /* GALERİ VE KART TASARIMI */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .weapon-card-header {
+            background: rgba(245, 130, 32, 0.1);
+            padding: 15px 20px;
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-card-header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        .weapon-card-content { padding: 20px; }
+
+        /* VİDEO KONTEYNERİ */
+        .video-container { margin-bottom: 30px; }
+        .video-container h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; text-align: center; font-weight: bold; letter-spacing: 1px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* RESİM GALERİSİ */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .image-box {
+            text-align: center;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .image-box:hover {
+            border-color: var(--primary-orange);
+            background: rgba(245, 130, 32, 0.06);
+            transform: translateY(-5px);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- BÜYÜTME MODALI -->
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <!-- PRELOADER -->
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <!-- SOL PANEL: KÜNYE VE LİNKLER -->
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="oyun/hl2.jpg" alt="Half-Life Kapak" onerror="this.src='https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/70/header.jpg';">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">HALF-LIFE 2</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">2004 YILININ OYUNU</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">BAĞLANTILAR</h3>
+                    
+                    <a href="https://store.steampowered.com/app/220/HalfLife_2/" target="_blank" class="archive-doc" style="border-color: rgba(245, 130, 32, 0.5);">
+                        <span class="doc-text highlight"><i class="fa-brands fa-steam"></i> STEAM SAYFASINA GİT</span>
+                    </a>
+                    <div style="height: 15px;"></div>
+                    
+                    <a href="hl2gelisim.html" class="archive-doc">
+                        <span class="doc-text"><i class="fa-solid fa-code"></i> GELİŞTİRİLME BİLGİLERİ</span>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- SAĞ PANEL: ANA MAKALELER, VİDEOLAR VE GALERİ -->
+            <section class="main-article">
+                <!-- BİLGİ ŞERİDİ -->
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">OYUN BİLGİLERİ</h2>
+                    <div class="info-row"><b>Geliştirici:</b> <span>Valve Corporation</span></div>
+                    <div class="info-row"><b>Çıkış Tarihi:</b> <span>16 Kasım 2004</span></div>
+                    <div class="info-row"><b>Oyun Motoru:</b> <span>Source</span></div>
+                    <div class="info-row"><b>Tür:</b> <span>Birinci Şahıs Nişancı (FPS)</span></div>
+                    <div class="info-row"><b>Ana Karakter:</b> <span>Dr. Gordon Freeman</span></div>
+                    <div class="info-row"><b>Mekan:</b> <span>Şehir 17, Black Mesa East, Ravenholm, Citadel</span></div>
+                </div>
+
+                <article class="story-section">
+                    <h2 style="margin-top: 0;">Oyun Hakkında</h2>
+                   		<p>Half-Life 2, Valve Corporation tarafından geliştirilerek 2004 yılında piyasaya sürülen ve oyun dünyasında endüstri standartlarını yeniden belirleyen bir birinci şahıs nişancı (FPS) yapımıdır. Resmi 	özelliklerine göre devrim niteliğindeki özel "Source" oyun motorunu kullanan bu yapım; gerçekçi ve dinamik fizik tabanlı oynanışı, stratejik tepkiler verebilen karmaşık yapay zekası ve dönemi için olağanüstü kabul edilen detaylı karakter yüz animasyonlarıyla öne çıkmaktadır. Oyun, hikayesini geleneksel sinematik ara sahneler kullanmak yerine tamamen ana karakter Gordon Freeman'ın perspektifinden kesintisiz ve akıcı bir şekilde anlatır. Özellikle çevresel unsurları dinamik bir silaha ve fizik tabanlı bulmaca çözme araçlarına dönüştüren ikonik "Yerçekimi Silahı" (Gravity Gun) gibi yenilikçi mekanikleri sayesinde, oyuncu ile oyun dünyası arasındaki etkileşimi eşsiz bir seviyeye taşımıştır.</p>
+                    	
+                    <h2>Valve'ın Tanımıyla</h2>
+                    	<p>Uykusundan işgal altındaki Şehir 17'de uyanan Gordon Freeman, çaresiz insan direnişi hareketini yönetirken Alyx Vance ona eşlik ediyor. Sizi içine hapsedecek bir dünyaya, sınırları zorlayan fizik sistemine ve heyecan verici çatışmalara sahip muhteşem FPS oyununu deneyimleyin.</p>
+
+                    <h2>Hikayesi</h2>
+                    	<p>Half-Life 2'nin hikayesi, ilk oyundaki Black Mesa felaketinden yaklaşık yirmi yıl sonrasını konu alır. Esrarengiz G-Man tarafından uzun bir staz (durağanlık) uykusundan uyandırılan teorik fizikçi Dr. Gordon Freeman, Dünya'ya geri döner ve kendini Doğu Avrupa mimarisine sahip distopik bir metropol olan Şehir 17'de (City 17) bulur.<br><br>
+
+						Geçen süre zarfında Dünya, "Yedi Saat Savaşı" olarak bilinen kısa ama mutlak bir yenilginin ardından "Combine" adlı çok boyutlu bir uzaylı imparatorluğu tarafından işgal edilmiştir. İnsanlık ağır bir baskı altında hayatta kalmaya çalışmakta, gezegenin kaynakları acımasızca sömürülmekte ve Combine'ın dünyadaki kukla yöneticiliğini, Black Mesa'nın eski yöneticisi Dr. Wallace Breen yapmaktadır.<br><br>
+
+						Gordon Freeman, Şehir 17'ye adım atar atmaz; eski çalışma arkadaşları Dr. Isaac Kleiner, Dr. Eli Vance, Barney Calhoun ve Eli'ın yetenekli kızı Alyx Vance'in öncülük ettiği gizli insan direnişine dahil olur.<br><br>
+
+						Hikaye; Şehir 17'nin tehlikeli yeraltı kanallarından tuzaklarla dolu Ravenholm kasabasına, zorlu sahil şeritlerinden yüksek güvenlikli Nova Prospekt hapishanesine kadar uzanır. Gordon'ın Combine güçlerine indirdiği darbeler, yıllardır beklenen topyekûn bir halk ayaklanmasını tetikler. Son perdede Gordon ve Alyx, isyanın tam ortasında Combine'ın devasa yönetim merkezi olan Citadel'e sızarak Dr. Breen'in rejimini çökertmek ve insanlığın kaderini yeniden yazmak için amansız bir mücadeleye girişir.</p>
+
+                    <h2>Öne Çıkan Özellikler</h2>
+                    <ul>
+                        <li>Ara Sahneler Yoktur</li>
+                        <li>Çevresel Hikaye Anlatımı</li>
+                        <li>Çeşitli Bulmacalar</li>
+                        <li>Mod ve Çeşitli İşletim Sistemlerine Destek</li>
+                        <li>Gelişmiş Fizik Motoru</li>
+                        <li>Çoklu Dil Desteği</li>
+                    </ul>
+
+                    <h2>Kazandığı Ödüllerden Bazıları</h2>
+                    <ul>
+                        <li>2004 Yılın PC Oyunu (IGN)</li>
+          				<li>2004 Yılın PC Oyunu (PC GAMER)</li>
+          				<li>2004 Yılın PC Oyunu (BAFTA)</li>
+          				<li>2004 En İyi Grafik (VGX)</li>
+		  				<li>2012 Son 10 Yılın En İyi Oyunu (VGX)</li>
+                    </ul>
+                </article>
+
+                <!-- GÖRSELLER -->
+                <div class="tables-wrapper">
+                    <div class="weapon-card">
+                        <div class="weapon-card-header">Oyun İçi Görseller</div>
+                        <div class="weapon-card-content">
+                            <div class="image-gallery">
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_47b4105b396de408cb8b6b4f358c69e5e2a62dae.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Sivil Koruma Denetimi">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_0e499071a60a20b24149ad65a8edb769250f2921.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Breen Şehir 17 meydanında bir ekran üzerinden propaganda yapıyor">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_ffb00abd45012680e4f209355ec81f961b6dd1fb.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Black Mesa East Sırasıyla soldan sağa (Judith, Eli, Alyx)">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_412b0e9f8285d3695d0b39840da41c184dff591a.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Black Mesa East'in hurdalık kısmında Dog ve Alyx">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_18841cb9a8fc2cf67039317b601d10c4059b6fa8.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Alyx Şehir duvarları önünde silah tutuyor ekranda Isaac Kleiner vatandaşları uyarıyor.">
+                                </div>
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220/ss_fe894d70bdfa75236a4b451efbeea7d4ce3e0174.1920x1080.jpg?t=1745368545" alt="Half-Life 2 Combine Strider (uzun olan) ve Combine Hunterlar White Forestta saldırı yapıyorlar">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- RESİM BÜYÜTME (ZOOM MODAL) ---
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            
+            const imgEl = el.querySelector('img');
+            
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            caption.textContent = imgEl.alt;
+            
+            modal.style.display = 'flex';
+        }
+
+        // --- PRELOADER (Sayfa Yüklenince Açılır) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 200);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

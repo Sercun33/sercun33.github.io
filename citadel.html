@@ -1,0 +1,474 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Citadel - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Courier+Prime&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    
+    <!-- 3D Model Viewer Kütüphanesi -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. ÇEKİRDEK TASARIM VE SIFIRLAMA
+           ========================================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #0a0a0a; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: -1; }
+
+        /* PRELOADER */
+        #preloader { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-content { text-align: center; }
+        .loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); margin-bottom: 20px; animation: pulse 2s infinite ease-in-out; }
+        .loader-bar { width: 200px; height: 3px; background: #111; margin: 0 auto; border-radius: 10px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #f58220; animation: load 2s linear forwards; }
+        .loader-text { display: block; margin-top: 15px; font-size: 0.6rem; letter-spacing: 3px; color: #f58220; font-weight: 700; }
+
+        /* NAVBAR */
+        #main-wrapper { opacity: 0; transition: opacity 0.8s ease; visibility: hidden; flex: 1; display: flex; flex-direction: column; }
+        #main-wrapper.visible { opacity: 1; visibility: visible; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 8%; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid rgba(245, 130, 32, 0.2); }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff;}
+        .logo img { height: 40px; }
+        .orange-text { color: #f58220; }
+
+        .nav-links { display: flex; list-style: none; gap: 25px; transition: 0.5s ease-in-out; }
+        .nav-links a { color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+        .menu-btn { display: none; width: 30px; height: 20px; cursor: pointer; z-index: 2100; position: relative; }
+        .menu-btn__burger, .menu-btn__burger::before, .menu-btn__burger::after { width: 30px; height: 3px; background: #f58220; position: absolute; transition: 0.4s; }
+        .menu-btn__burger::before { content: ''; transform: translateY(-8px); }
+        .menu-btn__burger::after { content: ''; transform: translateY(8px); }
+        .menu-btn.open .menu-btn__burger { background: transparent; transform: translateX(-20px); }
+        .menu-btn.open .menu-btn__burger::before { transform: rotate(45deg) translate(15px, -15px); }
+        .menu-btn.open .menu-btn__burger::after { transform: rotate(-45deg) translate(15px, 15px); }
+
+        @media (max-width: 992px) {
+            .menu-btn { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: rgba(10, 10, 10, 0.98); flex-direction: column; justify-content: center; align-items: center; z-index: 2050; }
+            .nav-links.open { right: 0; }
+            .nav-links li { margin: 15px 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* ==========================================================================
+           2. CİTADEL BİLGİ DOSYASI TASARIMI
+           ========================================================================== */
+        
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+            background: url('mekan/citadel.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 60px 10%;
+            border-bottom: 3px solid #f58220;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #f58220;
+            color: #000;
+            padding: 5px 15px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(245, 130, 32, 0.5);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            font-family: 'Courier Prime', monospace;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            width: 90%;
+            max-width: 1300px;
+            margin: 50px auto 80px;
+        }
+
+        .article-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .info-card {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(245, 130, 32, 0.3);
+            background: rgba(20, 20, 20, 0.8);
+        }
+
+        .info-card h2 {
+            font-size: 1.8rem;
+            color: #f58220;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .info-card h2 i {
+            color: #777;
+            font-size: 1.4rem;
+        }
+
+        .info-card p {
+            color: #ccc;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .info-card p:last-child { margin-bottom: 0; }
+        .info-card b { color: #fff; }
+
+        .article-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid rgba(245, 130, 32, 0.2);
+            margin: 10px 0 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* 3D MODEL ALANI */
+        .model-viewer-container {
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 130, 32, 0.3);
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            outline: none;
+            --poster-color: transparent;
+        }
+
+        /* Sağ Taraf - Teknik Veriler */
+        .sidebar { position: relative; }
+
+        .sticky-panel {
+            position: sticky;
+            top: 120px;
+            background: rgba(10, 10, 10, 0.8);
+            border-top: 4px solid #f58220;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        }
+
+        .sticky-panel h3 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+        }
+
+        .tech-table th, .tech-table td {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: top;
+        }
+
+        .tech-table th {
+            color: #f58220;
+            font-weight: 800;
+            text-transform: uppercase;
+            width: 45%;
+            text-align: left;
+        }
+
+        .tech-table td {
+            color: #ddd;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .tech-table tr:last-child th, .tech-table tr:last-child td { border-bottom: none; }
+
+        @media (max-width: 992px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .sticky-panel { position: static; margin-top: 20px; }
+            .hero-section { padding: 40px 5%; text-align: center; align-items: center; justify-content: center; }
+            .model-viewer-container { height: 350px; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes load { to { width: 100%; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }
+    </style>
+</head>
+<body>
+
+    <!-- YÜKLEYİCİ -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
+            <div class="loader-bar"><div class="progress"></div></div>
+            <span class="loader-text">İnsanlar bunları okuyor mu?</span>
+        </div>
+    </div>
+
+    <!-- MENÜ -->
+    <div id="main-wrapper">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+          <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+				<li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <!-- KAPAK BÖLÜMÜ -->
+        <header class="hero-section">
+            <div class="hero-content">
+                <span class="hero-badge">Combine'ın Başkenti</span>
+                <h1 class="hero-title">CITADEL</h1>
+                <p class="hero-subtitle">Combine'ın (Evrensel Birlik) Dünya Merkez Karargahı</p>
+            </div>
+        </header>
+
+        <!-- İÇERİK BÖLÜMÜ -->
+        <main class="content-grid">
+            
+            <!-- SOL TARAF: MAKALELER -->
+            <div class="article-section">
+                
+                <!-- 3D MODEL KARTI -->
+                <article class="info-card">
+                    <h2><i class="fa-solid fa-cube"></i> CITADEL 3 Boyutlu</h2>
+                    <div class="model-viewer-container">
+                        <model-viewer 
+                            src="3d/citadel_models.glb" 
+                            alt="Combine Citadel 3D Model" 
+                            auto-rotate 
+                            camera-controls 
+                            shadow-intensity="2" 
+                            exposure="1"
+                            environment-image="neutral"
+                            interaction-prompt="none">
+                            <div slot="progress-bar" style="background: #f58220; height: 3px;"></div>
+                        </model-viewer>
+                        <div style="position: absolute; bottom: 15px; right: 15px; font-family: 'Courier Prime'; font-size: 10px; color: #f58220; opacity: 0.6; pointer-events: none;">
+                            MODEL : CatBox(Sketchfab)<br>
+							License : CC AttributionCreative 
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.8rem; letter-spacing: 1px; color: #f58220;">
+                        <i class="fa-solid fa-arrows-spin"></i> Fare ile döndürebilir, tekerlek ile yakınlaşabilirsiniz.
+                    </p>
+                </article>
+
+                <!-- Kutu 1 -->
+                <article class="info-card">
+                    <h2><i class="fa-solid fa-earth-europe"></i> Genel Bakış</h2>
+                    <p>
+                        <b>Citadel (Hisar)</b>, Half-Life evreninde Combine imparatorluğunun Dünya üzerindeki ana karargahı ve askeri üretim merkezidir. Şehir 17'nin tam kalbinde yer alan bu devasa monolitik yapı, bulutların çok üzerine kadar uzanır ve şehrin her yerinden görülebilen korkutucu bir gölge yaratır.
+                    </p>
+                    <p>
+                        Dünya'nın yöneticisi konumuna getirilen <b>Dr. Wallace Breen</b>, operasyonlarını bu kulenin en tepesindeki ofisinden yürütür. Bina sadece bir yönetim merkezi değil, aynı zamanda devasa bir Karanlık Enerji reaktörüne ve boyutlar arası bir portala ev sahipliği yapar.
+                    </p>
+                </article>
+
+                <!-- Kutu 2 -->
+                <article class="info-card">
+                    <h2><i class="fa-solid fa-industry"></i> Mimari ve Üretim</h2>
+                    <img src="img/mekan/citadel-ic.jpg" alt="Citadel İç Mekan" class="article-image" onerror="this.style.display='none'">
+                    <p>
+                        Citadel, insan mimarisine ait hiçbir iz taşımaz. Tamamen uzaylı, asimetrik, soğuk ve mekanik bir tasarımı vardır. Binanın dış katmanları sürekli olarak hareket eder, genişler ve bir virüs gibi şehrin geri kalanını yavaş yavaş yutar. Yapının sadece gökyüzüne değil, yeraltına da devasa bir derinlikte uzandığı bilinmektedir.
+                    </p>
+                    <p>
+                        Tesisin içinde; sivil insanların <b>Stalker</b>'lara dönüştürüldüğü kan dondurucu modifikasyon merkezleri, Strider ve Gunship gibi devasa sentetik yaratıkların depolandığı askeri hangarlar ve direnişçileri Combine askerine çeviren beyin yıkama üniteleri yer alır. Milyonlarca Combine birimi bu yapının damarlarında sürekli bir üretim bandında hareket halindedir.
+                    </p>
+                </article>
+
+                <!-- Kutu 3 -->
+                <article class="info-card">
+                    <h2><i class="fa-solid fa-radiation"></i> Karanlık Enerji Reaktörü</h2>
+                    <p>
+                        Binanın tam kalbinde, tüm Combine teknolojisini ve Şehir 17'yi besleyen devasa bir Karanlık Enerji Reaktörü bulunur. Bu reaktör aynı zamanda Combine ana evreni ile Dünya arasındaki <b>Süper Portal'ı</b> açmak için gereken muazzam enerjiyi sağlar.
+                    </p>
+                    <p>
+                        Half-Life 2'nin sonunda Gordon Freeman'ın reaktöre doğrudan müdahalesi sonucu reaktör dengesini kaybetmiş ve <i>Episode One</i> kurgusu bu reaktörün patlamasını geciktirmek üzerine kurulmuştur. Patlama gerçekleştiğinde Citadel ile birlikte Şehir 17 tamamen haritadan silinmiştir.
+                    </p>
+                </article>
+
+            </div>
+
+            <!-- SAĞ TARAF: TEKNİK VERİLER (STICKY SIDEBAR) -->
+            <aside class="sidebar">
+                <div class="sticky-panel">
+                    <h3>CItadel</h3>
+                    <table class="tech-table">
+                        <tbody>
+    <tr>
+        <th>Konum</th>
+        <td>Şehir 17, Doğu Avrupa</td>
+    </tr>
+    <tr>
+        <th>Yükseklik</th>
+        <td>~2.5 Kilometre<br>(~8400 Feet)</td>
+    </tr>
+    <tr>
+        <th>Yönetici</th>
+        <td>
+            <a href="wallacebreen.html" style="color: #FCC79D; text-decoration: none; transition: 0.3s;">
+                Dr. Wallace Breen
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <th>İnşa Eden</th>
+        <td>
+            <a href="combine.html" style="color: #FCC79D; text-decoration: none; transition: 0.3s;">
+                Combine (Evrensel Birlik)
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <th>Ana İşlev</th>
+        <td>Askeri Üretim & Yönetim</td>
+    </tr>
+    <tr>
+        <th>Güç Kaynağı</th>
+        <td>Karanlık Enerji</td>
+    </tr>
+    <tr>
+        <th>Savunma</th>
+        <td>Enerji Kalkanları, Elite Ordusu</td>
+    </tr>
+    <tr>
+        <th>Durum</th>
+        <td>Yok Edildi</td>
+    </tr>
+</tbody>
+                    </table>
+                </div>
+            </aside>
+
+        </main>
+    </div>
+
+    <script>
+        // YÜKLEYİCİ VE MENÜ KONTROLÜ
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.classList.add('visible');
+                    }, 200);
+                }
+            }, 200);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

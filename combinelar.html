@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combine Güçleri - Half-Life Türkiye</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Courier+Prime&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- ORTAK ÇEKİRDEK VE ARKA PLAN --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ÖZEL SCROLLBAR --- */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #0a0a0a; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- HEV HUD NİŞANGAH (CROSSHAIR) --- */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505 url('img/black-mesa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            cursor: url('img/crosshair.png') 16 16, auto;
+        }
+
+        a, button, .enemy-card, .menu-btn { cursor: url('img/crosshair.png') 16 16, pointer !important; }
+
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
+
+        /* --- PRELOADER --- */
+        #preloader { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-content { text-align: center; }
+        .loader-logo { height: 80px; filter: drop-shadow(0 0 15px #f58220); margin-bottom: 20px; animation: pulse 2s infinite ease-in-out; }
+        .loader-bar { width: 200px; height: 3px; background: #111; margin: 0 auto; border-radius: 10px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #f58220; animation: load 2s linear forwards; }
+        .loader-text { display: block; margin-top: 15px; font-size: 0.6rem; letter-spacing: 3px; color: #f58220; font-weight: 700; }
+
+        /* --- NAVBAR --- */
+        #main-wrapper { opacity: 0; transition: opacity 0.8s ease; visibility: hidden; flex: 1; display: flex; flex-direction: column; }
+        #main-wrapper.visible { opacity: 1; visibility: visible; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 8%; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid rgba(245, 130, 32, 0.2); }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: #fff;}
+        .logo img { height: 40px; }
+        .orange-text { color: #f58220; }
+
+        .nav-links { display: flex; list-style: none; gap: 25px; transition: 0.5s ease-in-out; }
+        .nav-links a { color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #f58220; }
+
+        .menu-btn { display: none; width: 30px; height: 20px; cursor: pointer; z-index: 2100; position: relative; }
+        .menu-btn__burger, .menu-btn__burger::before, .menu-btn__burger::after { width: 30px; height: 3px; background: #f58220; position: absolute; transition: 0.4s; }
+        .menu-btn__burger::before { content: ''; transform: translateY(-8px); }
+        .menu-btn__burger::after { content: ''; transform: translateY(8px); }
+        .menu-btn.open .menu-btn__burger { background: transparent; transform: translateX(-20px); }
+        .menu-btn.open .menu-btn__burger::before { transform: rotate(45deg) translate(15px, -15px); }
+        .menu-btn.open .menu-btn__burger::after { transform: rotate(-45deg) translate(15px, 15px); }
+
+        @media (max-width: 992px) {
+            .menu-btn { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: rgba(10, 10, 10, 0.98); flex-direction: column; justify-content: center; align-items: center; z-index: 2050; }
+            .nav-links.open { right: 0; }
+            .nav-links li { margin: 15px 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* --- SAYFA BAŞLIĞI --- */
+        .page-header { text-align: center; padding: 40px 20px 30px; }
+        .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); color: #f58220; text-transform: uppercase; letter-spacing: 2px; }
+        .page-header p { color: #888; margin-top: 10px; font-weight: 700; max-width: 650px; margin-left: auto; margin-right: auto; }
+
+        /* --- DÜŞMAN KARTLARI (GRID) --- */
+        .enemy-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            gap: 25px; 
+            width: 90%; 
+            max-width: 1200px; 
+            margin: 0 auto 80px; 
+        }
+
+        .enemy-card { 
+            background: rgba(15, 15, 15, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border-radius: 15px; 
+            text-decoration: none;
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.4s ease; 
+            backdrop-filter: blur(10px); 
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+            animation: fadeIn 0.5s ease forwards; 
+        }
+
+        .enemy-card:hover { 
+            border-color: #f58220; 
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6), 0 0 20px rgba(245, 130, 32, 0.15); 
+        }
+
+        .enemy-img-container {
+            width: 100%;
+            height: 250px;
+            background: radial-gradient(circle, rgba(245,130,32,0.05) 0%, rgba(0,0,0,0.8) 100%);
+            border-bottom: 2px solid rgba(245, 130, 32, 0.2);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Hover durumunda resme hafif zoom atar */
+        .enemy-card:hover .enemy-img-container img {
+            transform: scale(1.05);
+        }
+
+        .enemy-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top; /* Karakterlerin yüzü görünsün diye yukarı odaklanır */
+            transition: transform 0.4s ease;
+        }
+
+        .enemy-info {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .enemy-badge {
+            color: #f58220;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .enemy-info h3 { 
+            font-size: 1.3rem; 
+            color: #fff; 
+            font-weight: 800; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            margin-bottom: 5px;
+        }
+
+        .enemy-info p {
+            font-size: 0.8rem;
+            color: #999;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes load { to { width: 100%; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
+            <div class="loader-bar"><div class="progress"></div></div>
+            <span class="loader-text">TEHDİT RAPORLARI YÜKLENİYOR...</span>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <nav class="navbar">
+            <a href="anasayfaa.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html" class="active">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+            </ul>
+        </nav>
+
+        <header class="page-header">
+            <h1>COMBINE GÜÇLERİ</h1>
+            <p>Evrensel Birlik (Combine) imparatorluğunun Şehir 17 ve çevresindeki askeri, sentetik ve mekanik işgal birimleri.</p>
+        </header>
+
+        <!-- DÜŞMAN KARTLARI LİSTESİ -->
+        <main class="enemy-grid">
+            
+            <!-- Düşman 1 -->
+            <a href="sivilkoruma.html" class="enemy-card">
+                <div class="enemy-img-container">
+                    <img src="img/sivilkoruma.jpg" alt="Sivil Koruma" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'">
+                </div>
+                <div class="enemy-info">
+                    <h3>Sivil Koruma</h3>
+                </div>
+            </a>
+
+            <!-- Düşman 2 -->
+            <a href="combineaskeri.html" class="enemy-card">
+                <div class="enemy-img-container">
+                    <img src="img/overwatchaskeri.jpg" alt="Overwatch Askeri" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'">
+                </div>
+                <div class="enemy-info">
+                    <h3>Combine Askeri</h3>
+                </div>
+            </a>
+
+            <!-- Düşman 3 -->
+            <a href="combineelit.html" class="enemy-card">
+                <div class="enemy-img-container">
+                    <img src="img/overwatchelite.jpg" alt="Combine Elit" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'">
+                </div>
+                <div class="enemy-info">
+                    <h3>Combine Elit</h3>
+                </div>
+            </a>
+
+            <!-- Düşman 4 -->
+            <a href="strider.html" class="enemy-card">
+                <div class="enemy-img-container">
+                    <img src="img/combinestrider.jpg" alt="Strider" onerror="this.src='https://wiki.sourceruns.org/images/thumb/7/7b/Hl2_crowbar.png/300px-Hl2_crowbar.png'">
+                </div>
+                <div class="enemy-info">
+                   <h3>Strider</h3>
+                </div>
+            </a>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const wrapper = document.getElementById('main-wrapper');
+                if (preloader && wrapper) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        wrapper.classList.add('visible');
+                    }, 600);
+                }
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

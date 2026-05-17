@@ -1,0 +1,412 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Half-Life'ın Geliştirilmesi</title>
+    
+    <!-- FAVICON VE STİL BAĞLANTILARI -->
+    <link rel="icon" type="image/png" href="img/tr/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="taraf.css" />
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU VE RENK DEĞİŞKENLERİ
+           ========================================================================== */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        /* --- WIKI SİSTEMİ & GENEL DÜZEN --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            text-align: left;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        .profile-container img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px; border-radius: 15px; transition: 0.3s;
+            cursor: zoom-in; position: relative; overflow: hidden;
+        }
+        .archive-doc:hover { border-color: var(--primary-orange); transform: translateY(-3px); }
+        .archive-doc img { width: 100%; border-radius: 8px; display: block; }
+        .doc-text { font-size: 10px; color: #555; font-weight: 800; text-align: center; margin-top: 8px; display: block; }
+
+        /* MODAL (RESİM BÜYÜTME) */
+        #zoomModal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; cursor: zoom-out;
+            flex-direction: column;
+        }
+        #zoomModal img { max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px; }
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;}
+
+        /* ANA İÇERİK */
+        .main-article { display: flex; flex-direction: column; gap: 35px; }
+        .info-ribbon {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-orange);
+            padding: 25px; border-radius: 0 20px 20px 0;
+        }
+        .info-row { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row b { color: var(--primary-orange); text-transform: uppercase; width: 160px; font-size: 0.75rem; letter-spacing: 1px; flex-shrink: 0; }
+        .info-row span { color: #eee; line-height: 1.4; }
+
+        .story-section { line-height: 1.8; color: #bbb; }
+        .story-section h2 { color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.3rem; border-bottom: 1px solid rgba(245, 130, 32, 0.2); display: inline-block; padding-bottom: 5px; }
+        .story-section p { margin-bottom: 20px; }
+
+        /* GALERİ VE KART TASARIMI */
+        .tables-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .weapon-card-header {
+            background: rgba(245, 130, 32, 0.1);
+            padding: 15px 20px;
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-card-header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        .weapon-card-content { padding: 20px; }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .image-box {
+            text-align: center;
+            width: 100%;
+            max-width: 180px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .image-box:hover {
+            border-color: var(--primary-orange);
+            background: rgba(245, 130, 32, 0.06);
+            transform: translateY(-5px);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .image-caption {
+            margin-top: 10px;
+            color: #bbb;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .wiki-wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar-assets { order: 2; }
+            .main-article { order: 1; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- BÜYÜTME MODALI -->
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <!-- PRELOADER -->
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn">
+                <div class="menu-btn__burger"></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <!-- SOL PANEL: PROFİL VE KONSEPT ARŞİVİ -->
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <img src="oyun/hlalfa/hlalfa.png" alt="Half-Life Alpha">
+                    <div class="char-name" style="font-size: 1.5rem; font-weight: 800; margin-top: 10px;">HALF-LIFE ALPHA</div>
+                    <div class="char-role" style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">0.52 / 0.62 Sızdırılmış Sürüm</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">KONSEPT ARŞİVİ</h3>
+                    
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/gargantua2.jpg" alt="Gargantua Modeli (Alternatif Renklerle)">
+                        <span class="doc-text">Gargantua</span>
+                    </div>
+                    <div style="height: 15px;"></div>
+                    
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/Display%20Renders/panthereye.jpg" alt="Kırmızı Panter Göz (Çıkarıldı)">
+                        <span class="doc-text">Panter Göz (Kırmızı)</span>
+                    </div>
+                    <div style="height: 15px;"></div>
+                    
+                    <div class="archive-doc" onclick="openZoom(this)">
+                        <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/Display%20Renders/stukabat.jpg" alt="Stubakat (Çıkarıldı)">
+                        <span class="doc-text">Stubakat</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- SAĞ PANEL: ANA MAKALELER VE GALERİ -->
+            <section class="main-article">
+                <!-- BİLGİ ŞERİDİ -->
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px;">SÜRÜM BİLGİLERİ</h2>
+                    <div class="info-row"><b>Sürüm Adı:</b> <span>Half-Life Alpha 0.52 / 0.62</span></div>
+                    <div class="info-row"><b>Sızdırılma Tarihi:</b> <span>8 Eylül 1997</span></div>
+                    <div class="info-row"><b>Harita Sayısı:</b> <span>21 Harita (Tamamlanmamış dahil)</span></div>
+                    <div class="info-row"><b>Aktif Silahlar:</b> <span>Glock, MP5, Levye (Sınırsız Cephane)</span></div>
+                    <div class="info-row"><b>Durumu:</b> <span>Valve tarafından resmi olarak hiç yayınlanmamıştır.</span></div>
+                </div>
+
+                <article class="story-section">
+                    <h2>Genel Bakış</h2>
+                    <p>Half-Life Alpha 0.52/0.62 sürümleri, 8 Eylül 1997 tarihli Half-Life'ın sızdırılmış sürümlerdir. Diskin içeriği Ocak 2013'te Reddit'te paylaşılmış ve sonrasında Valvetime forumu aracılığıyla tüm kitleye sunulmuştur. Disk ise eBay'de satışa çıkarılmış ve daha sonra 709 ABD dolarına satın alınmıştır. Daha sonraki ön sürümlerden (<a href="hluplink.html" style="color: var(--primary-orange);">Half-Life Uplink</a> ve <a href="hldayone.html" style="color: var(--primary-orange);">Half-Life Day One</a>) farklı olarak, Half-Life Alpha Valve tarafından resmi olarak hiç yayınlanmamıştır.</p>
+                    
+                    <h2>Haritalar ve Silahlar</h2>
+                    <p>Alfa sürümünde üç silah bulunur ve hepsinin sınırsız cephanesi vardır (Glock, MP5 ve Levye). Bu sayede güncel sürümdeki çoğu silahın bu zamana kadar oyuna eklenmedikleri anlaşılmaktadır.</p>
+                    <p>Henüz tam olarak bitmemişlerde dahil olmak üzere 21 Harita içerir:</p>
+                    <ul style="list-style-type: none; margin-left: 15px; color: #eee; font-family: monospace; line-height: 1.6;">
+                        <li>> The Portal Device -> (Unforeseen Consequences)</li>
+                        <li>> The Office Warrens -> (Office Complex)</li>
+                        <li>> The Security Complex -> ("We've Got Hostiles")</li>
+                        <li>> Alien Research Lab -> (Questionable Ethics)</li>
+                        <li>> Communications Center -> ("Forget About Freeman!")</li>
+                        <li>> Reactor Lab -> (Lambda Core)</li>
+                    </ul>
+                    <br>
+                    
+                    <h2>Geliştirme Notları: Polyrobo</h2>
+                    <p>Bu sürüm aynı zamanda dönemine göre devrimsel sayılabilecek pek çok özellik içermekteydi...</p>
+                    
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
+                        <div class="image-box" onclick="openZoom(this)">
+                            <img src="oyun/hlalfa/polyrobo.png" alt="Polyrobo 6000 Poligona Sahiptir">
+                            <div class="image-caption">Polyrobo (Çıkarıldı)</div>
+                        </div>
+                        <div class="image-box" onclick="openZoom(this)">
+                            <img src="oyun/hlalfa/polyilham.jpg" alt="Zentraedi Tactical Battle Pod">
+                            <div class="image-caption">Zentraedi Pod</div>
+                        </div>
+                    </div>
+
+                    <p>Yukarıdaki model figürü 1997 NextGeneration sunumu için geliştirilmiş <b>Polyrobo</b> isimli robota aittir. Kendisine ateş edildiğinde "Ooga Chaka" dansı yapar. Polyrobo'nun modeli <i>Super Dimension Fortress Macross</i> animesindeki Zentraedi Tactical Battle Pod'dan ilham alınmıştır. Polyrobo 6000 poligona sahiptir... (Örnek Karşılaştırma: Gordon Freeman (639), G-Man (576), Nihilanth (1859)).</p>
+                    
+                    <br>
+                    <h2>Ofis İncelemeleri</h2>
+                    <p>Valve çalışanlarının yıllardır geliştirdikleri oyunları bir süre sonra topluca inceleyip yorumlar yaptığı söylenmektedir. Bu resimlerden de anlaşıldığı üzere bu, şirket içinde gelenekselleşmiş bir harekettir.</p>
+
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
+                        <div class="image-box" onclick="openZoom(this)">
+                            <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Other/Office%20Event/Office_event04.jpg" alt="Valve ofisinde inceleme">
+                            <div class="image-caption">Ofiste İnceleme 1</div>
+                        </div>
+                        <div class="image-box" onclick="openZoom(this)">
+                            <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Other/Office%20Event/Office_event01.jpg" alt="Valve ofisinde inceleme 2">
+                            <div class="image-caption">Ofiste İnceleme 2</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ÇIKARILAN DÜŞMANLAR (GALERİ) -->
+                <div class="tables-wrapper">
+                    <div class="weapon-card">
+                        <div class="weapon-card-header">Çıkarılan Düşmanlar ve Konseptler</div>
+                        <div class="weapon-card-content">
+                            <div class="image-gallery">
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/Display%20Renders/archerfish.jpg" alt="Archer Fish Sol Altta Valve Logolu">
+                                    <div class="image-caption">Archer Fish</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Screenshots/C1a1%20-%20Unforseen%20Consequences/Version%201/experiment5.png" alt="Kırmızı Panter Deneyden sonra">
+                                    <div class="image-caption">Kırmızı Panter</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/Display%20Renders/scan_snapbug.jpg" alt="Snapbug Sol Altta Valve Logolu">
+                                    <div class="image-caption">Snapbug</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Renders/Scanned%20Images/assassin.png" alt="Assasin elinde silahıyla...">
+                                    <div class="image-caption">Assassin</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/friendly.png" alt="Mr Friendly Konsept">
+                                    <div class="image-caption">Mr. Friendly</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/fast_walker.jpg" alt="Fast Walker konsept resmi">
+                                    <div class="image-caption">Fast Walker</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/Alien%20Slave/aslave1.jpg" alt="Vortigauntların İlk tasarımı">
+                                    <div class="image-caption">Vortigaunt (Konsept)</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/Kingpin/kingpin1.jpg" alt="Kingpin Konsept">
+                                    <div class="image-caption">Kingpin</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/flocking_floater.jpg" alt="Flocking Floater ve Vücut Yapısı">
+                                    <div class="image-caption">Flocking Floater</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/charger.jpg" alt="Charger Konsept">
+                                    <div class="image-caption">Charger</div>
+                                </div>
+                                
+                                <div class="image-box" onclick="openZoom(this)">
+                                    <img src="https://valvearchive.com/archive/Half-Life/Half-Life/Art/Creatures/creature.jpg" alt="Creature Konsept Resmi">
+                                    <div class="image-caption">Creature</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- RESİM BÜYÜTME (ZOOM MODAL) ---
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            
+            const imgEl = el.querySelector('img');
+            const captionEl = el.querySelector('.image-caption') || el.querySelector('.doc-text');
+            
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            
+            // Eğer resmin kendi alt etiketi varsa veya altında yazan yazı varsa onu başlık yap
+            caption.textContent = captionEl ? captionEl.textContent : imgEl.alt;
+            
+            modal.style.display = 'flex';
+        }
+
+        // --- PRELOADER (Sayfa Yüklenince Açılır) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        // --- MOBİL MENÜ ---
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

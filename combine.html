@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combine Birliği - Tehdit Veri Dosyası</title>
+    
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css" />
+
+    <style>
+        /* ==========================================================================
+           PROFESYONEL TERMİNAL DÜZENİ (TEMİZ GÖRÜNÜM)
+           ========================================================================== */
+        :root {
+            --primary-orange: #f58220;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --text-color: #bbb;
+        }
+
+        html { scrollbar-width: thin; scrollbar-color: var(--primary-orange) #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 4px; }
+
+        /* Temizlenmiş Resim Konteyneri */
+        .img-shield {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 130, 32, 0.1);
+            cursor: zoom-in;
+            background: transparent;
+        }
+
+        .img-shield img {
+            width: 100%; display: block;
+            transition: 0.5s ease;
+        }
+
+        .img-shield:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- WIKI DÜZENİ --- */
+        .wiki-wrapper {
+            padding: 40px 8%; 
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+        }
+
+        .sidebar-assets { display: flex; flex-direction: column; gap: 25px; }
+        
+        .profile-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+
+        .archive-doc {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px; border-radius: 15px; margin-bottom: 15px;
+            position: relative;
+        }
+
+        .doc-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: var(--primary-orange); font-size: 10px; font-weight: 800; letter-spacing: 2px;
+            border: 1px solid var(--primary-orange); padding: 3px 8px; background: rgba(0,0,0,0.8); z-index: 4;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* HİKAYE KESİTLERİ */
+        .story-item {
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .story-item.has-image { grid-template-columns: 220px 1fr; align-items: start; }
+        }
+
+        .info-ribbon { background: var(--card-bg); border-left: 5px solid var(--primary-orange); padding: 25px; border-radius: 0 20px 20px 0; margin-bottom: 30px; }
+        .info-row { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; display: flex; }
+        .info-row b { color: var(--primary-orange); width: 140px; font-size: 0.75rem; text-transform: uppercase; flex-shrink: 0; }
+
+        /* BREEN ALINTI KUTUSU */
+        .quote-box {
+            border-left: 3px solid var(--primary-orange);
+            padding: 20px;
+            margin: 25px 0;
+            background: rgba(245, 130, 32, 0.05);
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            position: relative;
+        }
+        .quote-box::before {
+            content: "\f10d";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 10px; right: 20px;
+            opacity: 0.1;
+            font-size: 3rem;
+        }
+
+        /* ==========================================================================
+           BİRLİKLER KARTI
+           ========================================================================== */
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .unit-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(245, 130, 32, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .unit-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-5px);
+            background: rgba(245, 130, 32, 0.05);
+        }
+
+        .unit-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+        }
+
+        .unit-card h3 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin: 15px 10px 5px 10px;
+            text-transform: uppercase;
+        }
+
+        .unit-card span {
+            color: var(--primary-orange);
+            font-size: 0.75rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        #zoomModal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; cursor: zoom-out; flex-direction: column;}
+        #zoomModalCaption { color: #fff; margin-top: 15px; font-weight: bold; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;}
+
+        @media (max-width: 992px) { .wiki-wrapper { grid-template-columns: 1fr; } .sidebar-assets { order: 2; } .main-article { order: 1; } }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="zoomModal" onclick="this.style.display='none'">
+        <img id="zoomedImg" src="" style="max-width: 90%; max-height: 80%; border: 2px solid var(--primary-orange); border-radius: 10px;" alt="">
+        <div id="zoomModalCaption"></div>
+    </div>
+
+    <div id="preloader"><img src="img/tr/hltrwikiweb.png" class="loader-logo"></div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html" class="active">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+     <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="wiki-wrapper">
+            <aside class="sidebar-assets">
+                <div class="profile-container">
+                    <div class="img-shield" onclick="openZoom(this)">
+                        <img src="img/combine.jpg" alt="Combine Birliği Sembolü / Birlikleri">
+                    </div>
+                    <div style="font-size: 1.5rem; font-weight: 800; margin-top: 15px;">COMBINE BİRLİĞİ</div>
+                    <div style="color: var(--primary-orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Evrenlerarası İmparatorluk</div>
+                </div>
+
+                <div class="documents-group">
+                    <h3 style="font-size: 0.7rem; color: var(--primary-orange); text-align: center; letter-spacing: 2px; margin-bottom: 15px;">İŞGAL ARŞİVİ</h3>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="evrak/7saatsavasi.jpg" alt="7 Saat Savaşı Raporu (Half-Life: Alyx)">
+                        </div>
+                    </div>
+                    
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="combine/combineisgal.jpg" alt="Combine Metrocop İnsanlara Zulüm Ederken">
+                        </div>
+                    </div>
+
+                    <div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="mekan/citadel.jpg" alt="Combine'ın Dünyadaki Merkezi: Citadel">
+                        </div>
+                    </div>
+					
+					<div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="combine/yemek.png" alt="Hayatta Kalan insanlar combine yemek kuyruklarında.">
+                        </div>
+                    </div>
+					
+					<div class="archive-doc">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="combine/sivilkoruma1.png" alt="Sivil Koruma Oyuncuya zorla çöp attırmakta.">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="main-article">
+                <div class="info-ribbon">
+                    <h2 style="font-size: 1.1rem; color: #fff; margin-bottom: 20px; letter-spacing: 1px;">TEHDİT ANALİZ KARTI</h2>
+                    <div class="info-row"><b>Sınıflandırma:</b> <span>Evrenlerarası İmparatorluk - Evrensel Birlik</span></div>
+                    <div class="info-row"><b>Yönetim:</b> <span>Combine Advisorları / Dr. Wallace Breen (Dünya)</span></div>
+                    <div class="info-row"><b>İlk Görünüş:</b> <span>Half-Life 2 (2004)</span></div>
+                    <div class="info-row"><b>Son Görünüş:</b> <span>Half-Life: Alyx (2020)</span></div>
+                </div>
+
+                <div class="story-section" style="color: var(--text-color); line-height: 1.8; margin-top: 30px;">
+                    
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">COMBINE NEDİR?</h2>
+                            <p>Combine Birliği, pek çok evrende gezegenleri fethedip sömüren, yerel halkı köleleştiren devasa bir imparatorluktur. Özellikle de köleleştirdikleri ırkları genetik ve sibernetik olarak modifiye edip kendi saflarına (askeri birimler olarak) katmalarıyla bilinirler.</p>
+                        </div>
+                    </div>
+
+                    <div class="story-item has-image">
+                        <div class="img-shield" onclick="openZoom(this)">
+                            <img src="img/dunyateslim.jpg" alt="Dünya Teslim Oldu - The Terminal Gazetesi">
+                        </div>
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">7 SAAT SAVAŞI VE DÜNYA İŞGALİ</h2>
+                            <p>Black Mesa'da yaşanan Rezonans Çağlayanı sonucunda açılan Portal Fırtınalarını fark etmeleri üzerine Dünya'ya geldiler. Amaçları dünyayı sömürmek ve insanlığın sahip olduğunu düşündükleri "evren içi yerel portal" teknolojisine el koymaktı.</p>
+                            <p>İnsanlık tüm ordularıyla bu savaşa sadece <b>7 Saat</b> dayanabildi. Binlerce yılda kurulan medeniyet yok olmanın eşiğine geldiğinde, The Terminal gazetesinin son baskısı gerçeği haykırıyordu: <i>"Dünya Teslim Oldu."</i></p>
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">WALLACE BREEN'İN BAŞA GEÇİŞİ</h2>
+                            <p>Eski Black Mesa yöneticisi Wallace Breen, savaşın 7. saatinde Combine ile iletişimin bir yolunu buldu. Onlara Black Mesa'daki deneylerden bahsetti ve insanlığa teknolojiyi geliştirmeleri için zaman tanımalarını teklif etti. Combine bu anlaşmayı kabul etti ve insanlığı tamamen yok etmekten vazgeçti.</p>
+                            <p>Ancak bunun bir bedeli vardı: Breen, Dünya'nın başına bir <b>"Diktatör"</b> olarak atandı. Hayatta kalan insanlar Doğu Avrupa'daki seçilmiş şehirlere (Şehir 17 gibi) zorla yerleştirildi. İnsanlık kısırlaştırıldı, sularına ilaçlar katıldı ve her yere Combine'ı öven propagandalar asıldı.</p>
+                        </div>
+                    </div>
+
+                    <div class="quote-box">
+                        "Doğamıza ve kaderimize sadık kalabilmek için daha büyük şeyleri hedeflemeliyiz. Eşiğimizden taştık, gerçek tehdit yıldızlar arasında bizi beklerken anne sütü için ağlamak aptallıktır ve sadece küçük beyinlilerin 'Combine' olarak adlandırdığı evrensel birlik bizi oraya ulaştırabilir."
+                        <div style="text-align: right; color: var(--primary-orange); font-weight: 700; font-size: 0.8rem; margin-top: 10px; font-style: normal; text-transform: uppercase;">
+                            — Dr. Wallace Breen (Breencast)
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">YENİ DÜNYA DÜZENİ VE BİRLİKLER</h2>
+                            <p>Düzen oturtulduktan sonra Combine, ana ordusunun büyük bir kısmını geri çekti. Güvenliği, yarı makine (sentez) yaratıkları (Strider, Gunship, Dropship) ve köleleştirdikleri insanlardan oluşan birimlere bıraktı.</p>
+                            <ul style="list-style-type: square; margin-left: 20px; color: #eee; margin-top: 10px;">
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Combine Askerleri (Overwatch):</strong> Askeri geçmişi olan insanların teknolojik işlemlerden geçirilip duygularının silinmesiyle oluşturulan ağır silahlı birliklerdir.</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Metrocop (Sivil Koruma):</strong> Kendi isteğiyle Combine'a katılan, daha iyi yaşam şartları için kendi halkına zulmeden üniformalı polis gücüdür.</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: var(--primary-orange);">Stalker'lar:</strong> İsyan edip yakalanan insanların, organları kesilerek ve beyinleri yıkanarak dönüştürüldükleri acınası köle işçilerdir.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="story-item">
+                        <div class="story-text">
+                            <h2 style="color:#fff; font-size:1.1rem; margin-top:0;">GENEL ÖZELLİKLERİ</h2>
+                            <ul style="list-style-type: square; margin-left: 20px; color: #eee; margin-top: 10px;">
+                                <li style="margin-bottom: 8px;">Evrenlere ve boyutlara hükmetme arzusu.</li>
+                                <li style="margin-bottom: 8px;">Evrenler arası devasa teleportasyon altyapısı (ancak aynı evren içindeki kısa mesafe ışınlanmalarında zayıftırlar).</li>
+                                <li style="margin-bottom: 8px;">Biyolojik organizmaları makineleştirerek (sentezleyerek) üstün silahlar yaratma teknolojisi.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="color:#fff; font-size:1.3rem; border-bottom: 1px solid var(--primary-orange); padding-bottom: 10px; margin-top: 50px; text-transform: uppercase; letter-spacing: 2px;">COMBINE BİRLİKLERİ</h2>
+                
+                <div class="unit-grid">
+                    <a href="sivilkoruma.html" class="unit-card">
+                        <img src="combine/sivilkoruma.jpg" alt="Sivil Koruma Ekipleri" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Sivil Koruma</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                <!--    <a href="combine-overwatch.html" class="unit-card">
+                        <img src="combine/overwatchaskeri.jpg" alt="Overwatch Askerleri" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Overwatch Askerleri</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-elite.html" class="unit-card">
+                        <img src="combine/overwatchelite.jpg" alt="Combine Elite" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Elite</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-stalker.html" class="unit-card">
+                        <img src="combine/combinestalker.jpg" alt="Combine Stalker" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Stalker</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-strider.html" class="unit-card">
+                        <img src="combine/combinestrider.jpg" alt="Combine Strider" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Strider</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-hunter.html" class="unit-card">
+                        <img src="combine/combinehunter.jpg" alt="Combine Hunter" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Hunter</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-gunship.html" class="unit-card">
+                        <img src="combine/combinegunship.jpg" alt="Combine Gunship (Sarı)" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Gunship (Sarı)</h3>
+                        <span>(Sentez)</span>
+                    </a>
+
+                    <a href="combine-gunship2.html" class="unit-card">
+                        <img src="combine/combinegunship2.jpg" alt="Combine Gunship (Mavi)" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Gunship (Mavi)</h3>
+                        <span>(Sentez)</span>
+                    </a>
+                    
+                    <a href="combine-dropship.html" class="unit-card">
+                        <img src="combine/combinedropship.jpg" alt="Combine Dropship" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Dropship</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-scanner.html" class="unit-card">
+                        <img src="combine/combinesehirtarayici.jpg" alt="Combine Scanner (Şehir)" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Scanner</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-manhack.html" class="unit-card">
+                        <img src="combine/combinemanhack.jpg" alt="Combine Manhack" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Manhack</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-advisor.html" class="unit-card">
+                        <img src="combine/combineadvisor.jpg" alt="Combine Advisor" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Advisor</h3>
+                        <span>(Yönetici Irk)</span>
+                    </a>
+
+                    <a href="combine-hunterch.html" class="unit-card">
+                        <img src="combine/combinehunterchopper.jpg" alt="Combine Chopper" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Chopper</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-sentry.html" class="unit-card">
+                        <img src="combine/combinesentrygun.jpg" alt="Combine Sentry" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Sentry</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-sniper.html" class="unit-card">
+                        <img src="combine/combinesniper.jpg" alt="Combine Sniper" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Sniper</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-rollermine.html" class="unit-card">
+                        <img src="combine/combinerollermine.jpg" alt="Combine Rollermine" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Rollermine</h3>
+                        <span>(Half-Life 2)</span>
+                    </a>
+
+                    <a href="combine-grunt.html" class="unit-card">
+                        <img src="combine/combinegrunt.jpg" alt="Combine Grunt" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Grunt</h3>
+                        <span>(Half-Life: Alyx)</span>
+                    </a>
+
+                    <a href="combine-ordinal.html" class="unit-card">
+                        <img src="combine/combineordinal.jpg" alt="Combine Ordinal" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Ordinal</h3>
+                        <span>(Half-Life: Alyx)</span>
+                    </a>
+                    
+                    <a href="combine-suppressor.html" class="unit-card">
+                        <img src="combine/combinesuppressor.jpg" alt="Combine Suppressor" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Suppressor</h3>
+                        <span>(Half-Life: Alyx)</span>
+                    </a>
+
+                    <a href="combine-cremator.html" class="unit-card">
+                        <img src="combine/combinecremator.jpg" alt="Combine Cremator" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Cremator</h3>
+                        <span>(BETA)</span>
+                    </a>
+                
+                    <a href="combine-assasin.html" class="unit-card">
+                        <img src="combine/combineassasin.jpg" alt="Combine Assasin" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Assasin</h3>
+                        <span>(BETA)</span>
+                    </a>
+                    
+                    <a href="combine-scanner2.html" class="unit-card">
+                        <img src="combine/combinecoraktarayici.jpg" alt="Combine Scanner (Arazi)" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Arazi Scanner</h3>
+                        <span>(BETA)</span>
+                    </a>
+
+                    <a href="combine-scanner3.html" class="unit-card">
+                        <img src="combine/combinecombot.jpg" alt="Combine Combot" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combot Scanner</h3>
+                        <span>(BETA)</span>
+                    </a>
+                    
+                    <a href="combine-guard.html" class="unit-card">
+                        <img src="combine/combineguard.jpg" alt="Combine Guard" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Guard</h3>
+                        <span>(BETA)</span>
+                    </a>
+                    
+                    <a href="combine-assaultsynth.html" class="unit-card">
+                        <img src="combine/combineassaultsynth.jpg" alt="Combine Assault Synth" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combot Assault Synth</h3>
+                        <span>(BETA)</span>
+                    </a>
+
+                    <a href="combine-crabsynth.html" class="unit-card">
+                        <img src="combine/combinecrabsynth.jpg" alt="Combine Crabsynth" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Crabsynth</h3>
+                        <span>(BETA)</span>
+                    </a>
+
+                    <a href="combine-mortarsynth.html" class="unit-card">
+                        <img src="combine/combinemortarsynth.jpg" alt="Combine Mortarsynth" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Mortarsynth</h3>
+                        <span>(BETA)</span>
+                    </a>
+
+                    <a href="combine-elitesynth.html" class="unit-card">
+                        <img src="combine/combinesynthelite.jpg" alt="Combine Synth Elite" onerror="this.src='img/tr/hltrwikiweb.png';">
+                        <h3>Combine Synth Elite</h3>
+                        <span>(BETA)</span>
+                    </a> -->
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function openZoom(el) {
+            const modal = document.getElementById('zoomModal');
+            const zoomedImg = document.getElementById('zoomedImg');
+            const caption = document.getElementById('zoomModalCaption');
+            const imgEl = el.querySelector('img');
+            
+            zoomedImg.src = imgEl.src;
+            zoomedImg.alt = imgEl.alt;
+            caption.textContent = imgEl.alt;
+            
+            modal.style.display = 'flex';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 300);
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Topluluk Modları - Half-Life Türkiye</title>
+    <!-- FAVICON DÜZELTİLDİ -->
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <title>Topluluk Yapımları</title>
     
     <!-- Fontlar ve İkonlar -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
@@ -11,44 +13,55 @@
     
     <!-- HARİCİ CSS DOSYASI BAĞLANTISI -->
     <link rel="stylesheet" href="mod.css">
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU (SCROLLBAR)
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+    </style>
 </head>
 <body>
 
     <!-- AÇILIŞ EKRANI -->
-    <div id="preloader">
-        <div class="loader-content">
-            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
-            <div class="loader-bar"><div class="progress"></div></div>
-            <span class="loader-text">VERİTABANI SENKRONİZE EDİLİYOR...</span>
-        </div>
+   <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
     </div>
+
 
     <div id="main-wrapper">
         <!-- NAVBAR -->
         <nav class="navbar">
-            <a href="anasayfaa.html" class="logo">
+            <a href="index.html" class="logo">
                 <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
                 <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
             </a>
+            
             <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
-            <ul class="nav-links" id="navLinks">
-              <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Anasayfa</a></li>
                 <li><a href="karakterler.html">Karakterler</a></li>
                 <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
-            <!--    <li><a href="video.html">Videolar</a></li>
-                <li><a href="haberler.php">Haberler</a></li>-->
-                <li><a href="halflifeturkiye.html" class="active">Hakkımızda</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
                 <li><a href="minioyun.html">Mini Oyun</a></li>
-            </ul>
+               <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html" class="active">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
             </ul>
         </nav>
 
         <!-- BAŞLIK VE ARAMA -->
         <header class="page-header">
-            <h1>Topluluk Modları</h1>
-            <p>Black Mesa Arşivi'ne dışarıdan yüklenen yetkisiz (?) ama bir o kadar da efsanevi yazılım eklentileri.</p>
+            <h1>Topluluk Yapımları</h1>
+            <p>Half-Life Serisi Üzerine yapılmış bazı topluluk eserleri!</p>
         </header>
 
         <div class="search-container">
@@ -60,58 +73,177 @@
         <main class="mod-grid" id="modGrid">
             
             <div class="mod-card">
-                <img src="img/modlar/blackmesa.jpg" class="mod-img" alt="Black Mesa" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/101731652414777596/1202A7DCEECA91630C1CC9527D11FC8382AF4CB5/';">
+                <img src="mod/header.jpg" class="mod-img" alt="Black Mesa" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/101731652414777596/1202A7DCEECA91630C1CC9527D11FC8382AF4CB5/';">
                 <div class="mod-content">
                     <h2 class="mod-title">Black Mesa</h2>
                     <span class="mod-author">Geliştirici: Crowbar Collective</span>
                     <div class="mod-tags">
                         <span class="mod-tag">Remake</span>
-                        <span class="mod-tag">Singleplayer</span>
+                        <span class="mod-tag">Hikaye</span>
                     </div>
                     <p class="mod-desc">Orijinal Half-Life oyununun Source motoru ile tamamen baştan yapılmış, modern grafiklere ve genişletilmiş Xen bölümlerine sahip efsanevi hali.</p>
-                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                    <a href="https://store.steampowered.com/app/362890/Black_Mesa/" class="mod-btn">Steam Sayfasına Git</a>
                 </div>
             </div>
 
             <div class="mod-card">
-                <img src="img/modlar/entropy.jpg" class="mod-img" alt="Entropy: Zero 2" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/1826900450005706240/E113AFAC2CDE36F6D9CA7871C6BA953492CE0049/';">
+                <img src="mod/entropyayaklanma.webp" class="mod-img" alt="Entropy Zero Ayaklanma" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/1826900450005706240/E113AFAC2CDE36F6D9CA7871C6BA953492CE0049/';">
                 <div class="mod-content">
-                    <h2 class="mod-title">Entropy: Zero 2</h2>
-                    <span class="mod-author">Geliştirici: Breadmen</span>
+                    <h2 class="mod-title">Entropy Zero Ayaklanma</h2>
+                    <span class="mod-author">Geliştirici: Employee8 & FIlIpad<br>
+					Yerelleştirme : Blackhand & Half-Life Türkiye</span>
                     <div class="mod-tags">
                         <span class="mod-tag">Hikaye</span>
+                        <span class="mod-tag">Türkçe, Yerelleştirme</span>
                         <span class="mod-tag">Combine</span>
+                        <span class="mod-tag">Silah Paketi</span>
                     </div>
-                    <p class="mod-desc">Bad Cop (Kötü Polis) lakaplı elit bir Combine askerinin rolünü üstlenin. Gordon Freeman'a ulaşmak için devasa bir savaşa girin.</p>
-                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                    <p class="mod-desc">Entropy: Zero - Ayaklanma, bir Entropy: Zero Uprising modifikasyonudur. Bu modda Türkçe dublaj, Türkçe altyazı, Türkçe oyun içi yamalar, daha iyi silah modelleri ve animasyonları, özel ses tasarımları ve daha birçok şey mevcuttur. Modla ilgili tüm detaylı bilgilere ve açıklamalara Half-Life Türkiye Discord sunucusu üzerinden ulaşabilirsiniz.</p>
+                    <a href="https://www.moddb.com/mods/entropy-zero-uprising/downloads/entropy-zero-ayaklanma" class="mod-btn">Moddb Sayfasına Git</a>
                 </div>
             </div>
 
             <div class="mod-card">
-                <img src="img/modlar/svencoop.jpg" class="mod-img" alt="Sven Co-op" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/487814329971844234/9D2D490E35E1700F8A5D6B6B599BB710D707BE3F/';">
+                <img src="mod/hlturkce.png" class="mod-img" alt="Half-Life Turkce" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/487814329971844234/9D2D490E35E1700F8A5D6B6B599BB710D707BE3F/';">
                 <div class="mod-content">
-                    <h2 class="mod-title">Sven Co-op</h2>
-                    <span class="mod-author">Geliştirici: Sven Co-op Team</span>
+                    <h2 class="mod-title">Half-Life Türkçe Dublaj</h2>
+                    <span class="mod-author">Geliştirici: Westheia Record</span>
                     <div class="mod-tags">
-                        <span class="mod-tag">Co-op</span>
-                        <span class="mod-tag">Multiplayer</span>
+                        <span class="mod-tag">Türkçe, Yerelleştirme</span>
                     </div>
-                    <p class="mod-desc">Half-Life deneyimini arkadaşlarınızla omuz omuza yaşayın! Özel haritalar, yeni düşmanlar ve bitmek bilmeyen hayatta kalma mücadelesi.</p>
-                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                    <p class="mod-desc">Half-Life deneyimini Tamamen Türkçe Yaşamak için Bir Fırsat. Westheia Records sunar.</p>
+                    <a href="https://www.moddb.com/mods/half-life-trke-dublaj-orjinal" class="mod-btn">Moddb Sayfasına Git</a>
                 </div>
             </div>
 
             <div class="mod-card">
-                <img src="img/modlar/cryoffear.jpg" class="mod-img" alt="Cry of Fear" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <img src="mod/clof.jpg" class="mod-img" alt="Counter-Strike Opposing Force" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Counter-Strike Opposing Force</h2>
+                    <span class="mod-author">Geliştirici: Blackhand,  Fresh Silence,  LIL-PIF,  MTB Animations,  X-Ray,  Melih Öksüzce</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Half-Life Teması</span>
+                        <span class="mod-tag">Counter-Strike</span>
+                    </div>
+                    <p class="mod-desc">Counter-Strike Condition Zero için Half-Life Opposing Force Temalı bir mod.</p>
+                    <a href="https://gamebanana.com/wips/77659" class="mod-btn">Gamebanana Sayfasına Git</a>
+                </div>
+            </div>
+            
+			
+			<div class="mod-card">
+                <img src="https://media.moddb.com/images/mods/1/33/32385/az_bg_night0000.jpg" class="mod-img" alt="Entropy Zero" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Entropy Zero</h2>
+                    <span class="mod-author">Geliştirici: Breadmen</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Combine</span>
+                        <span class="mod-tag">Hikaye</span>
+                    </div>
+                    <p class="mod-desc">Half-Life 2: Episode 2 için hazırlanan bu modifikasyonda kötü adam olun ve terk edilmiş  Şehir 10'da ölüme terk edilmiş bir Metrocop'un yerine geçin.</p>
+                    <a href="https://store.steampowered.com/app/714070/Entropy__Zero/" class="mod-btn">Steam Sayfasına Git</a>
+                </div>
+            </div>
+			
+			
+			<div class="mod-card">
+                <img src="https://media.moddb.com/images/mods/1/13/12836/grey11.jpg" class="mod-img" alt="Grey" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Grey</h2>
+                    <span class="mod-author">Geliştirici: Deppresick Team</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Korku</span>
+                        <span class="mod-tag">Hikaye</span>
+                    </div>
+                    <p class="mod-desc">Grey'in hayatı sürekli bir mücadeleden ibaret. Sürekli bir düşüş sarmalında ve görünüşe göre gerçeklik bile ona karşı dönmüş. Grey uyandığında dünyanın sessizleştiğini, sokakların boş olduğunu görüyor. Yardım bulmalısınız. Grey'in yaşadığı kasvetli dünyayı, tamamen yeni ve benzersiz bir dünyada keşfedin ve paramparça olmuş geçmişine dair ipuçları bulun.</p>
+                    <a href="https://www.moddb.com/mods/grey" class="mod-btn">Moddb Sayfasına Git</a>
+                </div>
+            </div>
+			
+			
+			
+            <div class="mod-card">
+                <img src="https://media.moddb.com/images/mods/1/7/6145/33125.jpg" class="mod-img" alt="Afraid of Monsters" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Afraid of Monsters</h2>
+                    <span class="mod-author">Geliştirici: ruMpel</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Korku</span>
+                        <span class="mod-tag">Hikaye</span>
+                    </div>
+                    <p class="mod-desc">Adınız David Leatherhoff ve garip bir uyu-turucuya bağımlısınız. Son zamanlarda en derin ve karanlık korkularınızı kemiren yanılsamalar ve rüyalar görmeye başladınız. Sonunda yardım aramak için Markland Hastanesi'ne gidiyorsunuz.</p>
+                    <a href="https://www.moddb.com/mods/afraid-of-monsters-dc" class="mod-btn">Moddb Sayfasına Git</a>
+                </div>
+            </div>
+			
+			<div class="mod-card">
+                <img src="https://media.moddb.com/images/mods/1/25/24666/Echoes_Logo.3.png" class="mod-img" alt="Half-Life Echoes" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Half-Life Echoes</h2>
+                    <span class="mod-author">Geliştirici: James "MrGnang" Coburn</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Hikaye</span>
+                        <span class="mod-tag">Moddb 2018 Yılın Modu Ödülü</span>
+                    </div>
+                    <p class="mod-desc">Echoes, Black Mesa Araştırma Tesisi'nden ismi açıklanmayan bir bilim insanının bakış açısından oynanır.</p>
+                    <a href="https://www.moddb.com/mods/half-life-echoes" class="mod-btn">Moddb Sayfasına Git</a>
+                </div>
+            </div>
+			
+			
+			<div class="mod-card">
+                <img src="mod/cryofear.jpg" class="mod-img" alt="Cry of Fear" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
                 <div class="mod-content">
                     <h2 class="mod-title">Cry of Fear</h2>
                     <span class="mod-author">Geliştirici: Team Psykskallar</span>
                     <div class="mod-tags">
                         <span class="mod-tag">Korku</span>
-                        <span class="mod-tag">Hayatta Kalma</span>
+                        <span class="mod-tag">Hikaye</span>
                     </div>
-                    <p class="mod-desc">Half-Life 1 motoruyla yapılmış psikolojik bir korku şaheseri. Soğuk İskandinav gecelerinde yalnız başınıza veya co-op olarak hayatta kalın.</p>
-                    <a href="#" class="mod-btn">Dosyaya Git</a>
+                    <p class="mod-desc">Cry of Fear, korkunç yaratıklarla ve kabus gibi sanrılarla dolu ıssız bir kasabada geçen, psikolojik bir tek oyunculu ve işbirlikçi korku oyunudur. Oyunda, soğuk İskandinav gecesinde çaresizce cevaplar arayan, yavaş yavaş deliliğe doğru sürüklenirken şehirde yolunu bulan genç bir adamı canlandırıyorsunuz.</p>
+                    <a href="https://store.steampowered.com/app/223710/Cry_of_Fear/" class="mod-btn">Steam Sayfasına Git</a>
+                </div>
+            </div>
+            
+            <div class="mod-card">
+                <img src="mod/turklife.jpg" class="mod-img" alt="TürkLife" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Turk-Layf</h2>
+                    <span class="mod-author">Geliştirici: Ozan Eylül Yükünç</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Half-Life</span>
+                        <span class="mod-tag">Yerelleştirme</span>
+                    </div>
+                    <p class="mod-desc">Turk-Layf, Ozan Eylül Yükünç'ün yaptığı bir Türk Half-Life modudur. Bu mod Türklere hitap eden şeyler içerir, Türk küfürleri, gelenkleri, şakaları ve internet fenomenleri gibi. Oyundaki zorluklar, yaratıkların hızları, canları, verdiği hasarlar ve modeller, sesler ortalama olacak kadar değiştirilmiştir.</p>
+                    <a href="https://www.moddb.com/mods/turk-layf" class="mod-btn">Moddb Sayfasına Git</a>
+                </div>
+            </div>
+            
+            <div class="mod-card">
+                <img src="mod/mmod.webp" class="mod-img" alt="MMod" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Half-Life 2 : MMod</h2>
+                    <span class="mod-author">Geliştirici: Gunship-Mark-II</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Silah Paketi</span>
+                        <span class="mod-tag">Grafik</span>
+                    </div>
+                    <p class="mod-desc">Half-Life 2: MMod'un amacı, oyuncuya daha fazla seçenek ve savaş fırsatı sunarak, silah kullanımını, savaş mekaniklerini ve sürükleyicilik faktörünü geliştirmek,genişletmek, iyileştirmektir.</p>
+                    <a href="https://www.moddb.com/mods/hl2-ep2-enhased-mod" class="mod-btn">Moddb Sayfasına Git</a>
+                </div>
+            </div>
+			
+			<div class="mod-card">
+                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1761270/2ce25db66894e4e40992bac42b54dc935d0acfc9/capsule_616x353.jpg?t=1731964931" class="mod-img" alt="MMod" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/595861195655325514/2FC2DBA5A1DE3E3E77BDDF87A2B0E6C5C88F77B0/';">
+                <div class="mod-content">
+                    <h2 class="mod-title">Half-Life : MMod</h2>
+                    <span class="mod-author">Geliştirici: Gunship-Mark-II & MMod Team</span>
+                    <div class="mod-tags">
+                        <span class="mod-tag">Silah Paketi</span>
+                        <span class="mod-tag">Grafik</span>
+                    </div>
+                    <p class="mod-desc">Half-Life için ücretsiz, hayran yapımı bir modifikasyondur ve oyuncunun cephaneliğini geliştirmeyi ve savaş seçeneklerini daha da genişletmeyi amaçlamaktadır.</p>
+                    <a href="https://store.steampowered.com/app/1761270/HalfLife_MMod/" class="mod-btn">Steam Sayfasına Git</a>
                 </div>
             </div>
 
@@ -135,9 +267,9 @@
                     setTimeout(() => {
                         preloader.style.display = 'none';
                         wrapper.classList.add('visible');
-                    }, 500);
+                    }, 300);
                 }
-            }, 800);
+            }, 300);
         });
 
         // --- MOBİL MENÜ ---

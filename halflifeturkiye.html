@@ -7,39 +7,40 @@
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="icon" type="image/png" href="img/tr/favicon.ico">
     
     <link rel="stylesheet" href="hakkimizda.css">
 </head>
 <body>
 
     <!-- AÇILIŞ EKRANI -->
-    <div id="preloader">
-        <div class="loader-content">
-            <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Logo" onerror="this.style.display='none'">
-            <div class="loader-bar"><div class="progress"></div></div>
-            <span class="loader-text">ARŞİV BİLGİLERİ ÇEKİLİYOR...</span>
-        </div>
+   <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo">
     </div>
 
+
     <div id="main-wrapper">
-        <!-- NAVBAR -->
+        <!-- NAVBAR (İç içe geçme hatası düzeltildi) -->
         <nav class="navbar">
-            <a href="anasayfaa.html" class="logo">
+            <a href="index.html" class="logo">
                 <img src="img/tr/hltrwikiweb.png" alt="Logo" onerror="this.style.display='none'">
                 <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
             </a>
+            
             <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
-            <ul class="nav-links" id="navLinks">
-                <div class="menu-btn" id="menuBtn"><div style="width:30px; height:3px; background:#f58220;"></div></div>
+            
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Anasayfa</a></li>
                 <li><a href="karakterler.html">Karakterler</a></li>
                 <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
-            <!--    <li><a href="video.html">Videolar</a></li>
-                <li><a href="haberler.php">Haberler</a></li>-->
-                <li><a href="halflifeturkiye.html" class="active">Hakkımızda</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html">Videolar</a></li>
                 <li><a href="minioyun.html">Mini Oyun</a></li>
-            </ul>
+ <!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">TImelıne</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html" class="active">Hakkımızda</a></li>
             </ul>
         </nav>
 
@@ -75,7 +76,7 @@
                         <i class="fa-solid fa-shield-halved"></i>
                         <h2>YASAL UYARI</h2>
                     </div>
-                    <p>Half-Life evreni, karakterleri ve tüm resmi materyalleri Valve Corporation'a aittir. Bu site kâr amacı gütmeyen, hayran yapımı (fan-made) bir ansiklopedi projesidir.</p>
+                    <p>Half-Life evreni, karakterleri ve tüm resmi materyalleri Valve Corporation'a aittir. Bu site kâr amacı gütmeyen, hayran yapımı (fan-made) bir wiki projesidir.</p>
                 </div>
             </div>
 
@@ -88,12 +89,11 @@
                     <div class="terminal-body">
                         <div class="stat-row">
                             <span class="stat-label">SİTE DURUMU:</span>
-                            <span class="stat-value warning">BAKIM</span>
+                            <span class="stat-value visible">Stabil</span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">Sürüm:</span>
-                            <span class="stat-value">0.0.4</span>
-                        </div>
+                            <span class="stat-value">0.1</span>
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                     setTimeout(() => {
                         preloader.style.display = 'none';
                         wrapper.classList.add('visible');
-                    }, 400);
+                    }, 300);
                 }
             }, 300);
         });

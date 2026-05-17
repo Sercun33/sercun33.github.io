@@ -1,0 +1,559 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Videolar</title>
+    
+    <link rel="icon" type="image/png" href="img/tr/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="taraf.css">
+
+    <style>
+        /* ==========================================================================
+           ÖZEL TURUNCU KAYDIRMA ÇUBUĞU (SCROLLBAR)
+           ========================================================================== */
+        html { scrollbar-width: thin; scrollbar-color: #f58220 #050505; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid rgba(245, 130, 32, 0.15); }
+        ::-webkit-scrollbar-thumb { background: #f58220; border-radius: 4px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff9940; }
+
+        :root {
+            --primary-orange: #f58220;
+        }
+
+        /* ==========================================================================
+           VİDEO SAYFASI DÜZENİ (SIDEBAR + GRID)
+           ========================================================================== */
+        .video-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            margin-top: 30px;
+            align-items: start;
+        }
+
+        /* Filtre Menüsü (Sidebar) */
+        .filter-sidebar {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            border-bottom: 3px solid var(--primary-orange);
+            position: sticky;
+            top: 100px; /* Aşağı kaydırırken ekranda kalır */
+        }
+
+        .filter-sidebar h3 {
+            color: var(--primary-orange);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .filter-btn {
+            display: block;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            color: #bbb;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 700;
+            transition: 0.3s ease;
+            font-family: inherit;
+        }
+
+        .filter-btn i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(245, 130, 32, 0.1);
+            color: #fff;
+            border-color: var(--primary-orange);
+            padding-left: 20px;
+        }
+
+        .filter-btn.active {
+            box-shadow: inset 4px 0 0 var(--primary-orange);
+        }
+
+        /* Video Grid Alanı */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding-bottom: 50px;
+        }
+
+        .video-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(245, 130, 32, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .video-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-5px);
+            background: rgba(245, 130, 32, 0.05);
+            box-shadow: 0 10px 20px rgba(245, 130, 32, 0.1);
+        }
+
+        .video-thumb {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            border-bottom: 1px solid rgba(245, 130, 32, 0.2);
+            overflow: hidden;
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+
+        .video-card:hover .video-thumb img {
+            transform: scale(1.05);
+            filter: brightness(0.6);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: 0.3s ease;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            z-index: 3;
+        }
+
+        .video-card:hover .play-icon {
+            color: var(--primary-orange);
+            transform: translate(-50%, -50%) scale(1.1);
+            text-shadow: 0 0 20px rgba(245, 130, 32, 0.8);
+        }
+
+        .video-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(245, 130, 32, 0.9);
+            color: #000;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            z-index: 4;
+            text-transform: uppercase;
+        }
+
+        .video-tag.valve { background: #00bcd4; } 
+        .video-tag.teori { background: #8b0000; color: #fff;} 
+        .video-tag.oynanis { background: #4CAF50; color: #000;} 
+
+        .video-info { padding: 20px; }
+        .video-title { color: #fff; font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; line-height: 1.4; }
+        .video-desc { color: #bbb; font-size: 0.85rem; line-height: 1.5; }
+
+        /* SİNEMATİK VİDEO MODALI */
+        #videoModal {
+            display: none; position: fixed; inset: 0; z-index: 9999; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; 
+        }
+
+        .modal-container { width: 90%; max-width: 1000px; position: relative; }
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            border: 2px solid var(--primary-orange); border-radius: 12px;
+            box-shadow: 0 0 30px rgba(245, 130, 32, 0.3); background: #000;
+        }
+
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .close-modal-btn { position: absolute; top: -45px; right: 0; color: var(--primary-orange); font-size: 2rem; cursor: pointer; transition: 0.3s; }
+        .close-modal-btn:hover { color: #fff; transform: scale(1.1); }
+
+        /* Mobil ve Tablet Uyumluluğu */
+        @media (max-width: 992px) {
+            .video-layout { grid-template-columns: 1fr; }
+            .filter-sidebar { position: relative; top: 0; display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; }
+            .filter-sidebar h3 { width: 100%; margin-bottom: 10px; }
+            .filter-btn { width: auto; flex: 1 1 auto; margin-bottom: 0; text-align: center; }
+            .filter-btn i { display: none; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div id="videoModal">
+        <div class="modal-container">
+            <i class="fa-solid fa-xmark close-modal-btn" onclick="closeVideo()"></i>
+            <div class="video-wrapper">
+                <iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="preloader">
+        <img src="img/tr/hltrwikiweb.png" class="loader-logo" alt="Yükleniyor...">
+    </div>
+
+    <div id="main-wrapper" style="opacity: 0; transition: 1s;">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="img/tr/hltrwikiweb.png" alt="Logo">
+                <span>HALF-LIFE <span class="orange-text">TÜRKİYE</span></span>
+            </a>
+            
+            <div class="menu-btn" id="menuBtn"><div class="menu-btn__burger"></div></div>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="karakterler.html">Karakterler</a></li>
+                <li><a href="dusmanlar.html">DÜŞMANLAR</a></li>
+                <li><a href="silahlar.html">SİLAHLAR</a></li>
+                <li><a href="video.html" class="active">VİDEOLAR</a></li>
+                <li><a href="minioyun.html">Mini Oyun</a></li>
+<!-- <li><a href="haber.html">Haberler</a></li>-->
+                <li><a href="modlar.html">Modlar</a></li>
+                <li><a href="kronoloji.html">Timeline</a></li>
+                <li><a href="mekan.html">Mekanlar</a></li>
+                <li><a href="halflifeturkiye.html">Hakkımızda</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h1 class="page-title">Medya ve Video Arşivi</h1>
+            <p class="page-desc">Belgeseller, Kayıtlar, Teoriler ve Valve Arşivleri</p>
+
+            <div class="video-layout">
+                
+                <aside class="filter-sidebar">
+                    <h3>Kategoriler</h3>
+                    <button class="filter-btn active" data-filter="all"><i class="fa-solid fa-layer-group"></i> Tüm Videolar</button>
+                    <button class="filter-btn" data-filter="belgesel"><i class="fa-solid fa-film"></i> Belgeseller</button>
+                    <button class="filter-btn" data-filter="teori"><i class="fa-solid fa-brain"></i> Teoriler</button>
+                    <button class="filter-btn" data-filter="valve"><i class="fa-solid fa-box-archive"></i> Valve Arşivi</button>
+                    <button class="filter-btn" data-filter="speedrun"><i class="fa-solid fa-gamepad"></i> Oynanış / Speedrun</button>
+                </aside>
+
+                <div class="video-grid" id="videoGrid">
+                    
+                    <div class="video-card" data-video-id="y7n6-Qgn2BQ" data-category="belgesel">
+                        <span class="video-tag">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">HALF-LIFE BELGESELİ: ÖNGÖRÜLEMEYEN SONUÇLAR</div>
+                            <div class="video-desc">Makine'nin Half-Life Evrenini derinlemesine ele alan Belgeseli</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="TbZ3HzvFEto" data-category="belgesel">
+                        <span class="video-tag teori">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">HALF-LIFE 25.YIL BELGESELİ</div>
+                            <div class="video-desc">Valve'dan Half-Life'ın 25.Yılına özel belgesel</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="CaHtOISsLT4" data-category="valve">
+                        <span class="video-tag valve">VALVE ARŞİVİ</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life 2 - E3 2003 Sunumu</div>
+                            <div class="video-desc">Half-Life 2'nin E3 2003'teki Efsanevi sunumunun DEMO kaydı</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="8CoMdbnJwvE" data-category="valve">
+                        <span class="video-tag oynanis">VALVE ARŞİVİ</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life 2 - E3 2002 Sunumu</div>
+                            <div class="video-desc">Half-Life 2'nin E3 2002'deki Efsanevi sunumunun DEMO kaydı</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="wU4yPEFXzo0" data-category="valve">
+                        <span class="video-tag oynanis">VALVE ARŞİVİ</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life 2 - 2000 SIGGRAPH Sunumu</div>
+                            <div class="video-desc">Half-Life 2'nin 2000'deki Efsanevi sunumunun DEMO kaydı</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="ei6MbaczwXE" data-category="belgesel">
+                        <span class="video-tag oynanis">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life Belgeseli: İşverenler ve Hayırseverler</div>
+                            <div class="video-desc">Blackline'dan Half-Life Evrenine ait derinlemesine bir belgesel</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="hvWf8nEDa8k" data-category="belgesel">
+                        <span class="video-tag oynanis">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">BİR FPS KLASİĞİNİ GÜNÜMÜZE NASIL UYARLARSIN?</div>
+                            <div class="video-desc">Half-Life, yılların eskitemediği ve tüm dünyanın bildiği ikonik bir FPS başyapıtının yeniden canlanışının hikayesini Poly'den dinleyin.</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="YCjNT9qGjh4" data-category="belgesel">
+                        <span class="video-tag oynanis">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">HALF-LIFE 2 20. YIL BELGESELİ</div>
+                            <div class="video-desc">Half-Life 2'nin çıkışının 20. yıl dönümünü kutlamak için, oyunun geliştirme sürecini, Steam'in doğuş yerini ve daha birçok konuyu konuşmak üzere HL2 ekibinin üyeleri tekrar bir araya geliyor.</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="9-CrgVg60DI" data-category="belgesel">
+                        <span class="video-tag oynanis">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life 2'nin Korkunç Betası</div>
+                            <div class="video-desc">Valve'ın bizlere sunduğu Half Life oyunu kesinlikle bir şaheser. Peki ya zamanında sızdırılmadan önce Half Life 2'nin Betası nasıl gözüküyordu ?</div>
+                        </div>
+                    </div>
+					
+					<div class="video-card" data-video-id="cFto5LThzl8" data-category="speedrun">
+                        <span class="video-tag oynanis">SPEEDRUN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Black Mesa - Nihilanth Speedrun (Hatasız) 1:50.50</div>
+                            <div class="video-desc">Sercan Aksakal'dan Black Mesa - Nihilanth Speedrun (Definitive Edition Dünya Üçüncülüğü)</div>
+                        </div>
+                    </div>
+					
+					<div class="video-card" data-video-id="VtI5HM7GVGY" data-category="speedrun">
+                        <span class="video-tag oynanis">SPEEDRUN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">HALF-LIFE 20 DAKİKA 41 SANİYEDE!</div>
+                            <div class="video-desc">Quadrazid'in Half-Life Rekoru</div>
+                        </div>
+                    </div>
+					
+					<div class="video-card" data-video-id="5Wavn29LMrs" data-category="valve">
+                        <span class="video-tag oynanis">FRAGMAN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life (1998) - Resmi Fragmanı</div>
+                            <div class="video-desc">Half-Life'ın ilk resmi fragmanı</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="vGSgpg3xQME" data-category="valve">
+                        <span class="video-tag oynanis">FRAGMAN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life: Guard Duty Fragmanı</div>
+                            <div class="video-desc">Half-Life Blue Shift'in (o zamanlar Guard Duty) ilk fragmanı.</div>
+                        </div>
+                    </div>
+					
+					
+					<div class="video-card" data-video-id="ZNZsWm-Ulk4" data-category="valve">
+                        <span class="video-tag oynanis">FRAGMAN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life: Opposing Force Fragmanı</div>
+                            <div class="video-desc">Half-Life Opposing Force'un ilk fragmanı</div>
+                        </div>
+                    </div>
+					
+					<div class="video-card" data-video-id="O2W0N3uKXmo" data-category="valve">
+                        <span class="video-tag oynanis">FRAGMAN</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Half-Life: Alyx Fragmanı</div>
+                            <div class="video-desc">Yıllar sonra yeni bir Half-Life oyunu.</div>
+                        </div>
+                    </div>
+					
+					<div class="video-card" data-video-id="yTvPQ8YRGDU" data-category="belgesel">
+                        <span class="video-tag oynanis">BELGESEL</span>
+                        <div class="video-thumb">
+                            <img src="" alt="Video Kapak">
+                            <i class="fa-solid fa-play play-icon"></i>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">HALF-LIFE EVRENİNİN BİLİNMEYEN KAHRAMANLARI (GINA-COLETTE)</div>
+                            <div class="video-desc">Half-Life Evrenindeki Diğer Perspektifleri BlackHand'den dinleyin.</div>
+                        </div>
+                    </div>
+					
+					
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- KATEGORİ FİLTRELEME SİSTEMİ ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const videoCards = document.querySelectorAll('.video-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Aktif sınıfını diğer butonlardan kaldır ve tıklanana ekle
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                // Videoları filtrele
+                videoCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // --- SİNEMATİK VİDEO VE OTOMATİK THUMBNAIL SİSTEMİ ---
+        const videoModal = document.getElementById('videoModal');
+        const youtubePlayer = document.getElementById('youtubePlayer');
+
+        document.querySelectorAll('.video-card').forEach(card => {
+            const videoId = card.getAttribute('data-video-id');
+            
+            if (videoId) {
+                card.onclick = () => openVideo(videoId);
+                
+                const img = card.querySelector('.video-thumb img');
+                if (img) {
+                    img.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                    img.onerror = function() {
+                        if (this.src.includes('maxresdefault')) {
+                            this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                        } else if (this.src.includes('hqdefault')) {
+                            this.src = 'img/tr/hltrwikiweb.png';
+                        }
+                    };
+                }
+            }
+        });
+
+        function openVideo(videoId) {
+            youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            videoModal.style.display = 'flex';
+        }
+
+        function closeVideo() {
+            videoModal.style.display = 'none';
+            youtubePlayer.src = '';
+        }
+
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                closeVideo();
+            }
+        });
+
+        // --- PRELOADER & NAVBAR KONTROLLERİ ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('main-wrapper').style.opacity = '1';
+            }, 200); 
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if(menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+                menuBtn.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
